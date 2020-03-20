@@ -11,4 +11,7 @@ virtual pubquiz so you can get drunk during quarantine
 
 ## Server & Client
 
-The server can be started with `node server.js`, the client can be started with `yarn start`, or built with `yarn build` in the `client` folder.
+`yarn install` in client and `yarn install` in the root folder. (This could be improved).
+`yarn dev` will start the server and the client concurrently.
+`yarn client` will start the client only.
+`yarn server` will start the server only.
