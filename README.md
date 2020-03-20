@@ -9,10 +9,6 @@ virtual pubquiz so you can get drunk during quarantine
 - Node.js
 - Yarn
 
-### Packages
-
-- `yarn global add nodemon`
-
 ## Server & Client
 
 `yarn install` in client and `yarn install` in the root folder. (This could be improved).
