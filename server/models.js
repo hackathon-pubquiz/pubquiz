@@ -40,7 +40,7 @@ class Quiz extends Model {}
 Quiz.init(
   {
     date: Sequelize.DATE,
-    state: Sequelize.ENUM('running', 'past', 'future'),
+    state: Sequelize.ENUM("running", "past", "future")
   },
   {
     sequelize,
@@ -56,7 +56,7 @@ Question.init(
     positionInround: Sequelize.INTEGER,
     question: Sequelize.STRING,
     questionExternalLink: Sequelize.STRING,
-    correctAnswer: Sequelize.STRING,
+    correctAnswer: Sequelize.STRING
   },
   {
     sequelize,
@@ -67,8 +67,8 @@ Question.init(
 Question.belongsTo(Quiz);
 Quiz.belongsTo(Pub);
 
-Group.belongsToMany(Quiz, {through: 'QuizGroups'});
-Quiz.belongsToMany(Group, {through: 'QuizGroups'});
+Group.belongsToMany(Quiz, { through: "QuizGroups" });
+Quiz.belongsToMany(Group, { through: "QuizGroups" });
 
 Pub.hasMany(Group);
 // Group.belongsTo(Pub);

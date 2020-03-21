@@ -14,6 +14,8 @@ import RegisterUserScreen from "./components/RegisterUserScreen";
 import RegisterTeamScreen from "./components/RegisterTeamScreen";
 import CheerBackdrop from "./components/CheerBackdrop";
 import Quiz from "./Quiz/quiz";
+import HostQuizzes from "./components/HostQuizzes";
+import HostQuiz from "./components/HostQuiz";
 
 import {connect, useDispatch} from "react-redux";
 import {requestLoginUser, requestLogoutUser} from "./redux/sessions";
@@ -221,6 +223,8 @@ class App extends React.Component {
             <Route path="/quizmaster/:pubId/:quizId?">
               <QuizMaster />
             </Route>
+            <Route path="/host/quiz/:id" component={HostQuiz} />
+            <Route path="/host/quizzes" component={HostQuizzes} />
             <Route path="/quiz">
               <Quiz></Quiz>
             </Route>
