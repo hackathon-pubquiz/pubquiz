@@ -12,20 +12,17 @@ import { darkTheme } from "./Themes";
 import { withStyles, MuiThemeProvider } from "@material-ui/core";
 import RegisterUserScreen from "./components/RegisterUserScreen";
 import RegisterTeamScreen from "./components/RegisterTeamScreen";
+import Quiz from "./Quiz/quiz";
 
-import { useStore } from "react-redux";
 import { useDispatch } from "react-redux";
 import { requestLoginUser, requestLogoutUser } from "./redux/sessions";
 import Pubs from "./Pubs";
-import TeamChooser from "./TeamChooser";
 import { Tabs, Tab, Grid, AppBar, Typography } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { connect } from "react-redux";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import Drawer from "@material-ui/core/Drawer";
 import ChatIcon from "@material-ui/icons/Chat";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -169,13 +166,13 @@ class App extends React.Component {
             <Tab component={RouterLink} to="/people" label="Personen"></Tab>
             <Tab component={RouterLink} to="/player" label="Player"></Tab>
             <Tab component={RouterLink} to="/quizmaster" label="Quizmaster"></Tab>
-            <Tab component={RouterLink} to="/aktuellesQuiz" label="Aktuelles Quiz"></Tab>
             {this.props.authenticated ? (
               profileElement(this.props.loggedInUser.nickname)
             ) : (
               <Tab component={RouterLink} to="/login" label="Login"></Tab>
             )}
             <Tab component={RouterLink} to="/login2" label="Login"></Tab>
+            <Tab component={RouterLink} to="/quiz" label="Quiz"></Tab>
           </Tabs>
         </AppBar>
         <Drawer
@@ -219,8 +216,11 @@ class App extends React.Component {
             <Route path="/player">
               <Player></Player>
             </Route>
-            <Route path="/aktuellesQuiz">
-              <TeamChooser></TeamChooser>
+            <Route path="/quizmaster/:pubId/:quizId">
+              <QuizMaster />
+            </Route>
+            <Route path="/quiz">
+              <Quiz></Quiz>
             </Route>
           </Switch>
         </main>
