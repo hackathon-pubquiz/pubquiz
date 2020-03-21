@@ -1,36 +1,31 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 
-class Pubs extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-      pubs: []
-    };
-  }
-
-  componentDidMount() {
-    fetch("/api/pubs")
+const Pubs = () => {
+  
+  const [error, setError] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+  const [pubs, setPubs] = useState([]);
+  
+  useEffect(() => {
+     fetch("/api/pubs")
       .then(res => res.json())
       .then(
         result => {
-          this.setState({ isLoaded: true, pubs: result });
+          setLoaded(true)
+          setPubs(pubs)
         },
         error => {
-          this.setState({ isLoaded: true, error: error });
+          setLoaded(true)
+          setError(error)
         }
       );
-  }
+  }, [])
 
-  render() {
-    const { error, isLoaded, pubs } = this.state;
-    const pubItems = pubs.map(pub => <div key={pub.id}>{pub.name}</div>);
+  const pubItems = pubs.map(pub => <div key={pub.id}>{pub.name}</div>);
 
-    if (error) return <div>Error: {error.message}</div>;
-    else if (!isLoaded) return <div>Loading...</div>;
-    else return <div>Pubs:{pubItems}</div>;
-  }
+  if (error) return <div>Error: {error.message}</div>;
+  else if (!loaded) return <div>Loading...</div>;
+  else return <div>Pubs:{pubItems}</div>;
 }
 
 export default Pubs;
