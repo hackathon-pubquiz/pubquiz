@@ -50,13 +50,38 @@ Question.init(
 );
 
 Pub.hasMany(Group);
-Group.belongsTo(Pub);
-Group.hasMany(Person);
+// Group.belongsTo(Pub);
+// Group.hasMany(Person);
 Person.belongsTo(Group);
 
 sequelize.sync().then(() => {
   console.log("Database initialized");
+
+  seedDatabase();
+  // TODO seed some entries
 });
+
+function seedDatabase() {
+  const groups = ["Scotty doesn't know", "Kein Plan"].map(group => ({
+    name: group,
+    public: true
+  }));
+
+  Pub.create(
+    {
+      name: "The Snug",
+      groups: groups
+    },
+    { include: [Group] }
+  ).then(() => {
+    ["User1", "User2", "User3"].forEach(user => {
+      Person.create({
+        nickname: user,
+        groupId: 1
+      });
+    });
+  });
+}
 
 module.exports = {
   Pub,
