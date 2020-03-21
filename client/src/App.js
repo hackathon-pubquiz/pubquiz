@@ -6,6 +6,7 @@ import ChatWrapper from "./ChatWrapper";
 import Groups from "./Groups";
 import Pubs from "./Pubs";
 import Persons from "./Persons";
+import WebRTC from "./WebRTC";
 
 const socket = io({
   autoConnect: false
@@ -36,6 +37,7 @@ class App extends React.Component {
           <Pubs></Pubs>
           <Groups></Groups>
           <Persons></Persons>
+          <WebRTC></WebRTC>
         </header>
       </div>
     );
