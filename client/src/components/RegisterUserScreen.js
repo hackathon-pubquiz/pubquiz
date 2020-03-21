@@ -1,8 +1,10 @@
+import { ReactComponent as BarrelIcon } from "../img/fass.svg";
 import { withStyles, TextField, Button, Grid, Switch, FormGroup, FormControlLabel } from "@material-ui/core";
 import React, { useState } from "react";
 import Header from "./Header";
+import { login } from "../api";
 import { useDispatch } from "react-redux";
-import { requestGroupCreation } from "../redux/createGroup";
+import {requestLoginUser} from "../redux/sessions";
 
 const styles = theme => ({
   footer: {
@@ -16,16 +18,23 @@ const styles = theme => ({
   },
   goButton: {
     marginTop: "1em",
-  }
+  },
+  barrelIcon: {
+    fill: theme.palette.text.primary,
+    height: "1.5em",
+    width: "1.5em",
+    paddingRight: "0.4em",
+    boxSizing: "content-box",
+    verticalAlign: "bottom",
+  },
 });
 
 function RegisterTeamScreen(props) {
-  const [public_, setPublic] = useState(false);
-  const [groupName, setGroupName] = useState("");
+  const [nickname, setNickname] = useState("");
   const dispatch = useDispatch();
 
-  const handlePublicSwitch = event => {
-    setPublic(event.target.checked);
+  const handleLogin = () => {
+    dispatch(requestLoginUser(nickname));
   };
 
   const { classes } = props;
@@ -35,29 +44,22 @@ function RegisterTeamScreen(props) {
         <Header />
       </Grid>
       <Grid item>
-        <TextField label="Name deines Teams" onChange={e => setGroupName(e.target.value)} value={groupName} />
-      </Grid>
-      <Grid item>
-        <FormGroup row>
-          <FormControlLabel
-            control={<Switch checked={public_} onChange={handlePublicSwitch} name="public" />}
-            label="Team für andere öffnen"
-          />
-        </FormGroup>
+        <TextField label="Dein Name" onChange={e => setNickname(e.target.value)} value={nickname} />
       </Grid>
       <Grid item>
         <Button
           variant="contained"
           color="primary"
           className={classes.goButton}
-          onClick={() => dispatch(requestGroupCreation(groupName, public_))}
+          onClick={handleLogin}
         >
-          TEAM STARTEN!
+          LOS GEHT'S!
         </Button>
       </Grid>
       <Grid item container direction="column" justify="flex-end" className={classes.footerWrapper} alignItems="center">
         <Grid item component="footer" className={classes.footer}>
-          <a>Alleine hier? Schließe dich einem anderen Team an!</a>
+          <BarrelIcon className={classes.barrelIcon}/>
+          <a>Ich bin Pub-Betreiber</a>
         </Grid>
       </Grid>
     </Grid>
