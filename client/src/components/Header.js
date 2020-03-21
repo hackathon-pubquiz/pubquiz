@@ -14,25 +14,25 @@ const styles = theme => ({
     "& h1, & h2, & h3, & h4, & h5, & h6": {
       margin: "1em",
       "&:first-child": {
-        marginTop: 0
+        marginTop: 0,
       },
       "&:last-child": {
-        marginBottom: 0
-      }
-    }
+        marginBottom: 0,
+      },
+    },
   },
   headerContainer: {
-    width: "100%"
+    width: "100%",
   },
   beerIcon: {
     width: "9em",
     paddingLeft: "1.4em",
     fill: "white",
-    marginTop: "1em"
+    marginTop: "1em",
   },
   headline: {
     fontFamily: "modernia",
-    fontSize: "3em"
+    fontSize: "3em",
   },
   wedge: {
     position: "relative",
@@ -49,7 +49,7 @@ const styles = theme => ({
       position: "absolute",
       right: 0,
       transform: "skewY(-5deg)",
-      transformOrigin: 0
+      transformOrigin: 0,
     },
   },
 });

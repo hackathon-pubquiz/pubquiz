@@ -108,35 +108,36 @@ app.get("/api/question/:id", (req, res) =>
 app.post("/api/questions", async (req, res) => {
   let {pubId, quizId, date, questions} = req.body;
 
-  //let [year, month, day] = date.split('-', 3);
-  //date = new Date(year, month - 1, day, 0, 0, 0, 0);
-
   let success = true;
 
-  let quiz = await Quiz.findByPk(quizId);
+  let quiz = null;
+  if(quizId) {
+    quiz = await Quiz.findByPk(quizId);
+  }
 
   if(quiz) {
     quiz.update(date);
   } else {
     quiz = await Quiz.create({date, pubId});
+    quizId = quiz.id;
   }
 
   await questions.forEach((i_question, i) => {
     let {round, positionInround, question, questionExternalLink, correctAnswer} = i_question;
 
-    Question.findOne({where: {quizId: quiz.id, round, positionInround}})
+    Question.findOne({where: {quizId, round, positionInround}})
       .then((result) => {
         if(result) {
           return result.update({question, questionExternalLink, correctAnswer});
         } else {
-          return Question.create({quizId: quiz.id, round, positionInround, question, questionExternalLink, correctAnswer});
+          return Question.create({quizId, round, positionInround, question, questionExternalLink, correctAnswer});
         }
       }).then((opResult) => {
         success = success && true;
       });
   });
 
-  res.json({success});
+  res.json({success, quizId});
 });
 
 // TODO: post question
@@ -164,6 +165,23 @@ app.post("/api/group", async (req, res) => {
   console.log(`${isPublic ? "Public" : "Private"} group ${groupName} created!`);
   res.json({
     group: group
+  });
+});
+
+// Expected body: { userId: <id>, groupId: <id>}
+app.post("/api/group/join", async (req, res, next) => {
+  const userId = req.body.userId;
+  const groupId = req.body.groupId;
+
+  Group.findByPk(groupId).then(group => {
+    if (!group) {
+      next("Group does not exist");
+    } else if (group.public) {
+      group.addPerson(userId);
+      res.send();
+    } else {
+      next("Group was not public");
+    }
   });
 });
 
