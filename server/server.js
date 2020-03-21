@@ -4,16 +4,19 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.PORT || 8080;
 
-const { Pub, Group, Person, Question } = require("./models");
+const { Pub, Group, Person, Question, Session } = require("./models");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const server = require("http").createServer(app);
-const io = require('socket.io')(server);
+const io = require("socket.io")(server);
 
-const WebsocketHandler = require('./websocketHandler');
+const WebsocketHandler = require("./websocketHandler");
 const websocketHandler = new WebsocketHandler(io);
+
+const session = require("express-session");
+app.use(session({ secret: "such pub much wow", resave: false }));
 
 // BEGIN pub
 app.get("/api/pubs", (req, res) => {
@@ -22,9 +25,7 @@ app.get("/api/pubs", (req, res) => {
   });
 });
 
-app.get("/api/pub/:id", (req, res) =>
-  Pub.findByPk(req.params.id).then(result => res.json(result))
-);
+app.get("/api/pub/:id", (req, res) => Pub.findByPk(req.params.id).then(result => res.json(result)));
 
 app.post("/api/pub", (req, res) =>
   Pub.create({
@@ -102,6 +103,23 @@ app.get("/api/groups", (req, res) => {
 app.get("/api/group/:id", (req, res) =>
   Group.findByPk(req.params.id).then(result => res.json(result))
 );
+
+app.post("/api/login", async (req, res) => {
+  const requested_nickname = req.body.nickname;
+  console.log("Trying to login " + requested_nickname);
+  const [person, personCreated] = await Person.findOrCreate({
+    where: { nickname: requested_nickname }
+  });
+
+  console.log("Found or created person");
+  console.log(person);
+  const [session, sessionCreated] = await Session.findOrCreate({
+    where: { personId: person.id }
+  });
+  res.json({
+    person: person
+  });
+});
 
 // TODO: post groups
 // TODO: put groups

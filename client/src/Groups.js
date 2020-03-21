@@ -25,7 +25,9 @@ class Groups extends Component {
 
   render() {
     const { error, isLoaded, groups } = this.state;
-    const groupItems = groups.map(group => <div>{group.name}</div>);
+    const groupItems = groups.map(group => (
+      <div key={group.id}>{group.name}</div>
+    ));
 
     if (error) return <div>Error: {error.message}</div>;
     else if (!isLoaded) return <div>Loading...</div>;
