@@ -14,6 +14,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from "@material-ui/core/Button";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { connect } from "react-redux";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import { logout } from "./redux/sessions";
 
 const socket = io({
   autoConnect: false
@@ -45,15 +48,19 @@ class App extends React.Component {
 
   render() {
     const profileElement = nickname => (
-      <Button
-        aria-label="account of current user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
-        color="inherit"
-        startIcon={<AccountCircle />}
-      >
-        {nickname}
-      </Button>
+      <div>
+        <Button
+          aria-label="account of current user"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          color="inherit"
+          onClick={this.handleMenu}
+          startIcon={<AccountCircle />}
+        >
+          {nickname}
+        </Button>
+        <Button onClick={() => logout()}>Logout</Button>
+      </div>
     );
 
     return (
@@ -61,7 +68,6 @@ class App extends React.Component {
         <CssBaseline />
         <AppBar position="static">
           <Tabs component="nav">
-            <Tab component={RouterLink} to="/login" label="Login"></Tab>
             <Tab component={RouterLink} to="/pubs" label="Pubs"></Tab>
             <Tab component={RouterLink} to="/groups" label="Gruppen"></Tab>
             <Tab component={RouterLink} to="/people" label="Personen"></Tab>

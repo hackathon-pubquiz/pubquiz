@@ -9,8 +9,10 @@ import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./redux/rootReducer.js";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
+import { sessionService } from "redux-react-session";
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+sessionService.initSessionService(store);
 
 ReactDOM.render(
   <Provider store={store}>
