@@ -4,7 +4,7 @@ import { List } from "@material-ui/core";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-  return { usedId: state.sessionReducer.userId };
+  return { usedId: state.session.user };
 };
 
 class ChatWrapper extends React.Component {
@@ -70,12 +70,7 @@ class ChatWrapper extends React.Component {
         </form>
         <List dense={true}>
           {messageLog.map((m, i) => (
-            <Message
-              message={m}
-              key={i}
-              id={i}
-              ownMessage={m.nickname == ownNickname}
-            ></Message>
+            <Message message={m} key={i} id={i} ownMessage={m.nickname == ownNickname}></Message>
           ))}
         </List>
       </div>

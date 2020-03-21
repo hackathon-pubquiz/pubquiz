@@ -4,11 +4,14 @@ import io from "socket.io-client";
 import ChatWrapper from "./ChatWrapper";
 import Groups from "./Groups";
 import Persons from "./Persons";
+import QuizMaster from "./pages/QuizMaster";
+import Player from "./Player";
 
 import { useStore } from "react-redux";
 import { useDispatch } from "react-redux";
-import { requestLoginUser } from "./redux/sessions";
+import { requestLoginUser, requestLogoutUser } from "./redux/sessions";
 import Pubs from "./Pubs";
+import TeamChooser from "./TeamChooser";
 import { Tabs, Tab, Grid, AppBar, Typography } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from "@material-ui/core/Button";
@@ -16,7 +19,6 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import { connect } from "react-redux";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import { logout } from "./redux/sessions";
 
 const socket = io({
   autoConnect: false
@@ -59,7 +61,7 @@ class App extends React.Component {
         >
           {nickname}
         </Button>
-        <Button onClick={() => logout()}>Logout</Button>
+        <Button onClick={() => this.props.requestLogoutUser()}>Logout</Button>
       </div>
     );
 
@@ -67,14 +69,17 @@ class App extends React.Component {
       <Router>
         <CssBaseline />
         <AppBar position="static">
-          <Tabs component="nav">
+          <Tabs component="nav" value={false}>
             <Tab component={RouterLink} to="/pubs" label="Pubs"></Tab>
             <Tab component={RouterLink} to="/groups" label="Gruppen"></Tab>
             <Tab component={RouterLink} to="/people" label="Personen"></Tab>
-            {this.props.loggedInUser === undefined ? (
-              <Tab component={RouterLink} to="/login" label="Login"></Tab>
-            ) : (
+            <Tab component={RouterLink} to="/quizmaster" label="Quizmaster"></Tab>
+            <Tab component={RouterLink} to="/player" label="Player"></Tab>
+            <Tab component={RouterLink} to="/aktuellesQuiz" label="Aktuelles Quiz"></Tab>
+            {this.props.authenticated ? (
               profileElement(this.props.loggedInUser.nickname)
+            ) : (
+              <Tab component={RouterLink} to="/login" label="Login"></Tab>
             )}
           </Tabs>
         </AppBar>
@@ -96,6 +101,15 @@ class App extends React.Component {
               <Route path="/people">
                 <Persons></Persons>
               </Route>
+              <Route path="/quizmaster/:pubId/:quizDate">
+                <QuizMaster />
+              </Route>
+              <Route path="/player">
+                <Player></Player>
+              </Route>
+              <Route path="/aktuellesQuiz">
+                <TeamChooser></TeamChooser>
+              </Route>
             </Switch>
           </Grid>
         </Grid>
@@ -104,8 +118,12 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { loggedInUser: state.sessionReducer.user };
+const mapStateToProps = ({ session }) => {
+  return {
+    checked: session.checked,
+    authenticated: session.authenticated,
+    loggedInUser: session.user
+  };
 };
-const AppContainer = connect(mapStateToProps, {})(App);
+const AppContainer = connect(mapStateToProps, { requestLogoutUser: requestLogoutUser() })(App);
 export default AppContainer;

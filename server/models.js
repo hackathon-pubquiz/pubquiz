@@ -1,5 +1,8 @@
 const { Sequelize, Model } = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:");
+const sequelize = new Sequelize({
+  dialect: "sqlite",
+  storage: "database.sqlite"
+});
 
 class Pub extends Model {}
 Pub.init(
@@ -61,20 +64,20 @@ Session.belongsTo(Person);
 sequelize.sync().then(() => {
   console.log("Database initialized");
 
-  seedDatabase();
-  // TODO seed some entries
+  Pub.findAll().then(result => {
+    console.log(result);
+    if (result.length === 0) seedDatabase();
+  });
 });
 
 function seedDatabase() {
-  const groups = ["Scotty doesn't know", "Kein Plan"].map(group => ({
-    name: group,
-    public: true
-  }));
-
   Pub.create(
     {
       name: "The Snug",
-      groups: groups
+      groups: [
+        { name: "Quizzer", public: true },
+        { name: "Krasse Hacker", public: false }
+      ]
     },
     { include: [Group] }
   ).then(() => {

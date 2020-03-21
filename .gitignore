@@ -130,3 +130,6 @@ dmypy.json
 
 # javascript modules
 node_modules
+
+# sqlite databases
+*.sqlite
