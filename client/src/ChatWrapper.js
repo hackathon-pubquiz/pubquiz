@@ -1,64 +1,71 @@
 import React from "react";
+import Message from "./TextChat/Message";
+import { List } from "@material-ui/core";
 
 class ChatWrapper extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {message: null, messageLog: []};
+    this.state = {
+      message: null,
+      messageLog: [
+        { nickname: "Hannes", message: "Was geht bei euch?" },
+        { nickname: "Vera", message: "Alles locker :)" },
+        { nickname: "Tom", message: "Können wir emojis?" }
+      ]
+    };
   }
 
   componentDidMount() {
-    let {socket} = this.props;
+    let { socket } = this.props;
 
-    socket.on('rec_message', this.handleIncomingMessage);
+    socket.on("rec_message", this.handleIncomingMessage);
   }
 
-  handleIncomingMessage = ({nickname, message}) => {
-    let {messageLog} = this.state;
+  handleIncomingMessage = ({ nickname, message }) => {
+    let { messageLog } = this.state;
 
     // TODO limit to last n-Messages
-    messageLog = [...messageLog, {nickname, message}];
+    messageLog = [...messageLog, { nickname, message }];
 
-    this.setState({messageLog});
+    this.setState({ messageLog });
   };
 
-  handleChange = (event) => {
-    this.setState({'message': event.target.value});
+  handleChange = event => {
+    this.setState({ message: event.target.value });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
 
-    let {socket} = this.props;
-    let {message} = this.state;
+    let { socket } = this.props;
+    let { message } = this.state;
 
-    let nickname = 'TODO Nick';
-    let channel = 'TODO Channel';
+    let nickname = "TODO Nick";
+    let channel = "TODO Channel";
 
-    if(message) {
-      socket.emit('send_message', {nickname, channel, message});
+    if (message) {
+      socket.emit("send_message", { nickname, channel, message });
     }
   };
 
   render() {
-
-    let {messageLog} = this.state;
-
+    let { messageLog } = this.state;
+    let ownNickname = "TODO Nick";
     return (
       <div>
         <div>Chat</div>
         <form onSubmit={this.handleSubmit}>
           <input type="text" onChange={this.handleChange} />
         </form>
-        <div>
+        <List dense={true}>
           {messageLog.map((m, i) => (
-            <div key={i}>
-              <span>{m.nickname}</span>: <span>{m.message}</span>
-            </div>
+            <Message message={m} id={i} ownMessage={m.nickname == ownNickname}></Message>
           ))}
-        </div>
-      </div>);
-  };
+        </List>
+      </div>
+    );
+  }
 }
 
 export default ChatWrapper;
