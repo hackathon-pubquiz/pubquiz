@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.PORT || 8080;
 
-const { Pub, Group, Person, Question } = require("./models");
+const { Pub, Group, Person, Question, Session } = require("./models");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -104,16 +104,20 @@ app.get("/api/group/:id", (req, res) =>
   Group.findByPk(req.params.id).then(result => res.json(result))
 );
 
-app.post("/api/login", (req, res) => {
-  const requestObject = Json.parse(req.body);
-  const requested_nickname = requestObject.nickname;
+app.post("/api/login", async (req, res) => {
+  const requested_nickname = req.body.nickname;
   console.log("Trying to login " + requested_nickname);
-  Person.findOrCreate({
+  const [person, personCreated] = await Person.findOrCreate({
     where: { nickname: requested_nickname }
-  }).then(person => {
-    Session.findOrCreate({
-      where: { personId: person.id }
-    }).then(session => req.json(session));
+  });
+
+  console.log("Found or created person");
+  console.log(person);
+  const [session, sessionCreated] = await Session.findOrCreate({
+    where: { personId: person.id }
+  });
+  res.json({
+    person: person
   });
 });
 
