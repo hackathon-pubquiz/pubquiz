@@ -11,6 +11,7 @@ import Player from "./Player";
 import { darkTheme } from "./Themes";
 import { withStyles, MuiThemeProvider } from "@material-ui/core";
 import LoginScreen from "./components/LoginScreen";
+import Quiz from "./Quiz/quiz";
 
 import { useStore } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -175,6 +176,7 @@ class App extends React.Component {
               <Tab component={RouterLink} to="/login" label="Login"></Tab>
             )}
             <Tab component={RouterLink} to="/login2" label="Login"></Tab>
+            <Tab component={RouterLink} to="/quiz" label="Quiz"></Tab>
           </Tabs>
         </AppBar>
         <Drawer
@@ -220,6 +222,9 @@ class App extends React.Component {
             </Route>
             <Route path="/aktuellesQuiz">
               <TeamChooser></TeamChooser>
+            </Route>
+            <Route path="/quiz">
+              <Quiz></Quiz>
             </Route>
           </Switch>
         </main>
