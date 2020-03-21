@@ -95,6 +95,7 @@ const styles = theme => ({
   content: {
     paddingTop: theme.spacing(9),
     height: "100vh",
+    paddingRight: theme.spacing(2)
   },
   contentDrawerClosed: {
     paddingLeft: drawerClosedWidth(theme) + theme.spacing(2),

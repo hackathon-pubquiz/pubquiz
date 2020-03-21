@@ -6,10 +6,9 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import TextQuestion from "./textQuestion";
 import { setActiveQuestion } from "../redux/quizReducer";
+import SwipeableViews from "react-swipeable-views";
 
 function Quiz() {
-  console.log("quiz has renderered");
-
   const activeStep = useSelector(state => state.quiz.activeQuestion);
   const totalNumberOfSteps = useSelector(state => state.quiz.questions.length);
   const questions = useSelector(state => state.quiz.questions);
@@ -24,11 +23,17 @@ function Quiz() {
     dispatch(setActiveQuestion(activeStep - 1));
   };
 
+  const handleStepChange = step => {
+    dispatch(setActiveQuestion(step));
+  };
+
   return (
     <React.Fragment>
-      {questions.map(question => (
-        <TextQuestion question={question}></TextQuestion>
-      ))}
+      <SwipeableViews axis="x" index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
+        {questions.map(question => (
+          <TextQuestion question={question}></TextQuestion>
+        ))}
+      </SwipeableViews>
       <MobileStepper
         variant="dots"
         steps={totalNumberOfSteps}

@@ -8,7 +8,11 @@ export function setActiveQuestion(index) {
 
 export function quizReducer(
   state = {
-    questions: [{ title: "q1" }, { title: "q2" }, { title: "q3" }],
+    questions: [
+      { positionInRound: 1, question: "Was ist das?" },
+      { positionInRound: 2, question: "Wo ist das?" },
+      { positionInRound: 3, question: "Wer ist das?" }
+    ],
     activeQuestion: 0
   },
   action
