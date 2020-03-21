@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Link as RouterLink, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Link as RouterLink,
+  Route,
+  Switch
+} from "react-router-dom";
 import io from "socket.io-client";
 import ChatWrapper from "./ChatWrapper";
 import Groups from "./Groups";
@@ -10,6 +15,7 @@ import { useStore } from "react-redux";
 import { useDispatch } from "react-redux";
 import { requestLoginUser } from "./redux/sessions";
 import Pubs from "./Pubs";
+import TeamChooser from "./TeamChooser";
 import { Tabs, Tab, Grid, AppBar, Typography } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from "@material-ui/core/Button";
@@ -30,10 +36,13 @@ function LoginStub(props) {
 
   return (
     <div>
-      Login [Im Moment: Einloggen mit Benutername. Gibt es den Benutzer noch nicht, wird ein neuer
-      angelegt.]
+      Login [Im Moment: Einloggen mit Benutername. Gibt es den Benutzer noch
+      nicht, wird ein neuer angelegt.]
       <br />
-      <input onChange={e => setNickname(e.target.value)} value={nickname}></input>
+      <input
+        onChange={e => setNickname(e.target.value)}
+        value={nickname}
+      ></input>
       <button onClick={handleLogin}>Go</button>
     </div>
   );
@@ -61,12 +70,17 @@ class App extends React.Component {
       <Router>
         <CssBaseline />
         <AppBar position="static">
-          <Tabs component="nav">
+          <Tabs component="nav" value={false}>
             <Tab component={RouterLink} to="/login" label="Login"></Tab>
             <Tab component={RouterLink} to="/pubs" label="Pubs"></Tab>
             <Tab component={RouterLink} to="/groups" label="Gruppen"></Tab>
             <Tab component={RouterLink} to="/people" label="Personen"></Tab>
             <Tab component={RouterLink} to="/player" label="Player"></Tab>
+            <Tab
+              component={RouterLink}
+              to="/aktuellesQuiz"
+              label="Aktuelles Quiz"
+            ></Tab>
             {this.props.loggedInUser === undefined ? (
               <Tab component={RouterLink} to="/login" label="Login"></Tab>
             ) : (
@@ -94,6 +108,9 @@ class App extends React.Component {
               </Route>
               <Route path="/player">
                 <Player></Player>
+              </Route>
+              <Route path="/aktuellesQuiz">
+                <TeamChooser></TeamChooser>
               </Route>
             </Switch>
           </Grid>
