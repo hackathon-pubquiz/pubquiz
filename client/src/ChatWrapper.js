@@ -22,13 +22,17 @@ class ChatWrapper extends React.Component {
     socket.on("rec_message", this.handleIncomingMessage);
   }
 
-  handleIncomingMessage = ({ nickname, message }) => {
+  addMessage = ({ nickname, message }) => {
     let { messageLog } = this.state;
 
     // TODO limit to last n-Messages
     messageLog = [...messageLog, { nickname, message }];
 
     this.setState({ messageLog });
+  };
+
+  handleIncomingMessage = ({ nickname, message }) => {
+    this.addMessage({ nickname, message });
   };
 
   handleChange = event => {
@@ -45,6 +49,7 @@ class ChatWrapper extends React.Component {
     let channel = "TODO Channel";
 
     if (message) {
+      this.addMessage({ nickname, message });
       socket.emit("send_message", { nickname, channel, message });
     }
   };

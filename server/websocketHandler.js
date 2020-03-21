@@ -9,21 +9,21 @@ class WebsocketHandler {
     this.chatHandler = new ChatHandler(this);
 
     this.io.on('connection', (socket) => {
-      this.clients[socket.id] = socket;
-
-      socket.on('send_message', this.chatHandler.onIncomingChat);
+      socket.on('send_message', (data) => this.chatHandler.onIncomingChat(socket, data));
 
       socket.on('disconnect', () => {
-        delete this.clients[socket.id];
+        // ...
       });
     });
   }
 
-  sendMessage = ({eventName, data}) => {
+  sendMessage = ({socket, room, eventName, data}) => {
     console.debug(Object.keys(this.clients));
 
-    for (let socketId in this.clients) {
-      this.clients[socketId].emit(eventName, data);
+    if(room) {
+      socket.to(room).emit(eventName, data);
+    } else {
+      socket.broadcast.emit(eventName, data);
     }
   }
 };
