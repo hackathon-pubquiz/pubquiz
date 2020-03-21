@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Mui } from "react";
 import io from 'socket.io-client';
 import logo from "./logo.svg";
 import "./App.css";
+import { darkTheme } from "./Themes";
+import { MuiThemeProvider } from "@material-ui/core";
 import ChatWrapper from "./ChatWrapper";
+import LoginScreen from "./components/LoginScreen";
 
 const useFetch = url => {
   const [data, updateData] = useState(undefined);
@@ -30,24 +33,27 @@ class App extends React.Component {
   
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            >
-            Learn React
-          </a>
-          <ChatWrapper socket={socket} />
-          <Pubs></Pubs>
-        </header>
-      </div>
+      <MuiThemeProvider theme={ darkTheme }>
+        <div className="App">
+          {/*<header className="App-header">*/}
+          {/*  <img src={logo} className="App-logo" alt="logo" />*/}
+          {/*  <p>*/}
+          {/*    Edit <code>src/App.js</code> and save to reload.*/}
+          {/*  </p>*/}
+          {/*  <a*/}
+          {/*    className="App-link"*/}
+          {/*    href="https://reactjs.org"*/}
+          {/*    target="_blank"*/}
+          {/*    rel="noopener noreferrer"*/}
+          {/*    >*/}
+          {/*    Learn React*/}
+          {/*  </a>*/}
+          {/*  <ChatWrapper socket={socket} />*/}
+          {/*  <Pubs></Pubs>*/}
+          {/*</header>*/}
+          <LoginScreen />
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
