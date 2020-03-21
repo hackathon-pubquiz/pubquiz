@@ -1,6 +1,8 @@
 # pubquiz
 
-virtual pubquiz so you can get drunk during quarantine
+virtual pubquiz so you can get drunk during quarantine.
+
+"Viele Leute wollen zusammen in die Kneipe gehen, in die sie sowieso immer gehen, aber die ist ja zu, bzw. man soll sich ja physisch nicht sehen. Jetzt soll man aber trotzdem Spaß haben können."
 
 # Developing
 

@@ -217,7 +217,7 @@ class App extends React.Component {
             <Route path="/player">
               <Player></Player>
             </Route>
-            <Route path="/quizmaster/:pubId/:quizId">
+            <Route path="/quizmaster/:pubId/:quizId?">
               <QuizMaster />
             </Route>
             <Route path="/quiz">
