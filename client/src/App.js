@@ -9,6 +9,7 @@ import { login } from "./api";
 import Pubs from "./Pubs";
 import { Tabs, Tab, Grid, AppBar } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import WebRTC from "./WebRTC";
 
 const socket = io({
   autoConnect: false
@@ -50,6 +51,9 @@ class App extends React.Component {
         <Grid container justify="space-evenly">
           <Grid item>
             <ChatWrapper socket={socket} />
+          </Grid>
+          <Grid item>
+            <WebRTC />
           </Grid>
           <Grid item>
             <Switch>
