@@ -1,6 +1,6 @@
 import pubquizBackground from "../img/pubquiz_background.png";
 import { ReactComponent as BeerIcon } from "../img/bier.svg";
-import { withStyles, TextField, Button, Grid } from "@material-ui/core";
+import { withStyles, TextField, Button, Grid, Switch, FormGroup, FormControlLabel } from "@material-ui/core";
 import React, { useState } from "react";
 import { login } from "../api";
 
@@ -68,6 +68,12 @@ const styles = theme => ({
 });
 
 function LoginScreen(props) {
+  const [public_, setPublic] = useState(false);
+
+  const handlePublicSwitch = event => {
+    setPublic(event.target.checked);
+  }
+
   const { classes } = props;
   return (
     <Grid container direction="column" alignItems="center" className={classes.main}>
@@ -82,6 +88,14 @@ function LoginScreen(props) {
       </Grid>
       <Grid item>
         <TextField label="Name deines Teams" />
+      </Grid>
+      <Grid item>
+        <FormGroup row>
+          <FormControlLabel
+            control={<Switch checked={public_} onChange={handlePublicSwitch} name="public" />}
+            label="Team für andere öffnen"
+          />
+        </FormGroup>
       </Grid>
       <Grid item>
         <Button variant="contained" color="primary" className={classes.goButton}>
