@@ -1,8 +1,18 @@
+import { login } from "../api";
+
 export const LOGIN_USER = "LOGIN_USER";
-function loginUser(userId) {
+export function requestLoginUser(nickname) {
+  return function(dispatch) {
+    return login(nickname).then(json => dispatch(successLoginUser(json)));
+  };
+}
+
+export const SUCCESS_LOGIN_USER = "SUCCESS_LOGIN_USER";
+function successLoginUser(result) {
+  console.log(result);
   return {
-    type: LOGIN_USER,
-    userId: userId
+    type: SUCCESS_LOGIN_USER,
+    user: result.person
   };
 }
 
@@ -13,9 +23,9 @@ export function sessionReducer(
   action
 ) {
   switch (action.type) {
-    case LOGIN_USER:
+    case SUCCESS_LOGIN_USER:
       return Object.assign({}, state, {
-        userId: action.userId
+        user: action.user
       });
     default:
       return state;
