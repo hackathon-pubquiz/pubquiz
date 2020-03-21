@@ -1,6 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+
+const useFetch = url => {
+  const [data, updateData] = useState(undefined);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch(url);
+      const json = await response.json();
+      updateData(json);
+    }
+    fetchData();
+  }, [url]);
+
+  return data;
+};
 
 function App() {
   return (
@@ -18,7 +33,19 @@ function App() {
         >
           Learn React
         </a>
+        <Pubs></Pubs>
       </header>
+    </div>
+  );
+}
+
+function Pubs(props) {
+  const pubs = useFetch("/api/pubs");
+
+  return (
+    <div>
+      Pubs:
+      {JSON.stringify(pubs)}
     </div>
   );
 }
