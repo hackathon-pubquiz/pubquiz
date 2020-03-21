@@ -10,10 +10,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const server = require("http").createServer(app);
-const io = require('socket.io')(server);
+const io = require("socket.io")(server);
 
-const WebsocketHandler = require('./websocketHandler');
+const WebsocketHandler = require("./websocketHandler");
 const websocketHandler = new WebsocketHandler(io);
+
+const session = require("express-session");
+app.use(session({ secret: "such pub much wow", resave: false }));
 
 // BEGIN pub
 app.get("/api/pubs", (req, res) => {
@@ -22,9 +25,7 @@ app.get("/api/pubs", (req, res) => {
   });
 });
 
-app.get("/api/pub/:id", (req, res) =>
-  Pub.findByPk(req.params.id).then(result => res.json(result))
-);
+app.get("/api/pub/:id", (req, res) => Pub.findByPk(req.params.id).then(result => res.json(result)));
 
 app.post("/api/pub", (req, res) =>
   Pub.create({
@@ -102,6 +103,19 @@ app.get("/api/groups", (req, res) => {
 app.get("/api/group/:id", (req, res) =>
   Group.findByPk(req.params.id).then(result => res.json(result))
 );
+
+app.post("/api/login", (req, res) => {
+  const requestObject = Json.parse(req.body);
+  const requested_nickname = requestObject.nickname;
+  console.log("Trying to login " + requested_nickname);
+  Person.findOrCreate({
+    where: { nickname: requested_nickname }
+  }).then(person => {
+    Session.findOrCreate({
+      where: { personId: person.id }
+    }).then(session => req.json(session));
+  });
+});
 
 // TODO: post groups
 // TODO: put groups

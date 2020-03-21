@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import io from "socket.io-client";
 import logo from "./logo.svg";
 import "./App.css";
@@ -6,10 +6,27 @@ import ChatWrapper from "./ChatWrapper";
 import Groups from "./Groups";
 import Pubs from "./Pubs";
 import Persons from "./Persons";
+import { login } from "./api";
 
 const socket = io({
   autoConnect: false
 });
+
+function LoginStub(props) {
+  const [nickname, setNickname] = useState("");
+
+  const handleLogin = () => {
+    login(nickname);
+  };
+
+  return (
+    <div>
+      Login:
+      <input onChange={e => setNickname(e.target.value)} value={nickname}></input>
+      <button onClick={handleLogin}>Go</button>
+    </div>
+  );
+}
 
 class App extends React.Component {
   componentDidMount() {
@@ -36,6 +53,7 @@ class App extends React.Component {
           <Pubs></Pubs>
           <Groups></Groups>
           <Persons></Persons>
+          <LoginStub></LoginStub>
         </header>
       </div>
     );
