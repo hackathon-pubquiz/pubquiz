@@ -10,13 +10,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
-io.on("connection", client => {
-  client.on("click", data => {
-    console.log("User clicked");
-  });
-  //client.on('disconnect', () => { /* … */ });
-});
+const socket = require('socket.io')(server);
+
+const ChatHandler = require('./chatHandler');
+const chatHandler = new ChatHandler(socket);
 
 // BEGIN pub
 app.get("/api/pubs", (req, res) => {
