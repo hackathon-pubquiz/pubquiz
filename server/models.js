@@ -54,6 +54,10 @@ Pub.hasMany(Group);
 // Group.hasMany(Person);
 Person.belongsTo(Group);
 
+class Session extends Model {}
+Session.init({}, { sequelize, modelName: "session" });
+Session.belongsTo(Person);
+
 sequelize.sync().then(() => {
   console.log("Database initialized");
 
@@ -87,5 +91,6 @@ module.exports = {
   Pub,
   Group,
   Question,
-  Person
+  Person,
+  Session
 };
