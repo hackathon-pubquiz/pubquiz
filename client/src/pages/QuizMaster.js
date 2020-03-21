@@ -1,10 +1,10 @@
 import React from "react";
-import { withRouter } from "react-router";
-import { withStyles } from "@material-ui/core/styles";
-import { TextField, Button } from "@material-ui/core";
+import {withRouter} from "react-router";
+import {withStyles} from "@material-ui/core/styles";
+import {TextField, Button} from "@material-ui/core";
 
 const styles = theme => ({
-  root: {}
+  root: {},
 });
 
 class QuizMaster extends React.Component {
@@ -15,7 +15,8 @@ class QuizMaster extends React.Component {
       questions: [],
       maxInround: [],
       successMessage: null,
-      inputState: {}
+      inputState: {},
+      date: null,
     };
   }
 
@@ -24,41 +25,53 @@ class QuizMaster extends React.Component {
     let date = this.props.match.params.quizDate;
   }
 
-  onChange = (event, newValue) => {
+  onChange = (event) => {
     event.persist();
 
-    let { inputState } = this.state;
+    let {inputState} = this.state;
     inputState[event.target.id] = event.target.value;
 
-    this.setState({ inputState });
+    this.setState({inputState});
   };
 
-  addRound = event => {
+  onDateChange = (event) => {
+    event.persist();
+
+    let {date} = this.state;
+    date = event.target.value;
+
+    this.setState({date});
+  };
+
+  addRound = (event) => {
     event.preventDefault();
-    let { questions, maxInround } = this.state;
+    let {questions, maxInround} = this.state;
 
     let round = questions.length + 1;
     maxInround[round] = 1;
-    questions = [...questions, [{ round: round, positionInround: 1 }]];
+    questions = [...questions, [{round: round, positionInround: 1}]];
 
-    this.setState({ questions, maxInround });
+    this.setState({questions, maxInround});
   };
 
   addQuestionInRound = (event, round) => {
     event.preventDefault();
 
-    let { questions, maxInround } = this.state;
+    let {questions, maxInround} = this.state;
     let questionsInRound = questions[round - 1];
 
     maxInround[round] += 1;
-    questionsInRound = [...questionsInRound, { round: round, positionInround: maxInround[round] }];
+    questionsInRound = [...questionsInRound, {round: round, positionInround: maxInround[round]}]
     questions[round - 1] = questionsInRound;
 
-    this.setState({ questions, maxInround });
+    this.setState({questions, maxInround});
   };
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     event.preventDefault();
+
+    let {pubId, quizId} = this.props.match.params;
+    let {date} = this.state;
 
     let questions = this.collectDataToSubmit();
 
@@ -67,31 +80,32 @@ class QuizMaster extends React.Component {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(questions)
+      body: JSON.stringify({pubId, quizId, date, questions})
     })
       .then(data => {
-        this.setState({ successMessage: "Daten wurde erfolgreich gepspeichert" });
+        this.setState({successMessage: 'Daten wurde erfolgreich gepspeichert'})
       })
       .catch(error => {
         console.error("Error:", error);
       });
+
   };
 
   collectDataToSubmit = () => {
-    let { inputState } = this.state;
+    let {inputState} = this.state;
 
     let questions = [];
 
     for (let field in inputState) {
       let value = inputState[field];
-      let [questionId, positionInroundId, fieldName] = field.split("-");
+      let [roundId, positionInroundId, fieldName] = field.split('-');
 
-      let question = questions.find(e => {
-        return e.id === questionId && e.positionInround === positionInroundId;
+      let question = questions.find((e) => {
+        return e.round === roundId && e.positionInround === positionInroundId;
       });
 
       if (question == null) {
-        question = { id: questionId, positionInround: positionInroundId };
+        question = {round: roundId, positionInround: positionInroundId};
         questions = [...questions, question];
       }
 
@@ -102,11 +116,18 @@ class QuizMaster extends React.Component {
   };
 
   render() {
-    let { questions, successMessage } = this.state;
+    let {questions, successMessage, inputState} = this.state;
 
     return (
       <div>
         <form action="/" method="POST" noValidate autoComplete="off" onSubmit={this.onSubmit}>
+          <TextField
+            id="date"
+            label="Datum"
+            type="datetime-local"
+            value={this.state.date}
+            onChange={this.onDateChange}
+          />
           <div>
             {questions.map((round, i) => (
               <div key={`round-${i}`}>
@@ -114,25 +135,20 @@ class QuizMaster extends React.Component {
                   <Question
                     key={`question-${j}`}
                     question={question}
-                    stateValues={this.state.inputState}
+                    stateValues={inputState}
                     onChangeHandler={this.onChange}
                   />
                 ))}
-                <a href="#" onClick={event => this.addQuestionInRound(event, i + 1)}>
-                  Frage in Runde hinzufügen hinzufügen
-                </a>
+                <a href="#" onClick={(event) => this.addQuestionInRound(event, i + 1)}>Frage in Runde hinzufügen
+                  hinzufügen</a>
               </div>
             ))}
           </div>
           <div>
-            <a href="#" onClick={this.addRound}>
-              Runde hinzufügen
-            </a>
+            <a href="#" onClick={this.addRound}>Runde hinzufügen</a>
           </div>
           <div>
-            <Button type="submit" variant="contained">
-              Abschicken
-            </Button>
+            <Button type="submit" variant="contained">Abschicken</Button>
           </div>
           {successMessage ? <div>{successMessage}</div> : null}
         </form>
@@ -142,8 +158,8 @@ class QuizMaster extends React.Component {
 }
 
 function Question(props) {
-  let { question, stateValues, onChangeHandler } = props;
-  let { round, positionInround } = question;
+  let {question, stateValues, onChangeHandler} = props;
+  let {round, positionInround} = question;
   let idPrefix = `${round}-${positionInround}`;
 
   let roundId = `${idPrefix}-round`;
@@ -200,7 +216,7 @@ function Question(props) {
 
 function getStateValue(stateValues, id) {
   if (stateValues[id] === undefined) {
-    return "";
+    return '';
   } else {
     return stateValues[id];
   }
