@@ -10,10 +10,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const server = require("http").createServer(app);
-const socket = require('socket.io')(server);
+const io = require('socket.io')(server);
 
-const ChatHandler = require('./chatHandler');
-const chatHandler = new ChatHandler(socket);
+const WebsocketHandler = require('./websocketHandler');
+const websocketHandler = new WebsocketHandler(io);
 
 // BEGIN pub
 app.get("/api/pubs", (req, res) => {

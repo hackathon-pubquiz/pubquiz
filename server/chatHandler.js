@@ -1,20 +1,17 @@
 class ChatHandler {
-  
-  constructor(socket) {
-    this.socket = socket;
-    
-    this.socket.on('connection', (client) => {
-      client.on('chat_message', this.onIncomingChat);
-      //client.on('disconnect', () => { /* … */ });
-    });
+
+  constructor(websocketHandler) {
+    this.websocketHandler = websocketHandler;
   }
-  
+
   onIncomingChat = (data) => {
     // data.channel
     // data.nickname
-    // data.text
-    
-    console.log('Log!');
+    // data.message
+
+    console.log('Incomming chat:' + JSON.stringify(data));
+
+    this.websocketHandler.sendMessage({eventName: 'rec_message', data});
   };
 };
 

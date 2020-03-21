@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import io from 'socket.io-client';
 import logo from "./logo.svg";
 import "./App.css";
+import ChatWrapper from "./ChatWrapper";
 
 const useFetch = url => {
   const [data, updateData] = useState(undefined);
@@ -27,17 +28,13 @@ class App extends React.Component {
     socket.open();
   }
   
-  onClickHandler = () => {
-    socket.emit('chat_message');
-  };
-  
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            Edit <code onClick={this.onClickHandler}>src/App.js</code> and save to reload.
+            Edit <code>src/App.js</code> and save to reload.
           </p>
           <a
             className="App-link"
@@ -47,6 +44,7 @@ class App extends React.Component {
             >
             Learn React
           </a>
+          <ChatWrapper socket={socket} />
           <Pubs></Pubs>
         </header>
       </div>
