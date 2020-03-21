@@ -20,11 +20,6 @@ class QuizMaster extends React.Component {
     };
   }
 
-  componentDidMount() {
-    let id = this.props.match.params.pubId;
-    let date = this.props.match.params.quizDate;
-  }
-
   onChange = (event) => {
     event.persist();
 
@@ -82,8 +77,15 @@ class QuizMaster extends React.Component {
       },
       body: JSON.stringify({pubId, quizId, date, questions})
     })
-      .then(data => {
-        this.setState({successMessage: 'Daten wurde erfolgreich gepspeichert'})
+      .then(response => response.json())
+      .then(response => {
+        console.log(JSON.stringify(response));
+
+        this.setState({successMessage: 'Daten wurde erfolgreich gepspeichert'});
+
+        if(!quizId) {
+          this.props.history.push(this.props.history.location.pathname + '/' + response.quizId);
+        }
       })
       .catch(error => {
         console.error("Error:", error);
