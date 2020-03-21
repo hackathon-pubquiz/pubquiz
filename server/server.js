@@ -56,9 +56,7 @@ app.get("/api/persons", (req, res) => {
   });
 });
 
-app.get("/api/person/:id", (req, res) =>
-  Person.findByPk(req.params.id).then(result => res.json(result))
-);
+app.get("/api/person/:id", (req, res) => Person.findByPk(req.params.id).then(result => res.json(result)));
 
 app.post("/api/person", (req, res) =>
   Person.create({
@@ -86,9 +84,11 @@ app.get("/api/questions", (req, res) => {
   });
 });
 
-app.get("/api/question/:id", (req, res) =>
-  Question.findByPk(req.params.id).then(result => res.json(result))
-);
+app.get("/api/question/:id", (req, res) => Question.findByPk(req.params.id).then(result => res.json(result)));
+
+app.post("/api/questions", (req, res) => {
+  console.log(JSON.stringify(req.body));
+});
 
 // TODO: post question
 // TODO: put question
@@ -100,19 +100,30 @@ app.get("/api/groups", (req, res) => {
   });
 });
 
-app.get("/api/group/:id", (req, res) =>
-  Group.findByPk(req.params.id).then(result => res.json(result))
-);
+app.get("/api/group/:id", (req, res) => Group.findByPk(req.params.id).then(result => res.json(result)));
+
+app.post("/api/group", async (req, res) => {
+  const groupName = req.body.groupName;
+  const isPublic = req.body.public;
+
+  const [group, created] = await Group.findOrCreate({
+    where: { name: groupName },
+    defaults: {
+      public: isPublic
+    }
+  });
+  console.log(`${isPublic ? "Public" : "Private"} group ${groupName} created!`);
+  res.json({
+    group: group
+  });
+});
 
 app.post("/api/login", async (req, res) => {
   const requested_nickname = req.body.nickname;
-  console.log("Trying to login " + requested_nickname);
   const [person, personCreated] = await Person.findOrCreate({
     where: { nickname: requested_nickname }
   });
 
-  console.log("Found or created person");
-  console.log(person);
   const [session, sessionCreated] = await Session.findOrCreate({
     where: { personId: person.id }
   });

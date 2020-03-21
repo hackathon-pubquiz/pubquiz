@@ -5,7 +5,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 
 export default function Message(props) {
-  let { id, message, ownMessage } = props;
+  let { id, message, ownMessage, showText } = props;
   let icon = (
     <ListItemIcon>
       <Avatar alt={message.nickname} src="/static/images/avatar/1.jpg" />
@@ -14,7 +14,7 @@ export default function Message(props) {
   return (
     <ListItem key={id}>
       {ownMessage ? "" : icon}
-      <ListItemText primary={message.message} />
+      <ListItemText primary={showText && message.message} />
       {ownMessage ? icon : ""}
     </ListItem>
   );

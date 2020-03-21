@@ -1,33 +1,35 @@
 import { login } from "../api";
+import { sessionService } from "redux-react-session";
 
-export const LOGIN_USER = "LOGIN_USER";
 export function requestLoginUser(nickname) {
   return function(dispatch) {
-    return login(nickname).then(json => dispatch(successLoginUser(json)));
+    return login(nickname).then(json => {
+      console.log("Logging in this user");
+      console.log(json);
+      console.log(json.person);
+      sessionService
+        .saveSession({ token: json.token })
+        .then(() => {
+          console.log("Logging in this user");
+          console.log(json.person);
+          sessionService
+            .saveUser(json.person)
+            // .then(() => {
+            //   history.push("/");
+            // })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    });
   };
 }
 
-export const SUCCESS_LOGIN_USER = "SUCCESS_LOGIN_USER";
-function successLoginUser(result) {
-  console.log(result);
-  return {
-    type: SUCCESS_LOGIN_USER,
-    user: result.person
+export function requestLogoutUser() {
+  return function(dispatch) {
+    return () => {
+      sessionService.deleteSession();
+      sessionService.deleteUser();
+      // history.push("/login");
+    };
   };
-}
-
-export function sessionReducer(
-  state = {
-    userId: undefined
-  },
-  action
-) {
-  switch (action.type) {
-    case SUCCESS_LOGIN_USER:
-      return Object.assign({}, state, {
-        user: action.user
-      });
-    default:
-      return state;
-  }
 }
