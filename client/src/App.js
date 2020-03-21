@@ -218,9 +218,6 @@ class App extends React.Component {
             <Route path="/quizmaster/:pubId/:quizId">
               <QuizMaster />
             </Route>
-            <Route path="/aktuellesQuiz">
-              <TeamChooser></TeamChooser>
-            </Route>
             <Route path="/quiz">
               <Quiz></Quiz>
             </Route>
