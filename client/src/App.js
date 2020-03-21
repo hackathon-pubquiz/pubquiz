@@ -97,6 +97,7 @@ class App extends React.Component {
                 ) : (
                   <Tab component={RouterLink} to="/login" label="Login"></Tab>
                 )}
+                <Tab component={RouterLink} to="/login2" label="Login"></Tab>
               </Tabs>
             </AppBar>
           </Grid>
@@ -108,6 +109,9 @@ class App extends React.Component {
               <Switch>
                 <Route path="/login">
                   <LoginStub></LoginStub>
+                </Route>
+                <Route path="/login2">
+                  <LoginScreen></LoginScreen>
                 </Route>
                 <Route path="/pubs">
                   <Pubs></Pubs>
