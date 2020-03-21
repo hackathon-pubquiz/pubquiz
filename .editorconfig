@@ -8,8 +8,8 @@ charset = utf-8
 indent_style = space
 indent_size = 2
 
-quote_type = single
+quote_type = double
 
-max_line_length = 80
+max_line_length = 120
 
 trim_trailing_whitespace = true
