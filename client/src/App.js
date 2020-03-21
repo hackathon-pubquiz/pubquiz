@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Link as RouterLink, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Link as RouterLink,
+  Route,
+  Switch
+} from "react-router-dom";
 import io from "socket.io-client";
 import ChatWrapper from "./ChatWrapper";
 import Groups from "./Groups";
@@ -24,7 +29,10 @@ function LoginStub(props) {
   return (
     <div>
       Login:
-      <input onChange={e => setNickname(e.target.value)} value={nickname}></input>
+      <input
+        onChange={e => setNickname(e.target.value)}
+        value={nickname}
+      ></input>
       <button onClick={handleLogin}>Go</button>
     </div>
   );
@@ -40,7 +48,7 @@ class App extends React.Component {
       <Router>
         <CssBaseline />
         <AppBar position="static">
-          <Tabs component="nav">
+          <Tabs component="nav" value={false}>
             <Tab component={RouterLink} to="/login" label="Login"></Tab>
             <Tab component={RouterLink} to="/pubs" label="Pubs"></Tab>
             <Tab component={RouterLink} to="/groups" label="Gruppen"></Tab>
