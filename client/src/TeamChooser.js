@@ -1,12 +1,14 @@
-import React from "react";
 import {
-  Typography,
-  TextField,
-  Switch,
-  Button,
   Box,
-  FormControlLabel
+  Button,
+  FormControlLabel,
+  Link,
+  Switch,
+  TextField,
+  Typography
 } from "@material-ui/core";
+import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 const TeamChooser = props => {
   return (
@@ -31,7 +33,9 @@ const TeamChooser = props => {
       </form>
 
       <Typography>
-        Alleine hier? Schließe dich einem anderen Team an! TODO: Link
+        <Link component={RouterLink} to="/groups">
+          Alleine hier? Schließe dich einem anderen Team an!
+        </Link>
       </Typography>
     </Box>
   );

@@ -66,15 +66,13 @@ sequelize.sync().then(() => {
 });
 
 function seedDatabase() {
-  const groups = ["Scotty doesn't know", "Kein Plan"].map(group => ({
-    name: group,
-    public: true
-  }));
-
   Pub.create(
     {
       name: "The Snug",
-      groups: groups
+      groups: [
+        { name: "Quizzer", public: true },
+        { name: "Krasse Hacker", public: false }
+      ]
     },
     { include: [Group] }
   ).then(() => {
