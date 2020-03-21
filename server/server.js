@@ -167,6 +167,23 @@ app.post("/api/group", async (req, res) => {
   });
 });
 
+// Expected body: { userId: <id>, groupId: <id>}
+app.post("/api/group/join", async (req, res, next) => {
+  const userId = req.body.userId;
+  const groupId = req.body.groupId;
+
+  Group.findByPk(groupId).then(group => {
+    if (!group) {
+      next("Group does not exist");
+    } else if (group.public) {
+      group.addPerson(userId);
+      res.send();
+    } else {
+      next("Group was not public");
+    }
+  });
+});
+
 app.post("/api/login", async (req, res) => {
   const requested_nickname = req.body.nickname;
   const [person, personCreated] = await Person.findOrCreate({
