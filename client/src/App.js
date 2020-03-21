@@ -9,6 +9,7 @@ import io from "socket.io-client";
 import ChatWrapper from "./ChatWrapper";
 import Groups from "./Groups";
 import Persons from "./Persons";
+import QuizMaster from "./pages/QuizMaster"
 import Player from "./Player";
 import { darkTheme } from "./Themes";
 import { withStyles, MuiThemeProvider } from "@material-ui/core";
