@@ -43,7 +43,7 @@ class Player extends Component {
     const startPlaying = () => {
         this.player.seekTo(parseFloat(0))
         this.setState({ playing: true });
-        setInterval(updateProgess, 200);
+        this.timer = setInterval(updateProgess, 200);
     }
 
     const updateProgess = () => {
@@ -53,7 +53,7 @@ class Player extends Component {
         if (newProgress >= 100){
             this.setState({ playing: false, progress: 100})
             return () => {
-                clearInterval(timer);
+                clearInterval(this.timer);
             };
         }
     } 
