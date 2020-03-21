@@ -22,7 +22,7 @@ const styles = theme => ({
   }
 });
 
-function LoginScreen(props) {
+function RegisterTeamScreen(props) {
   const [public_, setPublic] = useState(false);
   const [groupName, setGroupName] = useState("");
   const dispatch = useDispatch();
@@ -67,4 +67,4 @@ function LoginScreen(props) {
   );
 }
 
-export default withStyles(styles)(LoginScreen);
+export default withStyles(styles)(RegisterTeamScreen);

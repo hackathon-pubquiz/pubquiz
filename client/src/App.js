@@ -10,7 +10,7 @@ import QuizMaster from "./pages/QuizMaster";
 import Player from "./Player";
 import { darkTheme } from "./Themes";
 import { withStyles, MuiThemeProvider } from "@material-ui/core";
-import LoginScreen from "./components/LoginScreen";
+import LoginScreen from "./components/RegisterTeamScreen";
 
 import { useStore } from "react-redux";
 import { useDispatch } from "react-redux";
