@@ -11,6 +11,9 @@ const WebRTC = () => {
     const [partners, setPartners] = useState([]);
 
     useEffect(() => {
+        //const stream = navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        //setMediaStream(stream)
+
         const peer = new Peer();
         peer.on('open', function (id) {
             setMyID(id)
@@ -31,9 +34,30 @@ const WebRTC = () => {
                 });
             });
         });
+        peer.on('call', (call) => {
+            console.log(call);
+
+            call.answer();
+            call.on('error', console.log);
+            call.on('stream', (stream) => {
+                console.log('received audio stream, strarting playing');
+                appendAudioStream(stream)
+            });
+
+        });
         setPeer(peer)
     }, []);
 
+    const appendAudioStream = (stream) => {
+        let audio = document.createElement('video');
+        audio.srcObject = stream;
+        audio.onloadedmetadata = () => {
+            console.log('now playing the audio');
+            audio.play();
+        };
+        let parentAudio = document.getElementById('parentAudio');
+        parentAudio.appendChild(audio)
+    };
 
     const add_partner = (p) => {
         const connection = peer.connect(p);
@@ -67,6 +91,43 @@ const WebRTC = () => {
         setMessageContent('')
     };
 
+    const callPartner = () => {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            console.log('getUserMedia supported.');
+            navigator.mediaDevices.getUserMedia(
+                // constraints - only audio needed for this app
+                {
+                    audio: true,
+                    video: true
+                })
+
+                // Success callback
+                .then(function (stream) {
+                    console.log(stream.getAudioTracks());
+                    partners.forEach((p) => {
+                        let call = peer.call(p.peerId, stream);
+                        console.log('Start streaming');
+                        console.log(call);
+                        call.on('error', console.log);
+                        call.on('stream', (stream) => {
+                            console.log('received audio stream, strarting playing');
+                            appendAudioStream(stream);
+                        });
+                    });
+
+                })
+
+                // Error callback
+                .catch(function (err) {
+                        console.log('The following getUserMedia error occured: ' + err);
+                    }
+                );
+        } else {
+            console.log('getUserMedia not supported on your browser!');
+        }
+
+    };
+
     const partnerContent = partners.map((e) => {
         return <div>{e.peerId}</div>
     });
@@ -87,7 +148,11 @@ const WebRTC = () => {
                 <input value={messageContent} onChange={(e) => setMessageContent(e.target.value)}/>
                 <button onClick={() => connect_send(messageContent)}>Send Message</button>
             </div>
+            <div>
+                <button onClick={() => callPartner()}>Call group</button>
+            </div>
             <div>{computeHistory}</div>
+            <audio id={'parentAudio'}/>
         </div>
     );
 };
