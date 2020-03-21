@@ -33,7 +33,10 @@ const socket = io({
   autoConnect: false
 });
 
-const drawerWidth = 240;
+const drawerClosedWidth = theme => {
+  return theme.spacing(10);
+};
+const drawerOpenWidth = 240;
 
 function LoginStub(props) {
   const [nickname, setNickname] = useState("");
@@ -53,6 +56,13 @@ function LoginStub(props) {
   );
 }
 
+function drawerTransition(theme, attributes, leaving) {
+  return theme.transitions.create(attributes, {
+    easing: theme.transitions.easing.sharp,
+    duration: leaving ? theme.transitions.duration.leavingScreen : theme.transitions.duration.enteringScreen
+  });
+}
+
 const styles = theme => ({
   main: {
     background: theme.palette.background.default,
@@ -63,41 +73,37 @@ const styles = theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+    transition: drawerTransition(theme, ["width", "margin"], true)
   },
   appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+    marginLeft: drawerOpenWidth,
+    width: `calc(100% - ${drawerOpenWidth}px)`,
+    transition: drawerTransition(theme, ["width", "margin"], false)
   },
   drawer: {
-    width: drawerWidth,
+    width: drawerOpenWidth,
     flexShrink: 0,
     whiteSpace: "nowrap"
   },
   drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+    width: drawerOpenWidth,
+    transition: drawerTransition(theme, "width", false)
   },
   drawerClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
+    transition: drawerTransition(theme, "width", true),
     overflowX: "hidden",
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1
-    }
+    width: drawerClosedWidth(theme)
+  },
+  content: {
+    paddingTop: theme.spacing(9)
+  },
+  contentDrawerClosed: {
+    paddingLeft: drawerClosedWidth(theme) + theme.spacing(2),
+    transition: drawerTransition(theme, "padding-left", false)
+  },
+  contentDrawerOpen: {
+    paddingLeft: drawerOpenWidth + theme.spacing(2),
+    transition: drawerTransition(theme, "padding-left", true)
   }
 });
 
@@ -190,36 +196,33 @@ class App extends React.Component {
 
           <ChatWrapper socket={socket} open={open} />
         </Drawer>
-
-        <Grid container direction="column" className={classes.main}>
-          <Grid item container justify="space-evenly" alignItems="stretch">
-            <Grid item>
-              <Switch>
-                <Route path="/login">
-                  <LoginStub></LoginStub>
-                </Route>
-                <Route path="/login2">
-                  <LoginScreen></LoginScreen>
-                </Route>
-                <Route path="/pubs">
-                  <Pubs></Pubs>
-                </Route>
-                <Route path="/groups">
-                  <Groups></Groups>
-                </Route>
-                <Route path="/people">
-                  <Persons></Persons>
-                </Route>
-                <Route path="/player">
-                  <Player></Player>
-                </Route>
-                <Route path="/aktuellesQuiz">
-                  <TeamChooser></TeamChooser>
-                </Route>
-              </Switch>
-            </Grid>
-          </Grid>
-        </Grid>
+        <main
+          className={clsx(classes.content, { [classes.contentDrawerOpen]: open, [classes.contentDrawerClosed]: !open })}
+        >
+          <Switch>
+            <Route path="/login">
+              <LoginStub></LoginStub>
+            </Route>
+            <Route path="/login2">
+              <LoginScreen></LoginScreen>
+            </Route>
+            <Route path="/pubs">
+              <Pubs></Pubs>
+            </Route>
+            <Route path="/groups">
+              <Groups></Groups>
+            </Route>
+            <Route path="/people">
+              <Persons></Persons>
+            </Route>
+            <Route path="/player">
+              <Player></Player>
+            </Route>
+            <Route path="/aktuellesQuiz">
+              <TeamChooser></TeamChooser>
+            </Route>
+          </Switch>
+        </main>
       </Router>
     );
   }

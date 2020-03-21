@@ -67,7 +67,13 @@ class ChatWrapper extends React.Component {
       <div>
         <List dense={true}>
           {messageLog.map((m, i) => (
-            <Message message={m} key={i} id={i} showText={open} ownMessage={m.nickname == ownNickname}></Message>
+            <Message
+              message={m}
+              key={i}
+              id={i}
+              showText={this.props.open}
+              ownMessage={m.nickname == ownNickname}
+            ></Message>
           ))}
         </List>
         {this.props.open && (
