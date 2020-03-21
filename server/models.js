@@ -1,5 +1,8 @@
 const { Sequelize, Model } = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:");
+const sequelize = new Sequelize({
+  dialect: "sqlite",
+  storage: "database.sqlite"
+});
 
 class Pub extends Model {}
 Pub.init(
@@ -61,8 +64,10 @@ Session.belongsTo(Person);
 sequelize.sync().then(() => {
   console.log("Database initialized");
 
-  seedDatabase();
-  // TODO seed some entries
+  Pub.findAll().then(result => {
+    console.log(result);
+    if (result.length === 0) seedDatabase();
+  });
 });
 
 function seedDatabase() {
