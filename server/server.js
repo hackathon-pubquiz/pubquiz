@@ -90,6 +90,10 @@ app.get("/api/question/:id", (req, res) =>
   Question.findByPk(req.params.id).then(result => res.json(result))
 );
 
+app.post("/api/questions", (req, res) => {
+  console.log(JSON.stringify(req.body));
+});
+
 // TODO: post question
 // TODO: put question
 // TODO: delete question?

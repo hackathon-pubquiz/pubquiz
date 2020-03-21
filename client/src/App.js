@@ -9,6 +9,7 @@ import io from "socket.io-client";
 import ChatWrapper from "./ChatWrapper";
 import Groups from "./Groups";
 import Persons from "./Persons";
+import QuizMaster from "./pages/QuizMaster"
 import Player from "./Player";
 
 import { useStore } from "react-redux";
@@ -75,6 +76,7 @@ class App extends React.Component {
             <Tab component={RouterLink} to="/pubs" label="Pubs"></Tab>
             <Tab component={RouterLink} to="/groups" label="Gruppen"></Tab>
             <Tab component={RouterLink} to="/people" label="Personen"></Tab>
+            <Tab component={RouterLink} to="/quizmaster" label="Quizmaster"></Tab>
             <Tab component={RouterLink} to="/player" label="Player"></Tab>
             <Tab
               component={RouterLink}
@@ -105,6 +107,9 @@ class App extends React.Component {
               </Route>
               <Route path="/people">
                 <Persons></Persons>
+              </Route>
+              <Route path="/quizmaster/:pubId/:quizDate">
+                <QuizMaster />
               </Route>
               <Route path="/player">
                 <Player></Player>
