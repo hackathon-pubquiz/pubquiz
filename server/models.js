@@ -1,7 +1,7 @@
-const { Sequelize, Model } = require("sequelize");
+const { Sequelize, Model } = require('sequelize');
 const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: "database.sqlite"
+  dialect: 'sqlite',
+  storage: 'database.sqlite'
 });
 
 class Pub extends Model {}
@@ -10,7 +10,7 @@ Pub.init(
     name: Sequelize.STRING,
     donationUrl: Sequelize.STRING
   },
-  { sequelize, modelName: "pub" }
+  { sequelize, modelName: 'pub' }
 );
 
 class Group extends Model {}
@@ -21,7 +21,7 @@ Group.init(
   },
   {
     sequelize,
-    modelName: "group"
+    modelName: 'group'
   }
 );
 
@@ -32,7 +32,7 @@ Person.init(
   },
   {
     sequelize,
-    modelName: "person"
+    modelName: 'person'
   }
 );
 
@@ -48,7 +48,7 @@ Question.init(
   },
   {
     sequelize,
-    modelName: "question"
+    modelName: 'question'
   }
 );
 
@@ -58,14 +58,13 @@ Pub.hasMany(Group);
 Person.belongsTo(Group);
 
 class Session extends Model {}
-Session.init({}, { sequelize, modelName: "session" });
+Session.init({}, { sequelize, modelName: 'session' });
 Session.belongsTo(Person);
 
 sequelize.sync().then(() => {
-  console.log("Database initialized");
+  console.log('Database initialized');
 
   Pub.findAll().then(result => {
-    console.log(result);
     if (result.length === 0) seedDatabase();
   });
 });
@@ -73,15 +72,15 @@ sequelize.sync().then(() => {
 function seedDatabase() {
   Pub.create(
     {
-      name: "The Snug",
+      name: 'The Snug',
       groups: [
-        { name: "Quizzer", public: true },
-        { name: "Krasse Hacker", public: false }
+        { name: 'Quizzer', public: true },
+        { name: 'Krasse Hacker', public: false }
       ]
     },
     { include: [Group] }
   ).then(() => {
-    ["User1", "User2", "User3"].forEach(user => {
+    ['User1', 'User2', 'User3'].forEach(user => {
       Person.create({
         nickname: user,
         groupId: 1
