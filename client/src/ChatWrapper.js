@@ -1,6 +1,11 @@
 import React from "react";
 import Message from "./TextChat/Message";
 import { List } from "@material-ui/core";
+import { connect } from "react-redux";
+
+const mapStateToProps = state => {
+  return { usedId: state.sessionReducer.userId };
+};
 
 class ChatWrapper extends React.Component {
   constructor(props) {
@@ -73,4 +78,6 @@ class ChatWrapper extends React.Component {
   }
 }
 
-export default ChatWrapper;
+const ChatWrapperContainer = connect(mapStateToProps, {})(ChatWrapper);
+
+export default ChatWrapperContainer;
