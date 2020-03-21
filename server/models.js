@@ -36,21 +36,39 @@ Person.init(
   }
 );
 
+class Quiz extends Model {}
+Quiz.init(
+  {
+    date: Sequelize.DATE,
+    state: Sequelize.ENUM('running', 'past', 'future'),
+  },
+  {
+    sequelize,
+    modelName: "quiz"
+  }
+);
+
 class Question extends Model {}
 Question.init(
   {
     type: Sequelize.STRING,
-    date: Sequelize.DATE,
     round: Sequelize.INTEGER,
     positionInround: Sequelize.INTEGER,
     question: Sequelize.STRING,
-    questionExternalLink: Sequelize.STRING
+    questionExternalLink: Sequelize.STRING,
+    correctAnswer: Sequelize.STRING,
   },
   {
     sequelize,
     modelName: 'question'
   }
 );
+
+Question.belongsTo(Quiz);
+Quiz.belongsTo(Pub);
+
+Group.belongsToMany(Quiz, {through: 'QuizGroups'});
+Quiz.belongsToMany(Group, {through: 'QuizGroups'});
 
 Pub.hasMany(Group);
 // Group.belongsTo(Pub);
@@ -92,6 +110,7 @@ function seedDatabase() {
 module.exports = {
   Pub,
   Group,
+  Quiz,
   Question,
   Person,
   Session

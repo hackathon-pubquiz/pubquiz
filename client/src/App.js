@@ -10,7 +10,7 @@ import QuizMaster from "./pages/QuizMaster";
 import Player from "./Player";
 import { darkTheme } from "./Themes";
 import { withStyles, MuiThemeProvider } from "@material-ui/core";
-import LoginScreen from "./components/LoginScreen";
+import LoginScreen from "./components/RegisterTeamScreen";
 import Quiz from "./Quiz/quiz";
 
 import { useStore } from "react-redux";
@@ -219,6 +219,9 @@ class App extends React.Component {
             </Route>
             <Route path="/player">
               <Player></Player>
+            </Route>
+            <Route path="/quizmaster/:pubId/:quizId">
+              <QuizMaster />
             </Route>
             <Route path="/aktuellesQuiz">
               <TeamChooser></TeamChooser>
