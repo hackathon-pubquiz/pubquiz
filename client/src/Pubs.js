@@ -25,7 +25,7 @@ class Pubs extends Component {
 
   render() {
     const { error, isLoaded, pubs } = this.state;
-    const pubItems = pubs.map(pub => <div>{pub.name}</div>);
+    const pubItems = pubs.map(pub => <div key={pub.id}>{pub.name}</div>);
 
     if (error) return <div>Error: {error.message}</div>;
     else if (!isLoaded) return <div>Loading...</div>;

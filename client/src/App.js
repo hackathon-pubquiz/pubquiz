@@ -61,6 +61,7 @@ class App extends React.Component {
         <CssBaseline />
         <AppBar position="static">
           <Tabs component="nav">
+            <Tab component={RouterLink} to="/login" label="Login"></Tab>
             <Tab component={RouterLink} to="/pubs" label="Pubs"></Tab>
             <Tab component={RouterLink} to="/groups" label="Gruppen"></Tab>
             <Tab component={RouterLink} to="/people" label="Personen"></Tab>
