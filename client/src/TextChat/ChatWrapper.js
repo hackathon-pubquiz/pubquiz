@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import {withStyles} from "@material-ui/core/styles";
 import { ReactComponent as CocktailIcon } from "../img/cocktail.svg";
 import { ReactComponent as PintIcon } from "../img/pint.svg";
+import { withTranslation } from 'react-i18next';
 
 const styles = theme => ({
   root: {},
@@ -94,7 +95,7 @@ class ChatWrapper extends React.Component {
 
   render() {
     let { messageLog } = this.state;
-    let {classes} = this.props;
+    let {classes, t} = this.props;
     let ownNickname = "TODO Nick";
     return (
       <div>
@@ -106,7 +107,7 @@ class ChatWrapper extends React.Component {
               onClick={this.handleCheer}
               className={classes.controlElement}
             >
-              Prost!
+              {t("prost")}
               <CocktailIcon className={clsx(classes.icon, classes.leftIcon)} />
               <PintIcon className={clsx(classes.icon, classes.rightIcon)} />
             </Button>
@@ -128,7 +129,7 @@ class ChatWrapper extends React.Component {
             <form onSubmit={this.handleSubmit}>
               <TextField
                 fullWidth
-                label="Sag was!"
+                label={t("chatLabel")}
                 onChange={this.handleChange}
                 className={this.props.classes.controlElement}
               />
@@ -140,6 +141,6 @@ class ChatWrapper extends React.Component {
   }
 }
 
-const ChatWrapperContainer = connect(mapStateToProps, {})(withStyles(styles)(ChatWrapper));
+const ChatWrapperContainer = connect(mapStateToProps, {})(withTranslation()(withStyles(styles)(ChatWrapper)));
 
 export default ChatWrapperContainer;
