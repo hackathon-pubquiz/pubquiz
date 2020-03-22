@@ -39,6 +39,10 @@ function Quiz(props) {
     dispatch(setActiveQuestion(step));
   };
 
+  const handleTip = () => {
+    window.open("https://www.sandbox.paypal.com/us/signin", "Paypal");
+  }
+
   return (
     <React.Fragment>
       <SwipeableViews axis="x" index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
@@ -69,6 +73,10 @@ function Quiz(props) {
           </Button>
         }
       />
+      <Button 
+        variant="contained" onClick={handleTip}>
+          Trinkgeld
+        </Button>
     </React.Fragment>
   );
 }
