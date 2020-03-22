@@ -38,7 +38,7 @@ export function quizReducer(
         activeQuestion: action.activeQuestion
       });
     case UPDATE_ANSWER_IN_STORE:
-      const updatedQuestions = [];
+      let updatedQuestions = [];
       for (const idx in state.questions) {
         const question = state.questions[idx];
 
@@ -52,13 +52,30 @@ export function quizReducer(
         }
       }
       return Object.assign({}, state, { questions: updatedQuestions });
-    case "quiz_started":
+    case "quiz_started": // From Websocket
       const questions = action.data.questions.slice();
 
       return Object.assign({}, state, {
         quizId: action.data.id,
         questions: questions
       });
+    case "update_answer_from_ws": // From Websocket
+      console.log(action);
+      let updatedQuestions2 = [];
+      // for (const idx in state.questions) {
+      //   const question = state.questions[idx];
+
+      //   if (question.questionId == action.questionId) {
+      //     const modifiedQuestion = Object.assign({}, question, {
+      //       answer: action.answer
+      //     });
+      //     updatedQuestions.push(modifiedQuestion);
+      //   } else {
+      //     updatedQuestions.push(question);
+      //   }
+      // }
+      // return Object.assign({}, state, { questions: updatedQuestions });
+      return state;
     default:
       return state;
   }
