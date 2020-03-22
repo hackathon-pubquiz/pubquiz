@@ -8,6 +8,42 @@ const styles = theme => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  icon: {
+    'font-size': '50vmin',
+  },
+  animContainer: {
+    display: 'flex',
+    'flex-direction': 'row',
+  },
+  animLeft: {
+    'animation-duration': '1s',
+    'animation-name': '$clinkLeft',
+  },
+  animRight: {
+    'animation-duration': '1s',
+    'animation-name': '$clinkRight',
+  },
+
+  '@keyframes clinkLeft': {
+    from: {
+      transform: 'translateX(-20%) rotate(0)',
+      opacity: '40%',
+    },
+    to: {
+      transform: 'translateX(10%) rotate(10deg)',
+      opacity: '100%',
+    }
+  },
+  '@keyframes clinkRight': {
+    from: {
+      transform: 'translateX(20%) rotate(0)',
+      opacity: '40%',
+    },
+    to: {
+      transform: 'translateX(-10%) rotate(-10deg)',
+      opacity: '100%',
+    }
+  }
 });
 
 class CheerBackdrop extends React.Component {
@@ -17,7 +53,7 @@ class CheerBackdrop extends React.Component {
   }
 
   componentDidMount() {
-    let { socket } = this.props;
+    let {socket} = this.props;
 
     socket.on("rec_cheer", this.handleIncomingCheer);
   }
@@ -32,10 +68,20 @@ class CheerBackdrop extends React.Component {
   };
 
   render() {
+    let {classes} = this.props;
+    let {open} = this.state;
+
     return (
       <div>
-        <Backdrop className={this.props.classes.backdrop} open={this.state.open} onClick={this.handleClose}>
-          <LocalBar style={{ fontSize: '80vh' }}/>
+        <Backdrop className={classes.backdrop} open={open} onClick={this.handleClose}>
+          <div className={classes.animContainer}>
+            <div className={open ? classes.animLeft : null}>
+              <LocalBar className={classes.icon}/>
+            </div>
+            <div className={open ? classes.animRight : null}>
+              <LocalBar className={classes.icon}/>
+            </div>
+          </div>
         </Backdrop>
       </div>
     );
