@@ -55,14 +55,14 @@ const styles = theme => ({
 });
 
 function Header(props) {
-  const { classes } = props;
+  const { classes, pubName } = props;
 
   return (
     <>
       <header className={classes.header}>
         <BeerIcon className={classes.beerIcon} />
         <h1 className={classes.headline}>Pub Quiz</h1>
-        <h3>The Snug Kaiserslautern</h3>
+        <h3>{pubName}</h3>
       </header>
       <div className={classes.wedge} />
     </>
