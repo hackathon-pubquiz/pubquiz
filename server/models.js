@@ -64,6 +64,20 @@ Question.init(
   }
 );
 
+class QuestionSubmission extends Model {}
+QuestionSubmission.init(
+  {
+    answer: Sequelize.STRING
+  },
+  {
+    sequelize,
+    modelName: "questionSubmission"
+  }
+);
+
+QuestionSubmission.belongsTo(Question);
+QuestionSubmission.belongsTo(Group);
+
 Question.belongsTo(Quiz);
 Quiz.belongsTo(Pub);
 
@@ -112,6 +126,7 @@ module.exports = {
   Group,
   Quiz,
   Question,
+  QuestionSubmission,
   Person,
   Session
 };

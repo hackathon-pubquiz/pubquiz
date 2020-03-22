@@ -16,6 +16,14 @@ import Quiz from "./Quiz/quiz";
 import HostQuizzes from "./components/HostQuizzes";
 import HostQuiz from "./components/HostQuiz";
 
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/rootReducer.js";
+import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { sessionService } from "redux-react-session";
+import createSocketIoMiddleware from "redux-socket.io";
+
 import { connect, useDispatch } from "react-redux";
 import { requestLoginUser, requestLogoutUser } from "./redux/sessions";
 import Pubs from "./Pubs";
@@ -172,8 +180,8 @@ class App extends React.Component {
             {this.props.authenticated ? (
               profileElement(this.props.loggedInUser.nickname)
             ) : (
-                <Tab component={RouterLink} to="/login/1" label="Login"></Tab>
-              )}
+              <Tab component={RouterLink} to="/login/1" label="Login"></Tab>
+            )}
             <Tab component={RouterLink} to="/login2/1" label="Login"></Tab>
             <Tab component={RouterLink} to="/quiz/1" label="Quiz"></Tab>
           </Tabs>
@@ -198,7 +206,10 @@ class App extends React.Component {
           <ChatWrapper socket={socket} open={open} />
         </Drawer>
         <main
-          className={clsx(classes.content, { [classes.contentDrawerOpen]: open, [classes.contentDrawerClosed]: !open })}
+          className={clsx(classes.content, {
+            [classes.contentDrawerOpen]: open,
+            [classes.contentDrawerClosed]: !open
+          })}
         >
           <Switch>
             <Route path="/login/:pubId">
@@ -219,12 +230,13 @@ class App extends React.Component {
             <Route path="/quizmaster/:pubId/:quizId?">
               <QuizMaster />
             </Route>
-            <Route path="/host/quiz/:id" ><HostQuiz socket={socket} /></Route>
+            <Route path="/host/quiz/:id">
+              <HostQuiz socket={socket} />
+            </Route>
             <Route path="/host/quizzes/:pubId" component={HostQuizzes} />
             <Route path="/quiz/:quizId">
-              <Quiz></Quiz>
+              <Quiz socket={socket}></Quiz>
             </Route>
-
           </Switch>
         </main>
       </Router>
@@ -252,4 +264,17 @@ function ThemeWrapper() {
   );
 }
 
-export default ThemeWrapper;
+function ReduxWrapper() {
+  const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+  sessionService.initSessionService(store);
+
+  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
+
+  return (
+    <Provider store={store}>
+      <ThemeWrapper></ThemeWrapper>
+    </Provider>
+  );
+}
+
+export default ReduxWrapper;
