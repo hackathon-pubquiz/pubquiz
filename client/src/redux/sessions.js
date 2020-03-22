@@ -1,22 +1,25 @@
-import { login } from "../api";
-import { sessionService } from "redux-react-session";
+import {fetchGroup, login} from "../api";
+import {sessionService} from "redux-react-session";
 
-export function requestLoginUser(nickname) {
+export function requestLoginUser(pubId, nickname) {
   return function(dispatch) {
-    return login(nickname).then(json => {
+    return login(pubId, nickname).then(json => {
       console.log("Logging in this user");
       console.log(json);
       console.log(json.person);
       sessionService
-        .saveSession({ token: json.token })
+        .saveSession({token: json.token})
         .then(() => {
           console.log("Logging in this user");
           console.log(json.person);
-          sessionService
-            .saveUser(json.person)
-            // .then(() => {
+          sessionService.saveUser(json.person).then(() => {
+            //Fetches information about the group the user is in
+            //TODO: Needs to be saved in the session
+            fetchGroup(json.person.groupId).then((json) => {
+              console.log(json)
+            })
             //   history.push("/");
-            // })
+          })
             .catch(err => console.error(err));
         })
         .catch(err => console.error(err));
@@ -25,7 +28,7 @@ export function requestLoginUser(nickname) {
 }
 
 export function requestLogoutUser() {
-  return function(dispatch) {
+  return function (dispatch) {
     return () => {
       sessionService.deleteSession();
       sessionService.deleteUser();

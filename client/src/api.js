@@ -1,5 +1,5 @@
-export function login(nickname) {
-  const payload = { nickname: nickname };
+export function login(pubId, nickname) {
+  const payload = { pubId, nickname };
   return fetch("/api/login", {
     method: "POST",
     headers: {
@@ -9,8 +9,14 @@ export function login(nickname) {
   }).then(response => response.json());
 }
 
-export function createGroup(groupName, public_) {
-  const payload = { groupName: groupName, public: public_ };
+export function fetchGroup(groupID) {
+  return fetch("/api/group/" + groupID.toString(), {
+    method: "GET",
+  }).then(response => response.json());
+}
+
+export function createGroup(pubId, groupName, public_) {
+  const payload = { pubId, groupName, public: public_ };
   return fetch("/api/group", {
     method: "POST",
     headers: {

@@ -13,6 +13,12 @@ class ChatHandler {
 
     this.websocketHandler.sendMessage({socket: ownSocket, room: null, eventName: 'rec_message', data});
   };
+
+  onIncomingCheer = (ownSocket, data) => {
+    this.websocketHandler.sendMessage({socket: ownSocket, room: null, eventName: 'rec_cheer'});
+    // self send the cheer ;)
+    this.websocketHandler.sendMessage({socket: ownSocket, room: ownSocket.id, eventName: 'rec_cheer'});
+  };
 };
 
 module.exports = ChatHandler;

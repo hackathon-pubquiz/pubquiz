@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withStyles } from "@material-ui/core";
 import ReactPlayer from "react-player";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/core/Slider";
@@ -8,7 +9,10 @@ import PlayArrow from "@material-ui/icons/PlayArrow";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-class Player extends Component {
+const styles = theme => ({
+});
+
+class AudioQuestion extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,6 +29,8 @@ class Player extends Component {
   };
 
   render() {
+    const { question } = this.props;
+    console.log(question)
     const { volume, volumeOn, playing, progress } = this.state;
 
     const changeVol = (event, vol) => {
@@ -65,36 +71,28 @@ class Player extends Component {
       <div className="player_root">
         <ReactPlayer
           ref={this.ref}
-          url="https://www.youtube.com/watch?v=z9Uz1icjwrM"
+          url={question.questionExternalLink}
           playing={playing}
           height="0px"
           volume={getVolume()}
         />
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <IconButton
-              aria-label="delete"
-              onClick={startPlaying}
-              disabled={playing}
-            >
+        <Grid container justify="center" alignItems="center">
+          <Grid item xs={1}>
+            <IconButton aria-label="delete" onClick={startPlaying} disabled={playing}>
               <PlayArrow />
             </IconButton>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <LinearProgress variant="determinate" value={progress} />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={1}>
             <IconButton checked={volumeOn} onClick={toggleVolume}>
               {!volumeOn && <VolumeOff />}
               {volumeOn && <VolumeUp />}
             </IconButton>
           </Grid>
-          <Grid item xs={4}>
-            <Slider
-              value={volume}
-              onChange={changeVol}
-              aria-labelledby="continuous-slider"
-            />
+          <Grid item xs={2}>
+            <Slider value={volume} onChange={changeVol} aria-labelledby="continuous-slider" color="secondary"/>
           </Grid>
         </Grid>
       </div>
@@ -102,4 +100,4 @@ class Player extends Component {
   }
 }
 
-export default Player;
+export default withStyles(styles)(AudioQuestion);

@@ -8,9 +8,9 @@ function successCreateGroup(json) {
   };
 }
 
-export function requestGroupCreation(groupName, public_) {
+export function requestGroupCreation(pubId, groupName, public_) {
   return function(dispatch) {
-    return createGroup(groupName, public_).then(json => dispatch(successCreateGroup(json)));
+    return createGroup(pubId, groupName, public_).then(json => dispatch(successCreateGroup(json)));
   };
 }
 

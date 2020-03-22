@@ -1,8 +1,32 @@
 import React from "react";
+import clsx from "clsx";
 import Message from "./Message";
-import { List } from "@material-ui/core";
+import { TextField, List, Button } from "@material-ui/core";
+import { LocalBar} from '@material-ui/icons';
 import { connect } from "react-redux";
-import TextField from "@material-ui/core/TextField";
+import {withStyles} from "@material-ui/core/styles";
+import { ReactComponent as CocktailIcon } from "../img/cocktail.svg";
+import { ReactComponent as PintIcon } from "../img/pint.svg";
+
+const styles = theme => ({
+  root: {},
+  control: {
+    margin: theme.spacing(2),
+  },
+  controlElement: {
+    'margin-top': theme.spacing(2),
+  },
+  icon: {
+    'width': '1.5rem',
+    'height': '1.5rem',
+  },
+  leftIcon: {
+    transform: 'rotate(10deg)',
+  },
+  rightIcon: {
+    transform: 'rotate(-10deg)',
+  }
+});
 
 const mapStateToProps = state => {
   return { usedId: state.session.user };
@@ -45,6 +69,14 @@ class ChatWrapper extends React.Component {
     this.setState({ message: event.target.value });
   };
 
+  handleCheer = event => {
+    event.preventDefault();
+
+    let channel = "TODO Channel";
+
+    this.props.socket.emit("send_cheer", { channel });
+  };
+
   handleSubmit = event => {
     event.preventDefault();
 
@@ -62,9 +94,24 @@ class ChatWrapper extends React.Component {
 
   render() {
     let { messageLog } = this.state;
+    let {classes} = this.props;
     let ownNickname = "TODO Nick";
     return (
       <div>
+        {this.props.open ? (
+          <div className={classes.control}>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={this.handleCheer}
+              className={classes.controlElement}
+            >
+              Prost!
+              <CocktailIcon className={clsx(classes.icon, classes.leftIcon)} />
+              <PintIcon className={clsx(classes.icon, classes.rightIcon)} />
+            </Button>
+          </div>
+        ) : null}
         <List dense={true}>
           {messageLog.map((m, i) => (
             <Message
@@ -72,20 +119,27 @@ class ChatWrapper extends React.Component {
               key={i}
               id={i}
               showText={this.props.open}
-              ownMessage={m.nickname == ownNickname}
-            ></Message>
+              ownMessage={m.nickname === ownNickname}
+            />
           ))}
         </List>
         {this.props.open && (
-          <form onSubmit={this.handleSubmit}>
-            <TextField label="Sag was!" onChange={this.handleChange} />
-          </form>
+          <div className={this.props.classes.control}>
+            <form onSubmit={this.handleSubmit}>
+              <TextField
+                fullWidth
+                label="Sag was!"
+                onChange={this.handleChange}
+                className={this.props.classes.controlElement}
+              />
+            </form>
+          </div>
         )}
       </div>
     );
   }
 }
 
-const ChatWrapperContainer = connect(mapStateToProps, {})(ChatWrapper);
+const ChatWrapperContainer = connect(mapStateToProps, {})(withStyles(styles)(ChatWrapper));
 
 export default ChatWrapperContainer;

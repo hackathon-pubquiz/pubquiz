@@ -55,14 +55,14 @@ const stylesFull = theme => ({
 });
 
 const HeaderFull = withStyles(stylesFull)(props => {
-  const { classes } = props;
+  const { classes, pubName } = props;
 
   return (
     <>
       <header className={classes.header}>
         <BeerIcon className={classes.beerIcon} />
         <h1 className={classes.headline}>Pub Quiz</h1>
-        <h3>The Snug Kaiserslautern</h3>
+        <h3>{pubName}</h3>
       </header>
       <div className={classes.wedge} />
     </>
@@ -101,7 +101,7 @@ const stylesCompact = theme => ({
 
 
 const HeaderCompact = withStyles(stylesCompact)(props => {
-  const { classes } = props;
+  const { classes, pubName } = props;
 
   return (
     <Grid container component="header" className={classes.header} alignItems="center" wrap="nowrap">
@@ -110,7 +110,7 @@ const HeaderCompact = withStyles(stylesCompact)(props => {
       </Grid>
       <Grid item>
         <h1 className={classes.headline}>Pub Quiz</h1>
-        <h3>The Snug Kaiserslautern</h3>
+        <h3>{pubName}</h3>
       </Grid>
     </Grid>
   );
