@@ -1,8 +1,9 @@
-# pubquiz
+# virtual pubquiz
 
-virtual pubquiz so you can get drunk during quarantine.
+A virtual pubquiz, which enables players or guests to participate in everybody's favorite guessing+drinking game,
+and allows pub owners to not lose the connection to their regulars and even generate some revenue.
 
-"Viele Leute wollen zusammen in die Kneipe gehen, in die sie sowieso immer gehen, aber die ist ja zu, bzw. man soll sich ja physisch nicht sehen. Jetzt soll man aber trotzdem Spaß haben können."
+This project was started in as part of the [WirvsVirus-Hackathon](https://wirvsvirushackathon.org/).
 
 # Developing
 
@@ -11,9 +12,17 @@ virtual pubquiz so you can get drunk during quarantine.
 - Node.js
 - Yarn
 
-## Server & Client
+## Building and Running
 
-`yarn install` in client and `yarn install` in the root folder. (This could be improved).
-`yarn dev` will start the server and the client concurrently.
-`yarn client` will start the client only.
-`yarn server` will start the server only.
+- Clone this repository.
+- cd into the cloned repository and do `yarn install`
+- cd into `./client` and do `yarn install` again.
+
+For running both server and client concurrently, run
+
+- `yarn dev` in the root folder of the cloned repository.
+
+For starting server or client individually, run
+
+- `yarn client` will start the client only.
+- `yarn server` will start the server only.
