@@ -2,18 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, Typography } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 
-const QuizOperation = () => {
-  return (
-    <Typography>
-      <Typography variant="h3">QuizOperation</Typography>
-      <div>Übersicht Teams? (Um zum Beispiel 2 1er Teams zusammenzusetzen)</div>
-      <div>Quiz starten? </div>
-      <div>Timer</div>
-      <div>Runde bewerten</div>
-    </Typography>
-  );
-};
-
 const HostQuizzes = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -35,11 +23,9 @@ const HostQuizzes = () => {
   }, []);
 
   const quizItems = quizzes.map(quiz => (
-    <Typography key={quiz.id}>
-      <Link component={RouterLink} to={"/host/quiz/" + quiz.id}>
-        Quiz: {quiz.date}
-      </Link>{" "}
-    </Typography>
+    <Link component={RouterLink} to={"/host/quiz/" + quiz.id} key={quiz.id}>
+      Quiz:{quiz.date}
+    </Link>
   ));
 
   if (!isLoaded) {

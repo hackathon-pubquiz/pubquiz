@@ -9,6 +9,12 @@ export function login(pubId, nickname) {
   }).then(response => response.json());
 }
 
+export function fetchGroup(groupID) {
+  return fetch("/api/group/" + groupID.toString(), {
+    method: "GET",
+  }).then(response => response.json());
+}
+
 export function createGroup(pubId, groupName, public_) {
   const payload = { pubId, groupName, public: public_ };
   return fetch("/api/group", {

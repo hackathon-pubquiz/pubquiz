@@ -7,7 +7,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import AnswerTextField from "./answerTextField";
 import AudioQuestion from "./audioQuestion";
 import PictureQuestion from "./pictureQuestion";
-import { setActiveQuestion } from "../redux/quizReducer";
+import { setActiveQuestion, updateAnswer } from "../redux/quizReducer";
 import SwipeableViews from "react-swipeable-views";
 import { Paper, Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -36,6 +36,7 @@ function Quiz(props) {
   const questions = useSelector(state => state.quiz.questions);
 
   const dispatch = useDispatch();
+  const socket = props.socket;
 
   const handleNext = () => {
     dispatch(setActiveQuestion(activeStep + 1));
@@ -49,9 +50,14 @@ function Quiz(props) {
     dispatch(setActiveQuestion(step));
   };
 
+  const typeText = (positionInRound, e) => {
+    const answerText = e.target.value;
+    dispatch(updateAnswer(positionInRound, answerText));
+    socket.emit("write_answer", { answerText });
+  };
   const handleTip = () => {
     window.open("https://www.sandbox.paypal.com/us/signin", "Paypal");
-  }
+  };
 
   return (
     <React.Fragment>
@@ -74,7 +80,7 @@ function Quiz(props) {
               </Grid>
             </Grid>
           </Paper>
-        ))}          
+        ))}
       </SwipeableViews>
       <MobileStepper
         variant="dots"
@@ -93,10 +99,9 @@ function Quiz(props) {
           </Button>
         }
       />
-      <Button 
-        variant="contained" onClick={handleTip}>
-          Trinkgeld
-        </Button>
+      <Button variant="contained" onClick={handleTip}>
+        Trinkgeld
+      </Button>
     </React.Fragment>
   );
 }

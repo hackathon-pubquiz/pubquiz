@@ -1,9 +1,12 @@
 import React from "react";
+import clsx from "clsx";
 import Message from "./Message";
 import { TextField, List, Button } from "@material-ui/core";
 import { LocalBar} from '@material-ui/icons';
 import { connect } from "react-redux";
 import {withStyles} from "@material-ui/core/styles";
+import { ReactComponent as CocktailIcon } from "../img/cocktail.svg";
+import { ReactComponent as PintIcon } from "../img/pint.svg";
 
 const styles = theme => ({
   root: {},
@@ -12,6 +15,16 @@ const styles = theme => ({
   },
   controlElement: {
     'margin-top': theme.spacing(2),
+  },
+  icon: {
+    'width': '1.5rem',
+    'height': '1.5rem',
+  },
+  leftIcon: {
+    transform: 'rotate(10deg)',
+  },
+  rightIcon: {
+    transform: 'rotate(-10deg)',
   }
 });
 
@@ -81,18 +94,21 @@ class ChatWrapper extends React.Component {
 
   render() {
     let { messageLog } = this.state;
+    let {classes} = this.props;
     let ownNickname = "TODO Nick";
     return (
       <div>
         {this.props.open ? (
-          <div className={this.props.classes.control}>
+          <div className={classes.control}>
             <Button
               fullWidth
               variant="contained"
               onClick={this.handleCheer}
-              className={this.props.classes.controlElement}
+              className={classes.controlElement}
             >
-              Prost! <LocalBar /> &#127867;
+              Prost!
+              <CocktailIcon className={clsx(classes.icon, classes.leftIcon)} />
+              <PintIcon className={clsx(classes.icon, classes.rightIcon)} />
             </Button>
           </div>
         ) : null}
