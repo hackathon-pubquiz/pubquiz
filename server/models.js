@@ -28,7 +28,8 @@ Group.init(
 class Person extends Model {}
 Person.init(
   {
-    nickname: Sequelize.STRING
+    nickname: Sequelize.STRING,
+    uuid: Sequelize.STRING
   },
   {
     sequelize,
@@ -117,7 +118,8 @@ function seedDatabase() {
     ["User1", "User2", "User3"].forEach(user => {
       Person.create({
         nickname: user,
-        groupId: 1
+        groupId: 1,
+        uuid: require('uuid').v4()
       });
     });
 
