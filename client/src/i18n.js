@@ -1,6 +1,6 @@
 import i18n from "i18next";
-import LanguageDetector from 'i18next-browser-languagedetector';
-import { initReactI18next  } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
 i18n
   .use(LanguageDetector)
@@ -9,7 +9,7 @@ i18n
     resources: {
       en: {
         translations: {
-          hannes: "Hannes is typing...",
+          someoneIsTyping: "{{name}} is typing...",
           answer: "Answer",
           altPictureText: "Here should be a picture",
           questionHeader: "Question #{{number}}",
@@ -45,7 +45,7 @@ i18n
       },
       de: {
         translations: {
-          hannes: "Hannes tippt gerade...",
+          someoneIsTyping: "{{name}} tippt gerade...",
           answer: "Antwort",
           altPictureText: "Hier sollte ein Bild sein",
           questionHeader: "Frage #{{number}}",
@@ -92,9 +92,9 @@ i18n
       escapeValue: false
     },
 
-    detection:{
-        order: ['navigator','querystring'],
-        lookupQuerystring: 'lng'
+    detection: {
+      order: ["navigator", "querystring"],
+      lookupQuerystring: "lng"
     }
   });
 
