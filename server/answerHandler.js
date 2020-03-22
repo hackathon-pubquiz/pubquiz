@@ -27,6 +27,14 @@ class AnswerHandler {
     };
     this.websocketHandler.sendMessage({ socket: ownSocket, room: null, eventName: "action", data: broadcastPayload });
   };
+
+  onLock = async (ownSocket, data) => {
+    console.log("Locking answer");
+  };
+
+  onRelease = async (ownSocket, data) => {
+    console.log("Releasing answer");
+  };
 }
 
 module.exports = AnswerHandler;

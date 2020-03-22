@@ -76,6 +76,7 @@ QuestionSubmission.init(
 
 QuestionSubmission.belongsTo(Question);
 QuestionSubmission.belongsTo(Group);
+QuestionSubmission.belongsTo(Person);
 
 Quiz.hasMany(Question);
 Question.belongsTo(Quiz);

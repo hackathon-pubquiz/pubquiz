@@ -24,6 +24,14 @@ export function updateAnswerInStore(groupId, questionId, answer) {
   };
 }
 
+const LOCK_ANSWER_FOR_MYSELF = "LOCK_ANSWER_FOR_MYSELF";
+export function lockAnswerForMyself(questionId) {
+  return {
+    type: LOCK_ANSWER_FOR_MYSELF,
+    questionId: questionId
+  };
+}
+
 export function quizReducer(
   state = {
     quizId: 0,

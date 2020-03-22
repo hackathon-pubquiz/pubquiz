@@ -1,14 +1,25 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
+import { lockAnswerForMyself } from "../redux/quizReducer";
 
 // const answerSelector = currentQuestion => createSelector(state => state.quiz.answers[currentQuestion.id]);
 
 function AnswerTextField(props) {
-  const { question } = props;
+  const { question, socket } = props;
 
   const answer = useSelector(state => state.quiz.answers[question.id]);
+  const dispatch = useDispatch();
+
+  const lockAnswer = () => {
+    dispatch(lockAnswerForMyself(question.id));
+    socket.emit("lock_answer", { questionId: question.id });
+  };
+
+  const releaseAnswer = () => {
+    socket.emit("release_answer", { questionId: question.id });
+  };
 
   return (
     <TextField
@@ -18,6 +29,8 @@ function AnswerTextField(props) {
       margin="normal"
       variant="outlined"
       onChange={e => props.typeTextHandler(question.id, e)}
+      onFocus={lockAnswer}
+      onBlur={releaseAnswer}
       value={answer && answer.text}
     />
   );
