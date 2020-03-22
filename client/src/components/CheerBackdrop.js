@@ -1,7 +1,8 @@
 import React from 'react';
 import Backdrop from '@material-ui/core/Backdrop';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
-import {LocalBar} from "@material-ui/icons";
+import { withStyles} from '@material-ui/core/styles';
+import { ReactComponent as CocktailIcon } from "../img/cocktail.svg";
+import { ReactComponent as PintIcon } from "../img/pint.svg";
 
 const styles = theme => ({
   backdrop: {
@@ -9,7 +10,8 @@ const styles = theme => ({
     color: '#fff',
   },
   icon: {
-    'font-size': '50vmin',
+    'width': '50vmin',
+    'height': '50vmin',
   },
   animContainer: {
     display: 'flex',
@@ -76,10 +78,10 @@ class CheerBackdrop extends React.Component {
         <Backdrop className={classes.backdrop} open={open} onClick={this.handleClose}>
           <div className={classes.animContainer}>
             <div className={open ? classes.animLeft : null}>
-              <LocalBar className={classes.icon}/>
+              <CocktailIcon className={classes.icon}/>
             </div>
             <div className={open ? classes.animRight : null}>
-              <LocalBar className={classes.icon}/>
+              <PintIcon className={classes.icon}/>
             </div>
           </div>
         </Backdrop>
