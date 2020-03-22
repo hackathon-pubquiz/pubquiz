@@ -2,12 +2,13 @@ import React from "react";
 import clsx from "clsx";
 import Message from "./Message";
 import { TextField, List, Button } from "@material-ui/core";
-import { LocalBar} from '@material-ui/icons';
 import { connect } from "react-redux";
 import {withStyles} from "@material-ui/core/styles";
 import { ReactComponent as CocktailIcon } from "../img/cocktail.svg";
 import { ReactComponent as PintIcon } from "../img/pint.svg";
 import AudioCall from "../audioCall/AudioCall";
+import { withTranslation } from 'react-i18next';
+import {getGroup} from "../redux/groupApi";
 
 const styles = theme => ({
   root: {},
@@ -73,9 +74,15 @@ class ChatWrapper extends React.Component {
   handleCheer = event => {
     event.preventDefault();
 
-    let channel = "TODO Channel";
+    this.getRoomName().then((room) => {
+      this.props.socket.emit("send_cheer", { room });
+    });
+  };
 
-    this.props.socket.emit("send_cheer", { channel });
+  getRoomName = () => {
+    return getGroup().then((group) => {
+      return group ? 'group-' + group.id : "no-op";
+    });
   };
 
   handleSubmit = event => {
@@ -85,17 +92,18 @@ class ChatWrapper extends React.Component {
     let { message } = this.state;
 
     let nickname = "TODO Nick";
-    let channel = "TODO Channel";
 
     if (message) {
       this.addMessage({ nickname, message });
-      socket.emit("send_message", { nickname, channel, message });
+      this.getRoomName().then((room) => {
+        socket.emit("send_message", { nickname, room, message });
+      });
     }
   };
 
   render() {
     let { messageLog } = this.state;
-    let {classes} = this.props;
+    let {classes, t} = this.props;
     let ownNickname = "TODO Nick";
     return (
       <div>
@@ -110,7 +118,7 @@ class ChatWrapper extends React.Component {
               onClick={this.handleCheer}
               className={classes.controlElement}
             >
-              Prost!
+              {t("prost")}
               <CocktailIcon className={clsx(classes.icon, classes.leftIcon)} />
               <PintIcon className={clsx(classes.icon, classes.rightIcon)} />
             </Button>
@@ -132,7 +140,7 @@ class ChatWrapper extends React.Component {
             <form onSubmit={this.handleSubmit}>
               <TextField
                 fullWidth
-                label="Sag was!"
+                label={t("chatLabel")}
                 onChange={this.handleChange}
                 className={this.props.classes.controlElement}
               />
@@ -144,6 +152,6 @@ class ChatWrapper extends React.Component {
   }
 }
 
-const ChatWrapperContainer = connect(mapStateToProps, {})(withStyles(styles)(ChatWrapper));
+const ChatWrapperContainer = connect(mapStateToProps, {})(withTranslation()(withStyles(styles)(ChatWrapper)));
 
 export default ChatWrapperContainer;

@@ -1,6 +1,6 @@
 import i18n from "i18next";
-import LanguageDetector from 'i18next-browser-languagedetector';
-import { initReactI18next  } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
 i18n
   .use(LanguageDetector)
@@ -9,7 +9,7 @@ i18n
     resources: {
       en: {
         translations: {
-          hannes: "Hannes is typing...",
+          someoneIsTyping: "{{name}} is typing...",
           answer: "Answer",
           altPictureText: "Here should be a picture",
           questionHeader: "Question #{{number}}",
@@ -39,12 +39,13 @@ i18n
           yourTeamName: "your team name",
           startTeam: "start team!",
           areYouAlone: "Are you alone? Join an other team!",
-          makeTeamPublic: "open for other players"
+          makeTeamPublic: "open for other players",
+          prost: "Prost!"
         }
       },
       de: {
         translations: {
-          hannes: "Hannes tippt gerade...",
+          someoneIsTyping: "{{name}} tippt gerade...",
           answer: "Antwort",
           altPictureText: "Hier sollte ein Bild sein",
           questionHeader: "Frage #{{number}}",
@@ -74,7 +75,8 @@ i18n
           yourTeamName: "Name deines Teams",
           startTeam: "Team starten",
           areYouAlone: "Alleine hier? Schließe dich einem anderen Team an!",
-          makeTeamPublic: "Team für andere öffnen"
+          makeTeamPublic: "Team für andere öffnen",
+          prost: "Prost!"
         }
       }
     },
@@ -90,9 +92,9 @@ i18n
       escapeValue: false
     },
 
-    detection:{
-        order: ['navigator','querystring'],
-        lookupQuerystring: 'lng'
+    detection: {
+      order: ["navigator", "querystring"],
+      lookupQuerystring: "lng"
     }
   });
 

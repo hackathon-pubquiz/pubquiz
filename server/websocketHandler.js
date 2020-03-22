@@ -13,8 +13,10 @@ class WebsocketHandler {
 
     this.io.on("connection", socket => {
       socket.on("send_message", data => this.chatHandler.onIncomingChat(socket, data));
-      socket.on("send_cheer", data => this.chatHandler.onIncomingCheer(socket));
+      socket.on("send_cheer", data => this.chatHandler.onIncomingCheer(socket, data));
       socket.on("write_answer", data => this.answerHandler.onUpdate(socket, data));
+      socket.on("lock_answer", data => this.answerHandler.onLock(socket, data));
+      socket.on("release_answer", data => this.answerHandler.onRelease(socket, data));
       socket.on("start_quiz", data => {
         console.log("got start_quiz with id " + data);
         socket.broadcast.emit("quiz_started", data);

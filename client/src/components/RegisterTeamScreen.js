@@ -1,7 +1,7 @@
 import { withStyles, TextField, Button, Grid, Switch, FormGroup, FormControlLabel } from "@material-ui/core";
 import React, { useState } from "react";
 import Header from "./Header";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { requestGroupCreation } from "../redux/groupApi";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -27,6 +27,7 @@ function RegisterTeamScreen(props) {
   const {pubId} = useParams();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const socketId = useSelector(state => state.socket.socketId);
 
   const handlePublicSwitch = event => {
     setPublic(event.target.checked);
@@ -54,7 +55,7 @@ function RegisterTeamScreen(props) {
           variant="contained"
           color="primary"
           className={classes.goButton}
-          onClick={() => dispatch(requestGroupCreation(pubId, groupName, public_))}
+          onClick={() => dispatch(requestGroupCreation(pubId, groupName, public_, socketId))}
         >
           {t("startTeam")}
         </Button>

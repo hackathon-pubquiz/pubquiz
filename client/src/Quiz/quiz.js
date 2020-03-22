@@ -76,11 +76,11 @@ function Quiz(props) {
                 <Box fontSize="h5.fontSize">{question.question}</Box>
               </Grid>
               <Grid item className={classes.gridItemExternalLink}>
-                {question.type === "song" ? <AudioQuestion question={question}></AudioQuestion>: ''}
-                {question.type === "picture" ? <PictureQuestion question={question}></PictureQuestion>: ''}
+                {question.type === "song" ? <AudioQuestion question={question}></AudioQuestion> : ""}
+                {question.type === "picture" ? <PictureQuestion question={question}></PictureQuestion> : ""}
               </Grid>
               <Grid item>
-                <AnswerTextField question={question} typeTextHandler={typeText}></AnswerTextField> 
+                <AnswerTextField question={question} socket={socket} typeTextHandler={typeText}></AnswerTextField>
               </Grid>
             </Grid>
           </Paper>

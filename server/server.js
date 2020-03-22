@@ -214,14 +214,14 @@ app.post("/api/group", async (req, res) => {
 
 // Expected body: { userId: <id>, groupId: <id>}
 app.post("/api/group/join", async (req, res, next) => {
-  const userId = req.body.userId;
-  const groupId = req.body.groupId;
+  const {userId, groupId, socketId} = req.body;
 
   Group.findByPk(groupId).then(group => {
     if (!group) {
       next("Group does not exist");
     } else {
       group.addPerson(userId);
+      io.sockets.connected[socketId].join('group-' + group.id);
       res.json(group);
       res.send();
     }

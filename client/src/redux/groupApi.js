@@ -1,12 +1,12 @@
 import {createGroup, joinGroup} from "../api";
 import {sessionService} from "redux-react-session";
 
-export function requestGroupCreation(pubId, groupName, public_) {
+export function requestGroupCreation(pubId, groupName, public_, socketId) {
   return function (dispatch) {
     return createGroup(pubId, groupName, public_)
       .then(groupJson => {
         sessionService.loadUser().then((user) => {
-          joinGroup(groupJson.group.id, user.id);
+          joinGroup(groupJson.group.id, user.id, socketId);
         });
       });
   };
@@ -20,7 +20,5 @@ export function setGroup(groupJson) {
 }
 
 export function getGroup() {
-  sessionService.loadUser().then((user) => {
-    return user.group;
-  });
+  return sessionService.loadUser().then((user) => user.group);
 }
