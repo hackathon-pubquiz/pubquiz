@@ -77,6 +77,7 @@ QuestionSubmission.init(
 QuestionSubmission.belongsTo(Question);
 QuestionSubmission.belongsTo(Group);
 QuestionSubmission.belongsTo(Person);
+Question.hasMany(QuestionSubmission);
 
 Quiz.hasMany(Question);
 Question.belongsTo(Quiz);
@@ -131,7 +132,17 @@ function seedDatabase() {
             positionInround: 1,
             question: "Muss das so?",
             correctAnswer: "Ja",
-            pubId: 1
+            pubId: 1,
+            QuestionSubmissions: [
+              {
+                answer: "Erste Antwort",
+                groupId: 1
+              },
+              {
+                answer: "Andere Antwort",
+                groupId: 2
+              }
+            ]
           },
           {
             type: "text",
@@ -139,7 +150,17 @@ function seedDatabase() {
             positionInround: 2,
             question: "Könnt ihr noch?",
             correctAnswer: "Ja",
-            pubId: 1
+            pubId: 1,
+            QuestionSubmissions: [
+              {
+                answer: "Dritte",
+                groupId: 1
+              },
+              {
+                answer: "Vierte",
+                groupId: 2
+              }
+            ]
           },
           {
             type: "text",
@@ -175,7 +196,7 @@ function seedDatabase() {
           }
         ]
       },
-      { include: [Question, Pub] }
+      { include: [{ model: Question, include: [QuestionSubmission] }, Pub] }
     );
   });
 }

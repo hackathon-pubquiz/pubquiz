@@ -29,6 +29,21 @@ class AnswerHandler {
   };
 
   onLock = async (ownSocket, data) => {
+    // data.questionId
+    // data.groupId
+    // data.userId
+
+    const [submission, created] = await QuestionSubmission.findOrCreate({
+      where: { groupId: data.groupId, questionId: data.questionId },
+      defaults: {
+        userId: data.userId
+      }
+    });
+    if (!created) {
+      submission.userId = data.userId;
+      await submission.save();
+    }
+
     console.log("Locking answer");
   };
 
