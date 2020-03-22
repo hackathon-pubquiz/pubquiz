@@ -107,7 +107,7 @@ app.get("/api/quiz/:id", (req, res) => {
 
 app.get("/api/quiz/:id/points", (req, res) => {
   SumPointsOfQuizPerGroup(req.params.id).then(result => res.json(result));
-})
+});
 // END quiz
 
 app.get("/api/questions", (req, res) => {
