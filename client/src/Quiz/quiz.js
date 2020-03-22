@@ -6,7 +6,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import TextQuestion from "./textQuestion";
 import AudioQuestion from "./audioQuestion";
-import { setActiveQuestion } from "../redux/quizReducer";
+import { setActiveQuestion, updateAnswer } from "../redux/quizReducer";
 import SwipeableViews from "react-swipeable-views";
 import { Paper } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
