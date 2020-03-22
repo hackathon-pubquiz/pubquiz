@@ -1,14 +1,17 @@
 import React from "react";
 import clsx from "clsx";
 import Message from "./Message";
-import { TextField, List, Button } from "@material-ui/core";
-import { connect } from "react-redux";
+import {TextField, List, Button} from "@material-ui/core";
+import {connect} from "react-redux";
 import {withStyles} from "@material-ui/core/styles";
-import { ReactComponent as CocktailIcon } from "../img/cocktail.svg";
-import { ReactComponent as PintIcon } from "../img/pint.svg";
+import {ReactComponent as CocktailIcon} from "../img/cocktail.svg";
+import {ReactComponent as PintIcon} from "../img/pint.svg";
 import AudioCall from "../audioCall/AudioCall";
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {getGroup} from "../redux/groupApi";
+import {fetchGroupMembers} from "../api";
+import Collapsible from 'react-collapsible';
+import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 const styles = theme => ({
   root: {},
@@ -31,7 +34,7 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => {
-  return { user: state.session.user };
+  return {user: state.session.user};
 };
 
 class ChatWrapper extends React.Component {
@@ -40,42 +43,44 @@ class ChatWrapper extends React.Component {
 
     this.state = {
       message: null,
+      teamMembers: [],
       messageLog: [
-        { nickname: "Hannes", message: "Was geht bei euch?" },
-        { nickname: "Vera", message: "Alles locker :)" },
-        { nickname: "Tom", message: "Können wir emojis?" }
+        {nickname: "Hannes", message: "Was geht bei euch?"},
+        {nickname: "Vera", message: "Alles locker :)"},
+        {nickname: "Tom", message: "Können wir emojis?"}
       ]
     };
   }
 
   componentDidMount() {
-    let { socket } = this.props;
+    let {socket} = this.props;
+    this.updateGroupMembers();
 
     socket.on("rec_message", this.handleIncomingMessage);
   }
 
-  addMessage = ({ nickname, message }) => {
-    let { messageLog } = this.state;
+  addMessage = ({nickname, message}) => {
+    let {messageLog} = this.state;
 
     // TODO limit to last n-Messages
-    messageLog = [...messageLog, { nickname, message }];
+    messageLog = [...messageLog, {nickname, message}];
 
-    this.setState({ messageLog });
+    this.setState({messageLog});
   };
 
-  handleIncomingMessage = ({ nickname, message }) => {
-    this.addMessage({ nickname, message });
+  handleIncomingMessage = ({nickname, message}) => {
+    this.addMessage({nickname, message});
   };
 
   handleChange = event => {
-    this.setState({ message: event.target.value });
+    this.setState({message: event.target.value});
   };
 
   handleCheer = event => {
     event.preventDefault();
 
     this.getRoomName().then((room) => {
-      this.props.socket.emit("send_cheer", { room });
+      this.props.socket.emit("send_cheer", {room});
     });
   };
 
@@ -88,27 +93,62 @@ class ChatWrapper extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    let { socket } = this.props;
-    let { message } = this.state;
+    let {socket} = this.props;
+    let {message} = this.state;
 
     let nickname = "TODO Nick";
 
     if (message) {
-      this.addMessage({ nickname, message });
+      this.addMessage({nickname, message});
       this.getRoomName().then((room) => {
-        socket.emit("send_message", { nickname, room, message });
+        socket.emit("send_message", {nickname, room, message});
       });
     }
   };
 
+  getGroupName = () => {
+    if (this.props.user.group && this.props.user.group.id) {
+      return "Team " + (this.props.user.group.name)
+    }
+  };
+
+  updateGroupMembers = () => {
+    if (this.props.user.group && this.props.user.group.id) {
+      fetchGroupMembers(this.props.user.group.id).then((users) => {
+        this.setState({teamMembers: users})
+        console.log('Team members: ' + this.state.teamMembers)
+      })
+    }
+    else {
+      setTimeout(this.updateGroupMembers,1000)
+    }
+
+  };
+
+  getGroupMembers = () => {
+    return this.state.teamMembers.map((e) => {
+      console.log(e.nickname);
+      return <div>{e.nickname}</div>
+    });
+  };
+
   render() {
-    let { messageLog } = this.state;
+    let {messageLog} = this.state;
     let {classes, t} = this.props;
     let ownNickname = "TODO Nick";
     return (
       <div>
-        <div>
-          <AudioCall user={this.props.user} addPartner={() => {}} />
+        {this.props.open && (
+          <div className={classes.control}>
+            <Collapsible trigger={<span>{this.getGroupName()}<ArrowDropDown /></span>}>
+              <div>
+                {this.getGroupMembers()}
+              </div>
+            </Collapsible>
+          </div>)}
+        <div className={classes.control}>
+          <AudioCall user={this.props.user} addPartner={() => {
+          }}/>
         </div>
         {this.props.open ? (
           <div className={classes.control}>
@@ -119,8 +159,8 @@ class ChatWrapper extends React.Component {
               className={classes.controlElement}
             >
               {t("prost")}
-              <CocktailIcon className={clsx(classes.icon, classes.leftIcon)} />
-              <PintIcon className={clsx(classes.icon, classes.rightIcon)} />
+              <CocktailIcon className={clsx(classes.icon, classes.leftIcon)}/>
+              <PintIcon className={clsx(classes.icon, classes.rightIcon)}/>
             </Button>
           </div>
         ) : null}
