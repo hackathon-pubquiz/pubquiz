@@ -192,16 +192,18 @@ class App extends React.Component {
           })}
         >
           <Tabs component="nav" value={false}>
-            <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start">
-              <ChatIcon />
-            </IconButton>
+            {this.props.loggedInUser.id ? (
+              <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start">
+                <ChatIcon />
+              </IconButton>
+            ) : null}
             <Tab component={RouterLink} to="/groups/1" label={t('groups')}></Tab>
             <Tab component={RouterLink} to="/people" label={t('people')}></Tab>
             <Tab component={RouterLink} to="/player" label={t('player')}>></Tab>
             <Tab component={RouterLink} to="/quizmaster/1" label={t('quizmaster')}></Tab>
             <Tab component={RouterLink} to="/host/quizzes/1" label={t('host')}></Tab>
             {this.props.authenticated ? (
-              profileElement(this.props.loggedInUser.nickname)
+              profileElement(this.props.loggedInUser.id)
             ) : (
               <Tab component={RouterLink} to="/login/1" label={t('login')}></Tab>
             )}
@@ -215,25 +217,27 @@ class App extends React.Component {
             </FormControl>
           </Tabs>
         </AppBar>
-        <Drawer
-          variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open
-          })}
-          classes={{
-            paper: clsx({
+        {this.props.loggedInUser.id ? (
+          <Drawer
+            variant="permanent"
+            className={clsx(classes.drawer, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open
-            })
-          }}
-        >
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
+            })}
+            classes={{
+              paper: clsx({
+                [classes.drawerOpen]: open,
+                [classes.drawerClose]: !open
+              })
+            }}
+          >
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
 
-          <ChatWrapper socket={socket} open={open} />
-        </Drawer>
+            <ChatWrapper socket={socket} open={open} />
+          </Drawer>
+        ) : null}
         <main
           className={clsx(classes.content, {
             [classes.contentDrawerOpen]: open,
