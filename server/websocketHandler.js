@@ -11,6 +11,10 @@ class WebsocketHandler {
     this.io.on('connection', (socket) => {
       socket.on('send_message', (data) => this.chatHandler.onIncomingChat(socket, data));
       socket.on('send_cheer', (data) => this.chatHandler.onIncomingCheer(socket));
+      socket.on('start_quiz', (data) => {
+        console.log("got start_quiz with id " + data);
+        socket.broadcast.emit('quiz_started', data);
+      });
 
       socket.on('disconnect', () => {
         // ...
@@ -18,13 +22,13 @@ class WebsocketHandler {
     });
   }
 
-  sendMessage = ({socket, room, eventName, data}) => {
+  sendMessage = ({ socket, room, eventName, data }) => {
 
-    if(socket.id === room) {
+    if (socket.id === room) {
       this.io.to(room).emit(eventName, data);
     }
 
-    if(room) {
+    if (room) {
       socket.to(room).emit(eventName, data);
     } else {
       socket.broadcast.emit(eventName, data);
