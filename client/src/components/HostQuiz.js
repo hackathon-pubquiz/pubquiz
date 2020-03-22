@@ -151,7 +151,7 @@ const HostQuizRound = props => {
       <>
         <Typography variant="h4">Runde {round}</Typography>
         <Typography>Zeit übrig: {counter}</Typography>
-        <Typography>Fragen:{questionItems}</Typography>
+        <div>Fragen:{questionItems}</div>
         <Button variant="contained" color="primary" onClick={startTimer} disabled={roundStarted}>
           Runde starten
         </Button>
@@ -179,31 +179,50 @@ const HostQuestionEvaluation = props => {
           setError(error);
         }
       );
-  }, [quizId]);
+  }, [quizId, round]);
+
+  const [formData, setFormData] = useState({});
+  const handleInputChange = event => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const sendEvaluationAndFinishRound = async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    };
+    const result = await fetch("/api/update_evaluations", requestOptions);
+    console.log(result);
+
+    finishRound();
+  };
 
   if (!isLoaded) return <>Laden...</>;
   else if (error) return <>Error: {error}</>;
   else {
-    const answerItems = answers.map(answer => <QuestionSubmissions key={answer.id} questionWithSubmissions={answer} />);
+    const answerItems = answers.map(answer => (
+      <QuestionSubmissions key={answer.id} handleChange={handleInputChange} questionWithSubmissions={answer} />
+    ));
     return (
-      <>
+      <form>
         <Typography variant="h4">Runde {round}: Antworten der Teams</Typography>
         {answerItems}
-        <Button variant="contained" color="primary" onClick={finishRound}>
+        <Button variant="contained" color="primary" onClick={sendEvaluationAndFinishRound}>
           Bewertung abschließen
         </Button>
-      </>
+      </form>
     );
   }
 };
 
 const QuestionSubmissions = props => {
-  const { questionWithSubmissions } = props;
+  const { handleChange, questionWithSubmissions } = props;
   const listItems = questionWithSubmissions.QuestionSubmissions.map(submission => (
     <ListItem key={submission.id}>
-      <Box display="flex" justifyItems="space-between">
+      <Box display="flex" justifyContent="space-between" alignItems="center" flexGrow={1}>
         <Typography>{submission.answer}</Typography>
-        <TextField label="Punkte" type="number" />
+        <TextField label="Punkte" type="number" name={submission.id.toString()} onChange={handleChange} />
       </Box>
     </ListItem>
   ));

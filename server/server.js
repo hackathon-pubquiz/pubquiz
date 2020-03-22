@@ -175,6 +175,13 @@ app.get("/api/question_submissions/:quizId/:round", (req, res) => {
   });
 });
 
+app.post("/api/update_evaluations", (req, res) => {
+  const entries = Object.entries(req.body);
+  // TODO: transaction?
+  const promises = entries.map(([id, points]) => QuestionSubmission.update({ points: points }, { where: { id: id } }));
+  Promise.all(promises).then(res.json());
+});
+
 app.get("/api/groups", (req, res) => {
   Group.findAll().then(result => {
     res.json(result);
