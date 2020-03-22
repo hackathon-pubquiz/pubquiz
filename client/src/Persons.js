@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withTranslation } from 'react-i18next';
 
 class Persons extends Component {
   constructor(props) {
@@ -25,14 +26,15 @@ class Persons extends Component {
 
   render() {
     const { error, isLoaded, people } = this.state;
+    const { t } = this.props;
     const peopleItems = people.map(person => (
       <div key={person.id}>{person.nickname}</div>
     ));
 
-    if (error) return <div>Error: {error.message}</div>;
-    else if (!isLoaded) return <div>Loading...</div>;
-    else return <div>People:{peopleItems}</div>;
+    if (error) return <div>{t("error",{message: error.message})}</div>;
+    else if (!isLoaded) return <div>{t("loading")}</div>;
+    else return <div>{t("people")}:{peopleItems}</div>;
   }
 }
 
-export default Persons;
+export default withTranslation()(Persons);

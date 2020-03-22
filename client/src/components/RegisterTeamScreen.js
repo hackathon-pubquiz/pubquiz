@@ -4,6 +4,7 @@ import Header from "./Header";
 import { useDispatch } from "react-redux";
 import { requestGroupCreation } from "../redux/groupApi";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const styles = theme => ({
   footer: {
@@ -24,6 +25,7 @@ function RegisterTeamScreen(props) {
   const [public_, setPublic] = useState(false);
   const [groupName, setGroupName] = useState("");
   const {pubId} = useParams();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const handlePublicSwitch = event => {
@@ -37,13 +39,13 @@ function RegisterTeamScreen(props) {
         <Header />
       </Grid>
       <Grid item>
-        <TextField label="Name deines Teams" onChange={e => setGroupName(e.target.value)} value={groupName} />
+        <TextField label={t("yourTeamName")} onChange={e => setGroupName(e.target.value)} value={groupName} />
       </Grid>
       <Grid item>
         <FormGroup row>
           <FormControlLabel
             control={<Switch checked={public_} onChange={handlePublicSwitch} name="public" />}
-            label="Team für andere öffnen"
+            label={t("makeTeamPublic")}
           />
         </FormGroup>
       </Grid>
@@ -54,12 +56,12 @@ function RegisterTeamScreen(props) {
           className={classes.goButton}
           onClick={() => dispatch(requestGroupCreation(pubId, groupName, public_))}
         >
-          TEAM STARTEN!
+          {t("startTeam")}
         </Button>
       </Grid>
       <Grid item container direction="column" justify="flex-end" className={classes.footerWrapper} alignItems="center">
         <Grid item component="footer" className={classes.footer}>
-          <a>Alleine hier? Schließe dich einem anderen Team an!</a>
+          <a>{t("areYouAlone")}</a>
         </Grid>
       </Grid>
     </Grid>

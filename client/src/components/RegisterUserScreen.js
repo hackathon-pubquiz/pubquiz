@@ -6,6 +6,7 @@ import { login } from "../api";
 import { useDispatch } from "react-redux";
 import {requestLoginUser} from "../redux/sessions";
 import {useParams} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const styles = theme => ({
   footer: {
@@ -34,6 +35,7 @@ function RegisterTeamScreen(props) {
   const [nickname, setNickname] = useState("");
   const [pubName, setPubName] = useState("");
   const {pubId} = useParams();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,7 +59,7 @@ function RegisterTeamScreen(props) {
         <Header pubName={pubName} />
       </Grid>
       <Grid item>
-        <TextField label="Dein Name" onChange={e => setNickname(e.target.value)} value={nickname} />
+        <TextField label={t("yourName")} onChange={e => setNickname(e.target.value)} value={nickname} />
       </Grid>
       <Grid item>
         <Button
@@ -66,13 +68,13 @@ function RegisterTeamScreen(props) {
           className={classes.goButton}
           onClick={handleLogin}
         >
-          LOS GEHT'S!
+          {t("letsGo")}
         </Button>
       </Grid>
       <Grid item container direction="column" justify="flex-end" className={classes.footerWrapper} alignItems="center">
         <Grid item component="footer" className={classes.footer}>
           <BarrelIcon className={classes.barrelIcon}/>
-          <a>Ich bin Pub-Betreiber</a>
+          <a>{t("iAmAPubOwner")}</a>
         </Grid>
       </Grid>
     </Grid>

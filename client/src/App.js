@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Link as RouterLink, Route, Switch } from "react-router-dom";
 import io from "socket.io-client";
 import clsx from "clsx";
+import { withTranslation } from 'react-i18next';
 
 import ChatWrapper from "./TextChat/ChatWrapper";
 import Groups from "./Groups";
@@ -160,7 +161,7 @@ class App extends React.Component {
       </div>
     );
 
-    const { classes } = this.props;
+    const { classes, t } = this.props;
 
     const open = this.state.open;
     return (
@@ -179,18 +180,18 @@ class App extends React.Component {
             <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start">
               <ChatIcon />
             </IconButton>
-            <Tab component={RouterLink} to="/groups/1" label="Gruppen"></Tab>
-            <Tab component={RouterLink} to="/people" label="Personen"></Tab>
-            <Tab component={RouterLink} to="/player" label="Player"></Tab>
-            <Tab component={RouterLink} to="/quizmaster/1" label="Quizmaster"></Tab>
-            <Tab component={RouterLink} to="/host/quizzes/1" label="Host"></Tab>
+            <Tab component={RouterLink} to="/groups/1" label={t('groups')}></Tab>
+            <Tab component={RouterLink} to="/people" label={t('people')}></Tab>
+            <Tab component={RouterLink} to="/player" label={t('player')}>></Tab>
+            <Tab component={RouterLink} to="/quizmaster/1" label={t('quizmaster')}></Tab>
+            <Tab component={RouterLink} to="/host/quizzes/1" label={t('host')}></Tab>
             {this.props.authenticated ? (
               profileElement(this.props.loggedInUser.nickname)
             ) : (
-              <Tab component={RouterLink} to="/login/1" label="Login"></Tab>
+              <Tab component={RouterLink} to="/login/1" label={t('login')}></Tab>
             )}
-            <Tab component={RouterLink} to="/login2/1" label="Login"></Tab>
-            <Tab component={RouterLink} to="/quiz/1" label="Quiz"></Tab>
+            <Tab component={RouterLink} to="/login2/1" label={t('login')}></Tab>
+            <Tab component={RouterLink} to="/quiz/1" label={t('quiz')}></Tab>
           </Tabs>
         </AppBar>
         <Drawer
@@ -263,7 +264,7 @@ const mapStateToProps = ({ session }) => {
 
 const mapDispatchToProps = { requestLogoutUser: requestLogoutUser() };
 
-const AppContainer = withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));
+const AppContainer = withTranslation()(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App)));
 
 moment.locale("de");
 
