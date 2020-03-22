@@ -86,7 +86,9 @@ const stylesCompact = theme => ({
       },
     },
     padding: "1rem .5rem",
-    marginBottom: "1rem",
+    "&:not(.no-margin)": {
+      marginBottom: "1rem",
+    },
   },
   beerIcon: {
     width: "5em",
@@ -101,10 +103,12 @@ const stylesCompact = theme => ({
 
 
 const HeaderCompact = withStyles(stylesCompact)(props => {
-  const { classes, pubName } = props;
+  const { classes, pubName, nomargin } = props;
+
+  const headerClasses = `${classes.header} ${nomargin ? 'no-margin' : ''}`;
 
   return (
-    <Grid container component="header" className={classes.header} alignItems="center" wrap="nowrap">
+    <Grid container component="header" className={headerClasses} alignItems="center" wrap="nowrap">
       <Grid item>
         <BeerIcon className={classes.beerIcon} />
       </Grid>

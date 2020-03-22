@@ -1,7 +1,7 @@
 import React from "react";
 import {withRouter} from "react-router";
 import {withStyles} from "@material-ui/core/styles";
-import {TextField, Button, Grid, Typography, Fab, Slider} from "@material-ui/core";
+import {TextField, Button, Grid, Typography, Fab, Slider, Paper} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import MobileStepper from "@material-ui/core/MobileStepper";
@@ -200,6 +200,7 @@ const quizMasterStyles = theme => ({
   },
   dateWrapper: {
     padding: "0 .4rem",
+    margin: ".4rem 0",
     "& > *": {
       margin: "0 .4rem",
     },
@@ -253,7 +254,7 @@ class QuizMaster extends React.Component {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({pubId, quizId, date: this.state.startDateTime, questions: collectedQuestions})
+      body: JSON.stringify({pubId, quizId, date, questions: collectedQuestions})
     })
       .then(response => response.json())
       .then(response => {
@@ -304,13 +305,11 @@ class QuizMaster extends React.Component {
   };
 
   onDateChange = (dateTime) => {
-    console.log(dateTime);
     this.setState({startDateTime: dateTime});
   };
 
   render() {
-    const {classes, t} = this.props;
-    const {questions, successMessage, inputState} = this.state;
+    const {classes, t, pubName} = this.props;
 
     const numRounds = this.state.rounds.length;
     const activeRound = this.state.activeRound;
@@ -323,14 +322,20 @@ class QuizMaster extends React.Component {
     return (
       <form action="/" method="POST" noValidate autoComplete="off" onSubmit={this.onSubmit} className={classes.main}>
         <Grid container direction="column" className={classes.mainGrid} wrap="nowrap">
-          <Header compact />
-          <Grid item container justify="space-between" alignItems="center" wrap="nowrap" className={classes.dateWrapper}>
-            <Grid item>
-              <DateTimePicker ampm={false} disablePast label={t('quizStart')} value={this.state.startDateTime} onChange={this.onDateChange} />
-            </Grid>
-            <Grid item>
-              <Button type="submit" variant="contained">{t('save')}</Button>
-            </Grid>
+          <Grid item>
+            <Header compact nomargin pubName={pubName} />
+          </Grid>
+          <Grid item>
+            <Paper variant="outlined" square>
+              <Grid container justify="space-between" alignItems="center" wrap="nowrap" className={classes.dateWrapper}>
+                <Grid item>
+                  <DateTimePicker ampm={false} disablePast label={t('quizStart')} value={this.state.startDateTime} onChange={this.onDateChange} />
+                </Grid>
+                <Grid item>
+                  <Button type="submit" variant="contained">{t('save')}</Button>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
           <Grid item className={classes.roundWrapper}>
             {
