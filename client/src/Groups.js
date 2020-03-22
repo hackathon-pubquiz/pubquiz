@@ -3,6 +3,7 @@ import { Box, Fab, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useSelector } from "react-redux";
 import {useParams} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const joinGroup = async (groupId, userId) => {
   const requestOptions = {
@@ -24,6 +25,7 @@ const Groups = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [groups, setGroups] = useState([]);
   const {pubId} = useParams();
+  const { t } = useTranslation();
 
   const userId = useSelector(state => state.session.user.id);
 
@@ -61,7 +63,7 @@ const Groups = () => {
   else
     return (
       <Typography>
-        Tritt einem der öffentlichen Teams bei!
+        {t('joinTeam')}
         {groupItems}
       </Typography>
     );

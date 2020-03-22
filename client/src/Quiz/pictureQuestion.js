@@ -1,5 +1,6 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 const styles = theme => ({
   pictureQuestion: {
@@ -9,8 +10,10 @@ const styles = theme => ({
 
 function PictureQuestion(props) {
   const { question, classes } = props;
+  const { t } = useTranslation();
+  
   return (
-    <img className={classes.pictureQuestion} src={question.questionExternalLink} alt="Hier sollte ein Bild sein"/>
+    <img className={classes.pictureQuestion} src={question.questionExternalLink} alt={t('altPictureText')}/>
   );
 }
 

@@ -2,6 +2,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
+import { useTranslation } from "react-i18next";
 
 const answerSelector = currentQuestion =>
   createSelector(
@@ -11,14 +12,15 @@ const answerSelector = currentQuestion =>
 
 function AnswerTextField(props) {
   const { question } = props;
+  const { t } = useTranslation();
 
   const answer = useSelector(answerSelector(question));
 
   return (
     <TextField
-      label="Anwort"
+      label={t('answer')}
       style={{ margin: 8, width: "80%" }}
-      helperText="Hannes tippt gerade..."
+      helperText={t('hannes')}
       margin="normal"
       variant="outlined"
       onChange={e => props.typeTextHandler(question.positionInRound, e)}

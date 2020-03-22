@@ -13,6 +13,7 @@ import { Paper, Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { withStyles } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 const styles = theme => ({
   questionWrapper: {
@@ -31,6 +32,7 @@ const styles = theme => ({
 
 function Quiz(props) {
   const { classes } = props;
+  const { t } = useTranslation();
   const activeStep = useSelector(state => state.quiz.activeQuestion);
   const totalNumberOfSteps = useSelector(state => state.quiz.questions.length);
   const questions = useSelector(state => state.quiz.questions);
@@ -67,7 +69,7 @@ function Quiz(props) {
           <Paper className={classes.questionWrapper}>
             <Grid className={classes.grid} container direction="column">
               <Grid item>
-                <Typography variant="h2">Frage #{question.positionInRound}</Typography>
+                <Typography variant="h2">{t("questionHeader", {number: question.positionInRound})}</Typography>
               </Grid>
               <Grid item>
                 <Box fontSize="h5.fontSize">{question.question}</Box>
@@ -90,18 +92,18 @@ function Quiz(props) {
         activeStep={activeStep}
         nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === totalNumberOfSteps - 1}>
-            Vor <KeyboardArrowRight />
+            {t("next")} <KeyboardArrowRight />
           </Button>
         }
         backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             <KeyboardArrowLeft />
-            Zurück
+            {t("previous")} 
           </Button>
         }
       />
       <Button variant="contained" onClick={handleTip}>
-        Trinkgeld
+        {t("tip")} 
       </Button>
     </React.Fragment>
   );
