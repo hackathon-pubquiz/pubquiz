@@ -41,6 +41,9 @@ import "moment/locale/de";
 import MomentUtils from "@date-io/moment";
 import {Web} from "@material-ui/icons";
 import AudioCall from "./audioCall/AudioCall";
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 
 const socket = io({
   autoConnect: false
@@ -120,6 +123,9 @@ const styles = theme => ({
   contentDrawerOpen: {
     paddingLeft: drawerOpenWidth + theme.spacing(2),
     transition: drawerTransition(theme, "padding-left", true)
+  },
+  formControl: {
+    justifyContent: "center"
   }
 });
 
@@ -161,7 +167,12 @@ class App extends React.Component {
       </div>
     );
 
-    const { classes, t } = this.props;
+    const { classes, t, i18n } = this.props;
+
+    const changeLanguage = event => {
+      console.log(event.target.value);
+      i18n.changeLanguage(event.target.value);
+    };
 
     const open = this.state.open;
     return (
@@ -192,6 +203,12 @@ class App extends React.Component {
             )}
             <Tab component={RouterLink} to="/login2/1" label={t('login')}></Tab>
             <Tab component={RouterLink} to="/quiz/1" label={t('quiz')}></Tab>
+            <FormControl className={classes.formControl}>
+              <Select value={i18n.language} onChange={changeLanguage}>
+                <MenuItem value={"de"}>de</MenuItem>
+                <MenuItem value={"en"}>en</MenuItem>
+              </Select>
+            </FormControl>
           </Tabs>
         </AppBar>
         <Drawer
