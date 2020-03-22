@@ -4,17 +4,13 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { useTranslation } from "react-i18next";
 
-const answerSelector = currentQuestion =>
-  createSelector(
-    state => state.quiz.questions,
-    questions => questions.filter(question => question.positionInRound === currentQuestion.positionInRound)[0].answer
-  );
+// const answerSelector = currentQuestion => createSelector(state => state.quiz.answers[currentQuestion.id]);
 
 function AnswerTextField(props) {
   const { question } = props;
   const { t } = useTranslation();
 
-  const answer = useSelector(answerSelector(question));
+  const answer = useSelector(state => state.quiz.answers[question.id]);
 
   return (
     <TextField
@@ -23,8 +19,8 @@ function AnswerTextField(props) {
       helperText={t('hannes')}
       margin="normal"
       variant="outlined"
-      onChange={e => props.typeTextHandler(question.positionInRound, e)}
-      value={answer}
+      onChange={e => props.typeTextHandler(question.id, e)}
+      value={answer && answer.text}
     />
   );
 }

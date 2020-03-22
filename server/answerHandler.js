@@ -1,16 +1,31 @@
+const { QuestionSubmission } = require("./models");
+
 class AnswerHandler {
   constructor(websocketHandler) {
     this.websocketHandler = websocketHandler;
   }
 
-  onUpdate = (ownSocket, data) => {
-    // data.channel
-    // data.nickname
-    // data.message
+  onUpdate = async (ownSocket, data) => {
+    // data.groupId
+    // data.questionId
+    // data.answerText
 
-    console.log("Incomming answer:" + JSON.stringify(data));
+    const [submission, created] = await QuestionSubmission.findOrCreate({
+      where: { groupId: data.groupId, questionId: data.questionId },
+      defaults: {
+        answer: data.answerText
+      }
+    });
+    if (!created) {
+      submission.answer = data.answerText;
+      await submission.save();
+    }
 
-    this.websocketHandler.sendMessage({ socket: ownSocket, room: null, eventName: "rec_message", data });
+    const broadcastPayload = {
+      type: "update_answer_from_ws",
+      data: data
+    };
+    this.websocketHandler.sendMessage({ socket: ownSocket, room: null, eventName: "action", data: broadcastPayload });
   };
 }
 

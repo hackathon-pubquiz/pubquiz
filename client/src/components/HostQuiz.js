@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, List, ListItem, Box, TextField } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 
 const HostQuiz = props => {
@@ -50,9 +50,12 @@ const HostQuiz = props => {
 
   const questionItems = questions.map(question => (
     <Typography key={question.id}>
-      Frage: {question.question}| Antwort:{question.correctAnswer} | Runde: {question.round}
+      Frage: {question.question || question.questionExternalLink} | Antwort:{question.correctAnswer} | Runde:
+      {question.round}
     </Typography>
   ));
+
+  const roundQuestions = questions.filter(q => q.round === round);
 
   const startQuiz = () => {
     console.log("starting quiz", quiz.id);
@@ -95,7 +98,15 @@ const HostQuiz = props => {
     );
   } else if (round <= lastRound) {
     return (
-      <HostQuizRound round={round} roundTime={5} finishRound={finishRound} timesUp={timesUp} startRound={startRound} />
+      <HostQuizRound
+        quizId={quiz.id}
+        round={round}
+        roundTime={5}
+        finishRound={finishRound}
+        timesUp={timesUp}
+        startRound={startRound}
+        questions={roundQuestions}
+      />
     );
   } else {
     return <div>Fertig: Ergebnisse</div>;
@@ -103,7 +114,7 @@ const HostQuiz = props => {
 };
 
 const HostQuizRound = props => {
-  const { round, roundTime, finishRound, timesUp, startRound } = props;
+  const { round, quizId, roundTime, finishRound, timesUp, startRound, questions } = props;
   const [counter, setCounter] = useState(roundTime);
   const [roundStarted, setRoundStarted] = useState(false);
 
@@ -133,26 +144,78 @@ const HostQuizRound = props => {
   };
 
   if (counter == 0) {
-    return (
-      <div>
-        <Typography variant="h4">Runde {round}: Antworten der Teams</Typography>
-        <Button variant="contained" color="primary" onClick={finishRound}>
-          Bewertung abschließen
-        </Button>
-      </div>
-    );
+    return <HostQuestionEvaluation quizId={quizId} round={round} finishRound={finishRound}></HostQuestionEvaluation>;
   } else {
+    const questionItems = questions.map(q => <Typography key={q.id}>{q.question}</Typography>);
     return (
-      <div>
+      <>
         <Typography variant="h4">Runde {round}</Typography>
-        <div>Zeit übrig: {counter}</div>
+        <Typography>Zeit übrig: {counter}</Typography>
+        <Typography>Fragen:{questionItems}</Typography>
         <Button variant="contained" color="primary" onClick={startTimer} disabled={roundStarted}>
           Runde starten
         </Button>
-      </div>
+      </>
     );
   }
 };
 
+const HostQuestionEvaluation = props => {
+  const { finishRound, quizId, round } = props;
+  const [answers, setAnswers] = useState({});
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/question_submissions/${quizId}/${round}`)
+      .then(res => res.json())
+      .then(
+        result => {
+          setAnswers(result);
+          setIsLoaded(true);
+        },
+        error => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, [quizId]);
+
+  if (!isLoaded) return <>Laden...</>;
+  else if (error) return <>Error: {error}</>;
+  else {
+    const answerItems = answers.map(answer => <QuestionSubmissions key={answer.id} questionWithSubmissions={answer} />);
+    return (
+      <>
+        <Typography variant="h4">Runde {round}: Antworten der Teams</Typography>
+        {answerItems}
+        <Button variant="contained" color="primary" onClick={finishRound}>
+          Bewertung abschließen
+        </Button>
+      </>
+    );
+  }
+};
+
+const QuestionSubmissions = props => {
+  const { questionWithSubmissions } = props;
+  const listItems = questionWithSubmissions.QuestionSubmissions.map(submission => (
+    <ListItem key={submission.id}>
+      <Box display="flex" justifyItems="space-between">
+        <Typography>{submission.answer}</Typography>
+        <TextField label="Punkte" type="number" />
+      </Box>
+    </ListItem>
+  ));
+  return (
+    <>
+      <Typography variant="h6">
+        Frage: {questionWithSubmissions.question || questionWithSubmissions.questionExternalLink}
+      </Typography>
+      <Typography variant="h6">Korrekte Antwort: {questionWithSubmissions.correctAnswer}</Typography>
+      <List>{listItems}</List>
+    </>
+  );
+};
+
 export default HostQuiz;
-export { HostQuizRound };

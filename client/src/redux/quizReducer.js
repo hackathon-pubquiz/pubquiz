@@ -8,41 +8,27 @@ export function setActiveQuestion(index) {
   };
 }
 
-export function updateAnswer(positionInRound, answer) {
+export function updateAnswer(groupId, questionId, answer) {
   return function(dispatch) {
     dispatch(send({ update: "update" }, "update"));
-    dispatch(updateAnswerInStore(positionInRound, answer));
+    dispatch(updateAnswerInStore(groupId, questionId, answer));
   };
 }
 
 const UPDATE_ANSWER_IN_STORE = "UPDATE_ANSWER_IN_STORE";
-export function updateAnswerInStore(positionInRound, answer) {
+export function updateAnswerInStore(groupId, questionId, answer) {
   return {
     type: UPDATE_ANSWER_IN_STORE,
     answer: answer,
-    positionInRound: positionInRound
+    questionId: questionId
   };
 }
 
 export function quizReducer(
   state = {
-    questions: [
-      { positionInRound: 1, question: "Wer ist das?", type: "text", questionExternalLink: "", answer: "" },
-      {
-        positionInRound: 2,
-        question: "Wie heißt der Song?",
-        type: "song",
-        questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM",
-        answer: ""
-      },
-      {
-        positionInRound: 3,
-        question: "Was ist das?",
-        type: "picture",
-        questionExternalLink: "http://thecatapi.com/api/images/get?format=src&type=jpg&size=med",
-        answer: ""
-      }
-    ],
+    quizId: 0,
+    questions: [],
+    answers: {}, // { questionId => { text: answer } }
     activeQuestion: 0
   },
   action
@@ -53,20 +39,24 @@ export function quizReducer(
         activeQuestion: action.activeQuestion
       });
     case UPDATE_ANSWER_IN_STORE:
-      const updatedQuestions = [];
-      for (const idx in state.questions) {
-        const question = state.questions[idx];
+      var currentAnswers = state.answers;
+      var newAnswers = Object.assign({}, currentAnswers, { [action.questionId]: { text: action.answer } });
+      return Object.assign({}, state, { answers: newAnswers });
 
-        if (question.positionInRound == action.positionInRound) {
-          const modifiedQuestion = Object.assign({}, question, {
-            answer: action.answer
-          });
-          updatedQuestions.push(modifiedQuestion);
-        } else {
-          updatedQuestions.push(question);
-        }
-      }
-      return Object.assign({}, state, { questions: updatedQuestions });
+    case "quiz_started": // From Websocket
+      const questions = action.data.questions.slice();
+
+      return Object.assign({}, state, {
+        quizId: action.data.id,
+        questions: questions
+      });
+
+    case "update_answer_from_ws": // From Websocket
+      var currentAnswers = state.answers;
+      var newAnswers = Object.assign({}, currentAnswers, {
+        [action.data.questionId]: { text: action.data.answerText }
+      });
+      return Object.assign({}, state, { answers: newAnswers });
     default:
       return state;
   }

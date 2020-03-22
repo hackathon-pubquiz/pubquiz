@@ -34,10 +34,10 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import Drawer from "@material-ui/core/Drawer";
 import ChatIcon from "@material-ui/icons/Chat";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import moment from "moment";
 import "moment/locale/de";
-import MomentUtils from '@date-io/moment';
+import MomentUtils from "@date-io/moment";
 
 const socket = io({
   autoConnect: false
@@ -267,7 +267,7 @@ function PickerUtilWrapper() {
     <MuiPickersUtilsProvider utils={MomentUtils} locale="de">
       <AppContainer />
     </MuiPickersUtilsProvider>
-  )
+  );
 }
 
 function ThemeWrapper() {
@@ -279,11 +279,9 @@ function ThemeWrapper() {
 }
 
 function ReduxWrapper() {
-  const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+  let socketIoMiddleware = createSocketIoMiddleware(socket, "/socket.io/");
+  const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, socketIoMiddleware)));
   sessionService.initSessionService(store);
-
-  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
-
   return (
     <Provider store={store}>
       <ThemeWrapper></ThemeWrapper>
