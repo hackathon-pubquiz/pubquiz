@@ -211,6 +211,18 @@ app.post("/api/login", async (req, res) => {
     where: { nickname: requested_nickname }
   });
 
+
+  if (personCreated){
+    Person.update({
+        uuid: require('uuid').v4()
+      },
+      {
+        where: {
+          nickname: requested_nickname
+        }
+      }
+    )}
+
   const [session, sessionCreated] = await Session.findOrCreate({
     where: { personId: person.id}
   });
