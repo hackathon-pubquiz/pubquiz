@@ -73,38 +73,35 @@ class ChatWrapper extends React.Component {
 
   handleCheer = event => {
     event.preventDefault();
-
-    this.getRoomName().then((room) => {
-      this.props.socket.emit("send_cheer", { room });
-    });
+    this.props.socket.emit("send_cheer", { room: this.getRoomName() });
   };
 
   getRoomName = () => {
-    return getGroup().then((group) => {
-      return group ? 'group-' + group.id : "no-op";
-    });
+    if(this.props.user.group && this.props.user.group.id) {
+      return 'group-' + this.props.user.group.id;
+    } else {
+      return 'no-group';
+    }
   };
 
   handleSubmit = event => {
     event.preventDefault();
 
-    let { socket } = this.props;
+    let { socket, user } = this.props;
     let { message } = this.state;
 
-    let nickname = "TODO Nick";
+    let {nickname} = user;
 
     if (message) {
       this.addMessage({ nickname, message });
-      this.getRoomName().then((room) => {
-        socket.emit("send_message", { nickname, room, message });
-      });
+      socket.emit("send_message", { nickname, room: this.getRoomName(), message });
     }
   };
 
   render() {
     let { messageLog } = this.state;
-    let {classes, t} = this.props;
-    let ownNickname = "TODO Nick";
+    let {classes, t, user} = this.props;
+    let ownNickname = user.nickname;
     return (
       <div>
         <div>

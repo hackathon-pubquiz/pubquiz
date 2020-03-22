@@ -203,7 +203,7 @@ class App extends React.Component {
             <Tab component={RouterLink} to="/quizmaster/1" label={t('quizmaster')}></Tab>
             <Tab component={RouterLink} to="/host/quizzes/1" label={t('host')}></Tab>
             {this.props.authenticated ? (
-              profileElement(this.props.loggedInUser.id)
+              profileElement(this.props.loggedInUser.nickname)
             ) : (
               <Tab component={RouterLink} to="/login/1" label={t('login')}></Tab>
             )}
