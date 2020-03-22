@@ -13,6 +13,7 @@ const HostQuiz = props => {
   const [questions, setQuestions] = useState([]);
 
   const [round, setRound] = useState(null);
+  const [lastRound, setLastRound] = useState(null);
 
   const { id } = useParams();
 
@@ -38,6 +39,7 @@ const HostQuiz = props => {
         result => {
           setQuestions(result);
           setQuestionsLoaded(true);
+          setLastRound(Math.max(...result.map(question => question.round)));
         },
         error => {
           setIsLoaded(true);
@@ -48,15 +50,30 @@ const HostQuiz = props => {
 
   const questionItems = questions.map(question => (
     <Typography key={question.id}>
-      Frage: {question.question}| Antwort:{question.correctAnswer}
+      Frage: {question.question}| Antwort:{question.correctAnswer} | Runde: {question.round}
     </Typography>
   ));
 
   const startQuiz = () => {
     console.log("starting quiz", quiz.id);
-    socket.emit("start_quiz", quiz.id)
+    socket.emit("start_quiz", quiz.id);
     setRound(1);
-  }
+  };
+
+  const finishRound = () => {
+    console.log("Bewertung abgeschlossen", round);
+    setRound(round + 1);
+  };
+
+  const startRound = () => {
+    console.log("Rundenzeit abgelaufen", quiz.id, round);
+    socket.emit("round_finished", quiz.id, round);
+  };
+
+  const timesUp = () => {
+    console.log("Rundenzeit abgelaufen", quiz.id, round);
+    socket.emit("round_finished", quiz.id, round);
+  };
 
   if (!isLoaded || !questionsLoaded) {
     return <Typography>Lade...</Typography>;
@@ -67,31 +84,56 @@ const HostQuiz = props => {
   } else if (!round) {
     return (
       <div>
-        <Typography variant="h4">Quiz {quiz.date}</Typography>
+        <Typography variant="h4">
+          Quiz {quiz.date}({lastRound} Runden)
+        </Typography>
         {questionItems}
         <Button variant="contained" color="primary" onClick={startQuiz}>
           Start!
         </Button>
       </div>
     );
+  } else if (round <= lastRound) {
+    return <HostQuizRound round={round} roundTime={5} finishRound={finishRound} timesUp={timesUp} />;
   } else {
-    return <HostQuizRound round={round} roundTime={60} />
+    return <div>Fertig: Ergebnisse</div>;
   }
 };
 
-const HostQuizRound = (props) => {
-  const { round, roundTime } = props;
-  const [counter, setCounter] = React.useState(roundTime);
+const HostQuizRound = props => {
+  const { round, roundTime, finishRound, timesUp } = props;
+  const [counter, setCounter] = useState(roundTime);
 
-  React.useEffect(() => {
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+  useEffect(() => {
+    setCounter(roundTime);
+  }, [round]);
+
+  useEffect(() => {
+    if (counter > 0) {
+      setTimeout(() => setCounter(counter - 1), 1000);
+    } else {
+      timesUp();
+    }
   }, [counter]);
 
-  return <div>
-    <div>Zeit übrig: {counter}</div>
-    <div>{round}</div>
-  </div>;
-}
+  if (counter == 0) {
+    return (
+      <div>
+        <Typography variant="h4">Runde {round}: Antworten der Teams</Typography>
+        <Button variant="contained" color="primary" onClick={finishRound}>
+          Runde abschließen
+        </Button>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <Typography variant="h4">Runde {round}</Typography>
+        <div>Zeit übrig: {counter}</div>
+      </div>
+    );
+  }
+};
 
 export default HostQuiz;
 export { HostQuizRound };
