@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {useWebRTC} from "./useWebRTC";
+import { ReactComponent as CallImg } from "../img/anruf.svg";
 
 const AudioCall = ({user}) => {
 
@@ -23,9 +24,8 @@ const AudioCall = ({user}) => {
     return <div>{e.sender}: {e.content}</div>
   });
 
-  return (
-    <div>
-      <div>My WebRTC ID is: {user.uuid} </div>
+  /*
+  <div>My WebRTC ID is: {user.uuid} </div>
       <div>Partner ID: {partnerContent}</div>
       <div>
         <input value={partnerID} onChange={(e) => setPartnerID(e.target.value)}/>
@@ -35,13 +35,13 @@ const AudioCall = ({user}) => {
         <input value={messageContent} onChange={(e) => setMessageContent(e.target.value)}/>
         <button onClick={() => connect_send(messageContent)}>Send Message</button>
       </div>
+   */
+
+  return (
+    <div>
       <div>
-        <button onClick={() => callPartner(false)}>Call group</button>
+        <CallImg style={{ maxWidth: 50 }} onClick={() =>  callPartner(false)}/>
       </div>
-      <div>
-        <button onClick={() => callPartner(true)}>Video Call</button>
-      </div>
-      <div>{computeHistory}</div>
       <div id={'parentAudio'}/>
     </div>
   );

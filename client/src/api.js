@@ -46,3 +46,9 @@ export function joinGroup(groupId, userId) {
     return true;
   });
 };
+
+export function fetchGroupMembers(groupID) {
+  return fetch("/api/persons/" + groupID.toString(), {
+    method: "GET",
+  }).then(response => response.json());
+}

@@ -40,7 +40,6 @@ import moment from "moment";
 import "moment/locale/de";
 import MomentUtils from "@date-io/moment";
 import {Web} from "@material-ui/icons";
-import AudioCall from "./audioCall/AudioCall";
 
 const socket = io({
   autoConnect: false
@@ -211,9 +210,7 @@ class App extends React.Component {
             <ChevronLeftIcon />
           </IconButton>
 
-          <AudioCall user={this.props.loggedInUser} addPartner={() => {}} />
-
-          <ChatWrapper socket={socket} open={open} />
+          <ChatWrapper socket={socket} open={open} user={this.props.loggedInUser}/>
         </Drawer>
         <main
           className={clsx(classes.content, {

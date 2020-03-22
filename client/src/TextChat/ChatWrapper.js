@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import {withStyles} from "@material-ui/core/styles";
 import { ReactComponent as CocktailIcon } from "../img/cocktail.svg";
 import { ReactComponent as PintIcon } from "../img/pint.svg";
+import AudioCall from "../audioCall/AudioCall";
 
 const styles = theme => ({
   root: {},
@@ -98,6 +99,9 @@ class ChatWrapper extends React.Component {
     let ownNickname = "TODO Nick";
     return (
       <div>
+        <div>
+          <AudioCall user={this.props.user} addPartner={() => {}} />
+        </div>
         {this.props.open ? (
           <div className={classes.control}>
             <Button
