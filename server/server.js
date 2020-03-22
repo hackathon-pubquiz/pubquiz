@@ -227,7 +227,7 @@ app.post("/api/login", async (req, res) => {
   });
 
   if(!person) {
-    person = await Person.create({ nickname: requested_nickname });
+    person = await Person.create({ nickname: requested_nickname, uuid: require('uuid').v4() });
   }
 
   const [session, sessionCreated] = await Session.findOrCreate({

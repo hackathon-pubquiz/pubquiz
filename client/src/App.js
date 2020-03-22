@@ -39,6 +39,8 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import moment from "moment";
 import "moment/locale/de";
 import MomentUtils from "@date-io/moment";
+import {Web} from "@material-ui/icons";
+import AudioCall from "./audioCall/AudioCall";
 
 const socket = io({
   autoConnect: false
@@ -56,6 +58,7 @@ function LoginStub(props) {
   const handleLogin = () => {
     dispatch(requestLoginUser(nickname));
   };
+
 
   return (
     <div>
@@ -207,6 +210,8 @@ class App extends React.Component {
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
+
+          <AudioCall user={this.props.loggedInUser} addPartner={() => {}} />
 
           <ChatWrapper socket={socket} open={open} />
         </Drawer>
