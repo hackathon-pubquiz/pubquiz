@@ -1,5 +1,7 @@
+import {setGroup} from "./redux/groupApi";
+
 export function login(pubId, nickname) {
-  const payload = { pubId, nickname };
+  const payload = {pubId, nickname};
   return fetch("/api/login", {
     method: "POST",
     headers: {
@@ -16,7 +18,7 @@ export function fetchGroup(groupID) {
 }
 
 export function createGroup(pubId, groupName, public_) {
-  const payload = { pubId, groupName, public: public_ };
+  const payload = {pubId, groupName, public: public_};
   return fetch("/api/group", {
     method: "POST",
     headers: {
@@ -25,3 +27,22 @@ export function createGroup(pubId, groupName, public_) {
     body: JSON.stringify(payload)
   }).then(response => response.json());
 }
+
+export function joinGroup(groupId, userId) {
+  const requestOptions = {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      groupId: groupId,
+      userId: userId
+    })
+  };
+
+  return fetch(
+    "/api/group/join",
+    requestOptions
+  ).then(response => response.json()).then((groupJson) => {
+    setGroup(groupJson);
+    return true;
+  });
+};

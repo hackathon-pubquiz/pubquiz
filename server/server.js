@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.PORT || 8080;
 
-const { Pub, Group, Person, Quiz, Question, Session } = require("./models");
+const { Pub, Group, Person, Quiz, Question, Session, QuestionSubmission } = require("./models");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,7 +79,7 @@ app.put("/api/person/:id", (req, res) =>
 //END person
 
 app.get("/api/quizzes/:pubId", (req, res) => {
-  Quiz.findAll({where: {pubId: req.params.pubId}}).then(result => {
+  Quiz.findAll({ where: { pubId: req.params.pubId } }).then(result => {
     res.json(result);
   });
 });
@@ -155,6 +155,15 @@ app.post("/api/questions", async (req, res) => {
 // TODO: put question
 // TODO: delete question?
 
+app.get("/api/question_submissions/:quizId/:round", (req, res) => {
+  Question.findAll({
+    where: { quizId: req.params.quizId, round: req.params.round },
+    include: [QuestionSubmission]
+  }).then(result => {
+    res.json(result);
+  });
+});
+
 app.get("/api/groups", (req, res) => {
   Group.findAll().then(result => {
     res.json(result);
@@ -162,7 +171,7 @@ app.get("/api/groups", (req, res) => {
 });
 
 app.get("/api/groups/:pubId", (req, res) => {
-  Group.findAll({where: {pubId: req.params.pubId}}).then(result => {
+  Group.findAll({ where: { pubId: req.params.pubId } }).then(result => {
     res.json(result);
   });
 });
@@ -178,10 +187,15 @@ app.post("/api/group", async (req, res) => {
     where: { name: groupName },
     defaults: {
       public: isPublic,
-      pubId: pubId,
+      pubId: pubId
     }
   });
-  console.log(`${isPublic ? "Public" : "Private"} group "${groupName}" created! (Pub ${pubId})`);
+  if(created) {
+    console.log(`${isPublic ? "Public" : "Private"} group "${groupName}" created! (Pub ${pubId})`);
+  } else {
+    console.log(`${isPublic ? "Public" : "Private"} group "${groupName}" reused! (Pub ${pubId})`);
+  }
+
   res.json({
     group: group
   });
@@ -195,39 +209,32 @@ app.post("/api/group/join", async (req, res, next) => {
   Group.findByPk(groupId).then(group => {
     if (!group) {
       next("Group does not exist");
-    } else if (group.public) {
+    } else  {
       group.addPerson(userId);
+      res.json(group);
       res.send();
-    } else {
-      next("Group was not public");
     }
   });
 });
 
 app.post("/api/login", async (req, res) => {
   const requested_nickname = req.body.nickname;
-  const {pubId} = req.body;
-  const [person, personCreated] = await Person.findOrCreate({
-    where: { nickname: requested_nickname }
+  const { pubId } = req.body;
+
+  let person = await Person.findOne({
+    where: { nickname: requested_nickname },
+    include: Group,
   });
 
-
-  if (personCreated){
-    Person.update({
-        uuid: require('uuid').v4()
-      },
-      {
-        where: {
-          nickname: requested_nickname
-        }
-      }
-    )}
+  if(!person) {
+    person = await Person.create({ nickname: requested_nickname });
+  }
 
   const [session, sessionCreated] = await Session.findOrCreate({
-    where: { personId: person.id}
+    where: { personId: person.id }
   });
   res.json({
-    person: person
+    person
   });
 });
 

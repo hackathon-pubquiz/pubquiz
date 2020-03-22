@@ -1,29 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Box, Fab, Typography } from "@material-ui/core";
+import React, {useState, useEffect} from "react";
+import {joinGroup} from "./api";
+import {Box, Fab, Typography} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
-
-const joinGroup = async (groupId, userId) => {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      groupId: groupId,
-      userId: userId
-    })
-  };
-
-  await fetch("/api/group/join", requestOptions).then(() => {
-    // TODO: weiterleiten zum Gruppenchat/oder so?
-  });
-};
+import { useTranslation } from "react-i18next";
 
 const Groups = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [groups, setGroups] = useState([]);
   const {pubId} = useParams();
+  const { t } = useTranslation();
 
   const userId = useSelector(state => state.session.user.id);
 
@@ -45,7 +33,7 @@ const Groups = () => {
   const groupItems = groups.map(group => {
     const joinButton = group.public ? (
       <Fab color="primary" onClick={() => joinGroup(group.id, userId)}>
-        <AddIcon />
+        <AddIcon/>
       </Fab>
     ) : null;
     return (
@@ -61,7 +49,7 @@ const Groups = () => {
   else
     return (
       <Typography>
-        Tritt einem der öffentlichen Teams bei!
+        {t('joinTeam')}
         {groupItems}
       </Typography>
     );

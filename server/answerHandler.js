@@ -10,14 +10,22 @@ class AnswerHandler {
     // data.questionId
     // data.answerText
 
-    console.log("Incomming answer:" + JSON.stringify(data));
     const [submission, created] = await QuestionSubmission.findOrCreate({
-      where: { groupId: data.groupId, positionInRound: data.positionInRound },
+      where: { groupId: data.groupId, questionId: data.questionId },
       defaults: {
         answer: data.answerText
       }
     });
-    this.websocketHandler.sendMessage({ socket: ownSocket, room: null, eventName: "rec_message", data });
+    if (!created) {
+      submission.answer = data.answerText;
+      await submission.save();
+    }
+
+    const broadcastPayload = {
+      type: "update_answer_from_ws",
+      data: data
+    };
+    this.websocketHandler.sendMessage({ socket: ownSocket, room: null, eventName: "action", data: broadcastPayload });
   };
 }
 
