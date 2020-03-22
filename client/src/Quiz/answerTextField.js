@@ -3,16 +3,10 @@ import TextField from "@material-ui/core/TextField";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
-const styles = theme => ({
-  questionWrapper: {
-    textAlign: "center"
-  }
-});
-
 const answerSelector = currentQuestion =>
   createSelector(
     state => state.quiz.questions,
-    questions => questions.filter(question => question.positionInRound == currentQuestion.positionInRound)[0].answer
+    questions => questions.filter(question => question.positionInRound === currentQuestion.positionInRound)[0].answer
   );
 
 function AnswerTextField(props) {

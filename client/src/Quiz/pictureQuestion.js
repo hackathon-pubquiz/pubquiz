@@ -10,7 +10,7 @@ const styles = theme => ({
 function PictureQuestion(props) {
   const { question, classes } = props;
   return (
-    <img className={classes.pictureQuestion} src={question.questionExternalLink}/>
+    <img className={classes.pictureQuestion} src={question.questionExternalLink} alt="Hier sollte ein Bild sein"/>
   );
 }
 

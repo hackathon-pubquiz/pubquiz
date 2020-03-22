@@ -55,6 +55,7 @@ function Quiz(props) {
     dispatch(updateAnswer(positionInRound, answerText));
     socket.emit("write_answer", { answerText });
   };
+
   const handleTip = () => {
     window.open("https://www.sandbox.paypal.com/us/signin", "Paypal");
   };
@@ -76,7 +77,7 @@ function Quiz(props) {
                 {question.type === "picture" ? <PictureQuestion question={question}></PictureQuestion>: ''}
               </Grid>
               <Grid item>
-                <AnswerTextField question={question}></AnswerTextField> 
+                <AnswerTextField question={question} typeTextHandler={typeText}></AnswerTextField> 
               </Grid>
             </Grid>
           </Paper>
