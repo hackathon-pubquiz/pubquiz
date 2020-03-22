@@ -85,6 +85,19 @@ Quiz.hasMany(Question);
 Question.belongsTo(Quiz);
 Quiz.belongsTo(Pub);
 
+const SumPointsOfQuizPerGroup = id =>
+  QuestionSubmission.findAll({
+    include: [
+      {
+        model: Question,
+        where: { quizId: id },
+        attributes: []
+      }
+    ],
+    attributes: ["groupId", [sequelize.fn("SUM", sequelize.col("points")), "total_points"]],
+    group: ["groupId"]
+  });
+
 Group.belongsToMany(Quiz, { through: "QuizGroups" });
 Quiz.belongsToMany(Group, { through: "QuizGroups" });
 
@@ -120,7 +133,7 @@ function seedDatabase() {
       Person.create({
         nickname: user,
         groupId: 1,
-        uuid: require('uuid').v4()
+        uuid: require("uuid").v4()
       });
     });
 
@@ -165,7 +178,7 @@ function seedDatabase() {
               {
                 answer: "Vierte",
                 groupId: 2,
-                points: 1
+                points: 2
               }
             ]
           },
@@ -215,5 +228,6 @@ module.exports = {
   Question,
   QuestionSubmission,
   Person,
-  Session
+  Session,
+  SumPointsOfQuizPerGroup
 };

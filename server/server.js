@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.PORT || 8080;
 
-const {Pub, Group, Person, Quiz, Question, Session, QuestionSubmission} = require("./models");
+const {Pub, Group, Person, Quiz, Question, Session, QuestionSubmission, SumPointsOfQuizPerGroup } = require("./models");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -104,6 +104,10 @@ app.get("/api/quizzes", (req, res) => {
 app.get("/api/quiz/:id", (req, res) => {
   Quiz.findByPk(req.params.id).then(result => res.json(result));
 });
+
+app.get("/api/quiz/:id/points", (req, res) => {
+  SumPointsOfQuizPerGroup(req.params.id).then(result => res.json(result));
+})
 // END quiz
 
 app.get("/api/questions", (req, res) => {

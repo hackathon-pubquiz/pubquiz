@@ -101,7 +101,7 @@ const HostQuiz = props => {
       <HostQuizRound
         quizId={quiz.id}
         round={round}
-        roundTime={5}
+        roundTime={1}
         finishRound={finishRound}
         timesUp={timesUp}
         startRound={startRound}
@@ -109,7 +109,49 @@ const HostQuiz = props => {
       />
     );
   } else {
-    return <div>Fertig: Ergebnisse</div>;
+    return <HostQuizResults quizId={quiz.id} />;
+  }
+};
+
+const HostQuizResults = props => {
+  const { quizId } = props;
+
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [pointsPerGroup, setPoints] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch(`/api/quiz/${quizId}/points`)
+      .then(res => res.json())
+      .then(
+        result => {
+          console.log(result);
+          setPoints(result);
+          setIsLoaded(true);
+        },
+        error => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, [quizId]);
+
+  if (!isLoaded) return <Typography>Laden...</Typography>;
+  else if (error) return <Typography>Error: {error}</Typography>;
+  else {
+    const resultPerGroup = pointsPerGroup.map(ppg => (
+      <ListItem key={ppg.groupId}>
+        <Typography>
+          GroupId: {ppg.groupId},Punkte: {ppg.total_points}
+        </Typography>
+      </ListItem>
+    ));
+    return (
+      <>
+        <Typography variant="h4">Ergebnisse</Typography>
+        <List>{resultPerGroup}</List>
+      </>
+    );
   }
 };
 
