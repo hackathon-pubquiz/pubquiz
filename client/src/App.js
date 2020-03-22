@@ -7,7 +7,6 @@ import ChatWrapper from "./TextChat/ChatWrapper";
 import Groups from "./Groups";
 import Persons from "./Persons";
 import QuizMaster from "./pages/QuizMaster";
-import Player from "./Player";
 import {darkTheme} from "./Themes";
 import {AppBar, MuiThemeProvider, Tab, Tabs, withStyles} from "@material-ui/core";
 import RegisterUserScreen from "./components/RegisterUserScreen";
@@ -216,9 +215,6 @@ class App extends React.Component {
             </Route>
             <Route path="/people">
               <Persons></Persons>
-            </Route>
-            <Route path="/player">
-              <Player></Player>
             </Route>
             <Route path="/quizmaster/:pubId/:quizId?">
               <QuizMaster />
