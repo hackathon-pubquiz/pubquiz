@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Fab, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { useSelector } from "react-redux";
+import {useParams} from "react-router-dom";
 
 const joinGroup = async (groupId, userId) => {
   const requestOptions = {
@@ -22,11 +23,12 @@ const Groups = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [groups, setGroups] = useState([]);
+  const {pubId} = useParams();
 
   const userId = useSelector(state => state.session.user.id);
 
   useEffect(() => {
-    fetch("/api/groups")
+    fetch("/api/groups/" + pubId)
       .then(res => res.json())
       .then(
         result => {
@@ -38,7 +40,7 @@ const Groups = () => {
           setError(error);
         }
       );
-  }, []);
+  }, [pubId]);
 
   const groupItems = groups.map(group => {
     const joinButton = group.public ? (

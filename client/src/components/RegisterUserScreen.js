@@ -1,10 +1,11 @@
 import { ReactComponent as BarrelIcon } from "../img/fass.svg";
 import { withStyles, TextField, Button, Grid, Switch, FormGroup, FormControlLabel } from "@material-ui/core";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Header from "./Header";
 import { login } from "../api";
 import { useDispatch } from "react-redux";
 import {requestLoginUser} from "../redux/sessions";
+import {useParams} from "react-router-dom";
 
 const styles = theme => ({
   footer: {
@@ -31,17 +32,29 @@ const styles = theme => ({
 
 function RegisterTeamScreen(props) {
   const [nickname, setNickname] = useState("");
+  const [pubName, setPubName] = useState("");
+  const {pubId} = useParams();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    fetch("/api/pub/" + pubId)
+      .then(res => res.json())
+      .then(
+        result => {
+          setPubName(result.name);
+        },
+      );
+  }, [pubId]);
+
   const handleLogin = () => {
-    dispatch(requestLoginUser(nickname));
+    dispatch(requestLoginUser(pubId, nickname));
   };
 
   const { classes } = props;
   return (
     <Grid container direction="column" alignItems="center" className={classes.main}>
       <Grid item className={classes.headerContainer}>
-        <Header />
+        <Header pubName={pubName} />
       </Grid>
       <Grid item>
         <TextField label="Dein Name" onChange={e => setNickname(e.target.value)} value={nickname} />

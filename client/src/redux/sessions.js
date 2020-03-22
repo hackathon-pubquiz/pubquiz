@@ -1,9 +1,9 @@
 import { login } from "../api";
 import { sessionService } from "redux-react-session";
 
-export function requestLoginUser(nickname) {
+export function requestLoginUser(pubId, nickname) {
   return function(dispatch) {
-    return login(nickname).then(json => {
+    return login(pubId, nickname).then(json => {
       console.log("Logging in this user");
       console.log(json);
       console.log(json.person);
