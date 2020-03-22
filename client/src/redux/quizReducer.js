@@ -66,7 +66,13 @@ export function quizReducer(
     case "quiz_started":
       console.log("Penis");
       console.log(action);
-      return state;
+      const questions = action.data.questions.slice();
+      console.log(questions);
+
+      return Object.assign({}, state, {
+        quizId: action.data.id,
+        questions: questions
+      });
     default:
       return state;
   }

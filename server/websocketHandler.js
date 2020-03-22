@@ -1,4 +1,4 @@
-const { Quiz } = require("./models");
+const { Quiz, Question } = require("./models");
 const ChatHandler = require("./chatHandler");
 const AnswerHandler = require("./answerHandler");
 
@@ -18,7 +18,9 @@ class WebsocketHandler {
       socket.on("start_quiz", data => {
         console.log("got start_quiz with id " + data);
         socket.broadcast.emit("quiz_started", data);
-        Quiz.findByPk(data).then(result => socket.broadcast.emit("action", { type: "quiz_started", data: result }));
+        Quiz.findByPk(data, { include: Question }).then(result =>
+          socket.broadcast.emit("action", { type: "quiz_started", data: result })
+        );
       });
 
       socket.on("disconnect", () => {
