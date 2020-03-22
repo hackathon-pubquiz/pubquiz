@@ -31,7 +31,7 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => {
-  return { usedId: state.session.user };
+  return { user: state.session.user };
 };
 
 class ChatWrapper extends React.Component {
