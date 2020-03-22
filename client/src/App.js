@@ -26,6 +26,10 @@ import { connect } from "react-redux";
 import Drawer from "@material-ui/core/Drawer";
 import ChatIcon from "@material-ui/icons/Chat";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import moment from "moment";
+import "moment/locale/de";
+import MomentUtils from '@date-io/moment';
 
 const socket = io({
   autoConnect: false
@@ -242,10 +246,20 @@ const mapDispatchToProps = { requestLogoutUser: requestLogoutUser() };
 
 const AppContainer = withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));
 
+moment.locale("de");
+
+function PickerUtilWrapper() {
+  return (
+    <MuiPickersUtilsProvider utils={MomentUtils} locale="de">
+      <AppContainer />
+    </MuiPickersUtilsProvider>
+  )
+}
+
 function ThemeWrapper() {
   return (
     <MuiThemeProvider theme={darkTheme}>
-      <AppContainer />
+      <PickerUtilWrapper />
     </MuiThemeProvider>
   );
 }
