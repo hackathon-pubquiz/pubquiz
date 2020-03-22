@@ -222,7 +222,7 @@ class App extends React.Component {
               <QuizMaster />
             </Route>
             <Route path="/quiz">
-              <Quiz></Quiz>
+              <Quiz socket={socket}></Quiz>
             </Route>
           </Switch>
         </main>

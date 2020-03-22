@@ -85,7 +85,7 @@ app.get("/api/quizzes", (req, res) => {
 });
 
 app.get("/api/quiz/:id", (req, res) => {
-  Quiz.findByPk(req.params.id).then(result => res.json(result))
+  Quiz.findByPk(req.params.id).then(result => res.json(result));
 });
 // END quiz
 
@@ -96,48 +96,47 @@ app.get("/api/questions", (req, res) => {
 });
 
 app.get("/api/questions/:quizId", (req, res) => {
-  Question.findAll({where: {quizId: req.params.quizId}}).then(result => {
+  Question.findAll({ where: { quizId: req.params.quizId } }).then(result => {
     res.json(result);
   });
 });
 
-app.get("/api/question/:id", (req, res) =>
-  Question.findByPk(req.params.id).then(result => res.json(result))
-);
+app.get("/api/question/:id", (req, res) => Question.findByPk(req.params.id).then(result => res.json(result)));
 
 app.post("/api/questions", async (req, res) => {
-  let {pubId, quizId, date, questions} = req.body;
+  let { pubId, quizId, date, questions } = req.body;
 
   let success = true;
 
   let quiz = null;
-  if(quizId) {
+  if (quizId) {
     quiz = await Quiz.findByPk(quizId);
   }
 
-  if(quiz) {
+  if (quiz) {
     quiz.update(date);
   } else {
-    quiz = await Quiz.create({date, pubId});
+    quiz = await Quiz.create({ date, pubId });
     quizId = quiz.id;
   }
 
   await questions.forEach((i_question, i) => {
-    let {round, positionInround, question, questionExternalLink, correctAnswer} = i_question;
+    let { round, positionInround, question, questionExternalLink, correctAnswer } = i_question;
 
-    Question.findOne({where: {quizId, round, positionInround}})
-      .then((result) => {
-        if(result) {
-          return result.update({question, questionExternalLink, correctAnswer});
+    Question.findOne({ where: { quizId, round, positionInround } })
+      .then(result => {
+        if (result) {
+          return result.update({ question, questionExternalLink, correctAnswer });
         } else {
-          return Question.create({quizId, round, positionInround, question, questionExternalLink, correctAnswer});
+          return Question.create({ quizId, round, positionInround, question, questionExternalLink, correctAnswer });
         }
-      }).then((opResult) => {
+      })
+      .then(opResult => {
         success = success && true;
       });
   });
 
-  res.json({success, quizId});
+  res.json({ success, quizId });
 });
 
 // TODO: post question

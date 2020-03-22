@@ -13,6 +13,7 @@ const styles = theme => ({
 
 function TextQuestion(props) {
   const { question, classes } = props;
+
   return (
     <Paper className={classes.questionWrapper}>
       <Typography variant="h2">Frage #{question.positionInRound}</Typography>
@@ -23,6 +24,7 @@ function TextQuestion(props) {
         helperText="Hannes tippt gerade..."
         margin="normal"
         variant="outlined"
+        onChange={props.typeTextHandler}
       />
     </Paper>
   );

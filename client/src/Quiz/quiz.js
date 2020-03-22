@@ -8,12 +8,13 @@ import TextQuestion from "./textQuestion";
 import { setActiveQuestion } from "../redux/quizReducer";
 import SwipeableViews from "react-swipeable-views";
 
-function Quiz() {
+function Quiz(props) {
   const activeStep = useSelector(state => state.quiz.activeQuestion);
   const totalNumberOfSteps = useSelector(state => state.quiz.questions.length);
   const questions = useSelector(state => state.quiz.questions);
 
   const dispatch = useDispatch();
+  const socket = props.socket;
 
   const handleNext = () => {
     dispatch(setActiveQuestion(activeStep + 1));
@@ -27,11 +28,16 @@ function Quiz() {
     dispatch(setActiveQuestion(step));
   };
 
+  const typeText = e => {
+    const answerText = e.target.value;
+    socket.emit("write_answer", { answerText });
+  };
+
   return (
     <React.Fragment>
       <SwipeableViews axis="x" index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
         {questions.map(question => (
-          <TextQuestion question={question}></TextQuestion>
+          <TextQuestion question={question} typeTextHandler={typeText}></TextQuestion>
         ))}
       </SwipeableViews>
       <MobileStepper
