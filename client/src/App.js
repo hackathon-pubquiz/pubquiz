@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Link as RouterLink, Route, Switch } from "react-router-dom";
+import React, {useState} from "react";
+import {BrowserRouter as Router, Link as RouterLink, Route, Switch} from "react-router-dom";
 import io from "socket.io-client";
 import clsx from "clsx";
 
@@ -8,21 +8,22 @@ import Groups from "./Groups";
 import Persons from "./Persons";
 import QuizMaster from "./pages/QuizMaster";
 import Player from "./Player";
-import { darkTheme } from "./Themes";
-import { withStyles, MuiThemeProvider } from "@material-ui/core";
+import {darkTheme} from "./Themes";
+import {AppBar, MuiThemeProvider, Tab, Tabs, withStyles} from "@material-ui/core";
 import RegisterUserScreen from "./components/RegisterUserScreen";
 import RegisterTeamScreen from "./components/RegisterTeamScreen";
+import CheerBackdrop from "./components/CheerBackdrop";
 import Quiz from "./Quiz/quiz";
+import HostQuizzes from "./components/HostQuizzes";
+import HostQuiz from "./components/HostQuiz";
 
-import { useDispatch } from "react-redux";
-import { requestLoginUser, requestLogoutUser } from "./redux/sessions";
+import {connect, useDispatch} from "react-redux";
+import {requestLoginUser, requestLogoutUser} from "./redux/sessions";
 import Pubs from "./Pubs";
-import { Tabs, Tab, Grid, AppBar, Typography } from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import { connect } from "react-redux";
 import Drawer from "@material-ui/core/Drawer";
 import ChatIcon from "@material-ui/icons/Chat";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -151,6 +152,7 @@ class App extends React.Component {
     return (
       <Router>
         <CssBaseline />
+        <CheerBackdrop socket={socket} />
 
         <AppBar
           position="static"
@@ -221,6 +223,8 @@ class App extends React.Component {
             <Route path="/quizmaster/:pubId/:quizId?">
               <QuizMaster />
             </Route>
+            <Route path="/host/quiz/:id" component={HostQuiz} />
+            <Route path="/host/quizzes" component={HostQuizzes} />
             <Route path="/quiz">
               <Quiz socket={socket}></Quiz>
             </Route>

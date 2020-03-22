@@ -12,6 +12,7 @@ class WebsocketHandler {
 
     this.io.on("connection", socket => {
       socket.on("send_message", data => this.chatHandler.onIncomingChat(socket, data));
+      socket.on("send_cheer", data => this.chatHandler.onIncomingCheer(socket));
       socket.on("write_answer", data => this.answerHandler.onUpdate(socket, data));
       socket.on("disconnect", () => {
         // ...
@@ -20,7 +21,9 @@ class WebsocketHandler {
   }
 
   sendMessage = ({ socket, room, eventName, data }) => {
-    console.debug(Object.keys(this.clients));
+    if (socket.id === room) {
+      this.io.to(room).emit(eventName, data);
+    }
 
     if (room) {
       socket.to(room).emit(eventName, data);
