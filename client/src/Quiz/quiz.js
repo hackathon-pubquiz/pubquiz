@@ -5,15 +5,28 @@ import Button from "@material-ui/core/Button";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import TextQuestion from "./textQuestion";
+import AudioQuestion from "./audioQuestion";
 import { setActiveQuestion } from "../redux/quizReducer";
 import SwipeableViews from "react-swipeable-views";
+import { Paper } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import { withStyles } from "@material-ui/core";
 
-function Quiz() {
+const styles = theme => ({
+  questionWrapper: {
+    textAlign: "center"
+  }
+});
+
+function Quiz(props) {
+  const { classes } = props;
   const activeStep = useSelector(state => state.quiz.activeQuestion);
   const totalNumberOfSteps = useSelector(state => state.quiz.questions.length);
   const questions = useSelector(state => state.quiz.questions);
 
   const dispatch = useDispatch();
+  const socket = props.socket;
 
   const handleNext = () => {
     dispatch(setActiveQuestion(activeStep + 1));
@@ -27,11 +40,25 @@ function Quiz() {
     dispatch(setActiveQuestion(step));
   };
 
+  const typeText = (positionInRound, e) => {
+    const answerText = e.target.value;
+    dispatch(updateAnswer(positionInRound, answerText));
+    socket.emit("write_answer", { answerText });
+  };
+  const handleTip = () => {
+    window.open("https://www.sandbox.paypal.com/us/signin", "Paypal");
+  };
+
   return (
     <React.Fragment>
       <SwipeableViews axis="x" index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
         {questions.map(question => (
-          <TextQuestion question={question}></TextQuestion>
+          <Paper className={classes.questionWrapper}>
+            <Typography variant="h2">Frage #{question.positionInRound}</Typography>
+            <Box fontSize="h5.fontSize">{question.question}</Box>
+            {question.type === "song" ? <AudioQuestion question={question}></AudioQuestion> : ""}
+            <TextQuestion question={question} typeTextHandler={typeText}></TextQuestion>
+          </Paper>
         ))}
       </SwipeableViews>
       <MobileStepper
@@ -51,8 +78,11 @@ function Quiz() {
           </Button>
         }
       />
+      <Button variant="contained" onClick={handleTip}>
+        Trinkgeld
+      </Button>
     </React.Fragment>
   );
 }
 
-export default Quiz;
+export default withStyles(styles)(Quiz);

@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {BrowserRouter as Router, Link as RouterLink, Route, Switch} from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Link as RouterLink, Route, Switch } from "react-router-dom";
 import io from "socket.io-client";
 import clsx from "clsx";
 
@@ -7,9 +7,8 @@ import ChatWrapper from "./TextChat/ChatWrapper";
 import Groups from "./Groups";
 import Persons from "./Persons";
 import QuizMaster from "./pages/QuizMaster";
-import Player from "./Player";
-import {darkTheme} from "./Themes";
-import {AppBar, MuiThemeProvider, Tab, Tabs, withStyles} from "@material-ui/core";
+import { darkTheme } from "./Themes";
+import { AppBar, MuiThemeProvider, Tab, Tabs, withStyles } from "@material-ui/core";
 import RegisterUserScreen from "./components/RegisterUserScreen";
 import RegisterTeamScreen from "./components/RegisterTeamScreen";
 import CheerBackdrop from "./components/CheerBackdrop";
@@ -17,8 +16,16 @@ import Quiz from "./Quiz/quiz";
 import HostQuizzes from "./components/HostQuizzes";
 import HostQuiz from "./components/HostQuiz";
 
-import {connect, useDispatch} from "react-redux";
-import {requestLoginUser, requestLogoutUser} from "./redux/sessions";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/rootReducer.js";
+import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { sessionService } from "redux-react-session";
+import createSocketIoMiddleware from "redux-socket.io";
+
+import { connect, useDispatch } from "react-redux";
+import { requestLoginUser, requestLogoutUser } from "./redux/sessions";
 import Pubs from "./Pubs";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from "@material-ui/core/Button";
@@ -165,18 +172,18 @@ class App extends React.Component {
             <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start">
               <ChatIcon />
             </IconButton>
-            <Tab component={RouterLink} to="/pubs" label="Pubs"></Tab>
-            <Tab component={RouterLink} to="/groups" label="Gruppen"></Tab>
+            <Tab component={RouterLink} to="/groups/1" label="Gruppen"></Tab>
             <Tab component={RouterLink} to="/people" label="Personen"></Tab>
             <Tab component={RouterLink} to="/player" label="Player"></Tab>
-            <Tab component={RouterLink} to="/quizmaster" label="Quizmaster"></Tab>
+            <Tab component={RouterLink} to="/quizmaster/1" label="Quizmaster"></Tab>
+            <Tab component={RouterLink} to="/host/quizzes/1" label="Host"></Tab>
             {this.props.authenticated ? (
               profileElement(this.props.loggedInUser.nickname)
             ) : (
-              <Tab component={RouterLink} to="/login" label="Login"></Tab>
+              <Tab component={RouterLink} to="/login/1" label="Login"></Tab>
             )}
-            <Tab component={RouterLink} to="/login2" label="Login"></Tab>
-            <Tab component={RouterLink} to="/quiz" label="Quiz"></Tab>
+            <Tab component={RouterLink} to="/login2/1" label="Login"></Tab>
+            <Tab component={RouterLink} to="/quiz/1" label="Quiz"></Tab>
           </Tabs>
         </AppBar>
         <Drawer
@@ -199,34 +206,36 @@ class App extends React.Component {
           <ChatWrapper socket={socket} open={open} />
         </Drawer>
         <main
-          className={clsx(classes.content, { [classes.contentDrawerOpen]: open, [classes.contentDrawerClosed]: !open })}
+          className={clsx(classes.content, {
+            [classes.contentDrawerOpen]: open,
+            [classes.contentDrawerClosed]: !open
+          })}
         >
           <Switch>
-            <Route path="/login">
+            <Route path="/login/:pubId">
               <RegisterUserScreen />
             </Route>
-            <Route path="/login2">
+            <Route path="/login2/:pubId">
               <RegisterTeamScreen />
             </Route>
             <Route path="/pubs">
               <Pubs></Pubs>
             </Route>
-            <Route path="/groups">
+            <Route path="/groups/:pubId">
               <Groups></Groups>
             </Route>
             <Route path="/people">
               <Persons></Persons>
             </Route>
-            <Route path="/player">
-              <Player></Player>
-            </Route>
             <Route path="/quizmaster/:pubId/:quizId?">
               <QuizMaster />
             </Route>
-            <Route path="/host/quiz/:id" component={HostQuiz} />
-            <Route path="/host/quizzes" component={HostQuizzes} />
-            <Route path="/quiz">
-              <Quiz></Quiz>
+            <Route path="/host/quiz/:id">
+              <HostQuiz socket={socket} />
+            </Route>
+            <Route path="/host/quizzes/:pubId" component={HostQuizzes} />
+            <Route path="/quiz/:quizId">
+              <Quiz socket={socket}></Quiz>
             </Route>
           </Switch>
         </main>
@@ -255,4 +264,17 @@ function ThemeWrapper() {
   );
 }
 
-export default ThemeWrapper;
+function ReduxWrapper() {
+  const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+  sessionService.initSessionService(store);
+
+  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
+
+  return (
+    <Provider store={store}>
+      <ThemeWrapper></ThemeWrapper>
+    </Provider>
+  );
+}
+
+export default ReduxWrapper;
