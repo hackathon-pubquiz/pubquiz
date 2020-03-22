@@ -78,6 +78,12 @@ app.put("/api/person/:id", (req, res) =>
 );
 //END person
 
+app.get("/api/quizzes/:pubId", (req, res) => {
+  Quiz.findAll({where: {pubId: req.params.pubId}}).then(result => {
+    res.json(result);
+  });
+});
+
 app.get("/api/quizzes", (req, res) => {
   Quiz.findAll().then(result => {
     res.json(result);
@@ -88,6 +94,12 @@ app.get("/api/quiz/:id", (req, res) => {
   Quiz.findByPk(req.params.id).then(result => res.json(result))
 });
 // END quiz
+
+app.get("/api/questions", (req, res) => {
+  Question.findAll().then(result => {
+    res.json(result);
+  });
+});
 
 app.get("/api/questions", (req, res) => {
   Question.findAll().then(result => {
@@ -150,19 +162,27 @@ app.get("/api/groups", (req, res) => {
   });
 });
 
+app.get("/api/groups/:pubId", (req, res) => {
+  Group.findAll({where: {pubId: req.params.pubId}}).then(result => {
+    res.json(result);
+  });
+});
+
 app.get("/api/group/:id", (req, res) => Group.findByPk(req.params.id).then(result => res.json(result)));
 
 app.post("/api/group", async (req, res) => {
   const groupName = req.body.groupName;
   const isPublic = req.body.public;
+  const pubId = req.body.pubId;
 
   const [group, created] = await Group.findOrCreate({
     where: { name: groupName },
     defaults: {
-      public: isPublic
+      public: isPublic,
+      pubId: pubId,
     }
   });
-  console.log(`${isPublic ? "Public" : "Private"} group ${groupName} created!`);
+  console.log(`${isPublic ? "Public" : "Private"} group "${groupName}" created! (Pub ${pubId})`);
   res.json({
     group: group
   });
@@ -187,12 +207,13 @@ app.post("/api/group/join", async (req, res, next) => {
 
 app.post("/api/login", async (req, res) => {
   const requested_nickname = req.body.nickname;
+  const {pubId} = req.body;
   const [person, personCreated] = await Person.findOrCreate({
     where: { nickname: requested_nickname }
   });
 
   const [session, sessionCreated] = await Session.findOrCreate({
-    where: { personId: person.id }
+    where: { personId: person.id}
   });
   res.json({
     person: person

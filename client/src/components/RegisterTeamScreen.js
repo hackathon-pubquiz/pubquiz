@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Header from "./Header";
 import { useDispatch } from "react-redux";
 import { requestGroupCreation } from "../redux/createGroup";
+import { useParams } from "react-router-dom";
 
 const styles = theme => ({
   footer: {
@@ -22,6 +23,7 @@ const styles = theme => ({
 function RegisterTeamScreen(props) {
   const [public_, setPublic] = useState(false);
   const [groupName, setGroupName] = useState("");
+  const {pubId} = useParams();
   const dispatch = useDispatch();
 
   const handlePublicSwitch = event => {
@@ -50,7 +52,7 @@ function RegisterTeamScreen(props) {
           variant="contained"
           color="primary"
           className={classes.goButton}
-          onClick={() => dispatch(requestGroupCreation(groupName, public_))}
+          onClick={() => dispatch(requestGroupCreation(pubId, groupName, public_))}
         >
           TEAM STARTEN!
         </Button>
