@@ -25,17 +25,20 @@ function AnswerTextField(props) {
     socket.emit("release_answer", { questionId: question.id, userId: userId, groupId: groupId });
   };
 
+  const helperText =
+    answer && answer.personId !== null && answer.personId !== userId ? t("someoneIsTyping", { name: "Kollege" }) : "";
+
   return (
     <TextField
       label={t("answer")}
       style={{ margin: 8, width: "80%" }}
-      helperText={t("hannes")}
+      helperText={helperText}
       margin="normal"
       variant="outlined"
       onChange={e => props.typeTextHandler(question.id, e)}
       onFocus={lockAnswer}
       onBlur={releaseAnswer}
-      value={answer && answer.text}
+      value={answer && answer.answer}
     />
   );
 }

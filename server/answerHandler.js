@@ -23,7 +23,10 @@ class AnswerHandler {
 
     const broadcastPayload = {
       type: "update_answer_from_ws",
-      data: data
+      data: {
+        questionId: data.questionId,
+        answer: submission
+      }
     };
     this.websocketHandler.sendMessage({ socket: ownSocket, room: null, eventName: "action", data: broadcastPayload });
   };
@@ -32,23 +35,56 @@ class AnswerHandler {
     // data.questionId
     // data.groupId
     // data.userId
-
     const [submission, created] = await QuestionSubmission.findOrCreate({
       where: { groupId: data.groupId, questionId: data.questionId },
       defaults: {
-        userId: data.userId
+        personId: data.userId
       }
     });
     if (!created) {
-      submission.userId = data.userId;
+      submission.personId = data.userId;
       await submission.save();
     }
 
-    console.log("Locking answer");
+    const broadcastPayload = {
+      type: "update_answer_from_ws",
+      data: {
+        questionId: data.questionId,
+        answer: submission
+      }
+    };
+    this.websocketHandler.sendMessage({ socket: ownSocket, room: null, eventName: "action", data: broadcastPayload });
   };
 
   onRelease = async (ownSocket, data) => {
-    console.log("Releasing answer");
+    // data.questionId
+    // data.groupId
+    // data.userId
+    const [submission, created] = await QuestionSubmission.findOrCreate({
+      where: { groupId: data.groupId, questionId: data.questionId },
+      defaults: {
+        answer: "",
+        personId: null
+      }
+    });
+    if (!created) {
+      submission.personId = null;
+      await submission.save();
+    }
+
+    const broadcastPayload = {
+      type: "update_answer_from_ws",
+      data: {
+        questionId: data.questionId,
+        answer: submission
+      }
+    };
+    this.websocketHandler.sendMessage({
+      socket: ownSocket,
+      room: null,
+      eventName: "action",
+      data: broadcastPayload
+    });
   };
 }
 

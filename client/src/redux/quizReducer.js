@@ -36,7 +36,7 @@ export function quizReducer(
   state = {
     quizId: 0,
     questions: [],
-    answers: {}, // { questionId => { text: answer } }
+    answers: {}, // { questionId => { answer: "foo", personId: X } }
     activeQuestion: 0
   },
   action
@@ -61,9 +61,16 @@ export function quizReducer(
 
     case "update_answer_from_ws": // From Websocket
       var currentAnswers = state.answers;
+      var newAnswer = Object.assign({}, currentAnswers[action.data.questionId], action.data.answer);
+
+      console.log(action);
+
       var newAnswers = Object.assign({}, currentAnswers, {
-        [action.data.questionId]: { text: action.data.answerText }
+        [action.data.questionId]: newAnswer
       });
+
+      console.log(newAnswers);
+
       return Object.assign({}, state, { answers: newAnswers });
     default:
       return state;
