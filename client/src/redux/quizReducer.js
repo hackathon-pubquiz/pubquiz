@@ -8,28 +8,29 @@ export function setActiveQuestion(index) {
   };
 }
 
-export function updateAnswer(positionInRound, answer) {
+export function updateAnswer(groupId, questionId, answer) {
   return function(dispatch) {
     dispatch(send({ update: "update" }, "update"));
-    dispatch(updateAnswerInStore(positionInRound, answer));
+    dispatch(updateAnswerInStore(groupId, questionId, answer));
   };
 }
 
 const UPDATE_ANSWER_IN_STORE = "UPDATE_ANSWER_IN_STORE";
-export function updateAnswerInStore(positionInRound, answer) {
+export function updateAnswerInStore(groupId, questionId, answer) {
   return {
     type: UPDATE_ANSWER_IN_STORE,
     answer: answer,
-    positionInRound: positionInRound
+    questionId: questionId
   };
 }
 
 export function quizReducer(
   state = {
+    quizId: 0,
     questions: [
-      { positionInRound: 1, question: "Was ist das?", type: "text", questionExternalLink: "", answer: "" },
-      { positionInRound: 2, question: "Wo ist das?", type: "text", questionExternalLink: "", answer: "" },
-      { positionInRound: 3, question: "Wer ist das?", type: "text", questionExternalLink: "", answer: "" },
+      { id: 0, positionInRound: 1, question: "Was ist das?", type: "text", questionExternalLink: "", answer: "" },
+      { id: 1, positionInRound: 2, question: "Wo ist das?", type: "text", questionExternalLink: "", answer: "" },
+      { id: 2, positionInRound: 3, question: "Wer ist das?", type: "text", questionExternalLink: "", answer: "" },
       {
         positionInRound: 4,
         question: "Wie heißt der Song?",
@@ -52,7 +53,7 @@ export function quizReducer(
       for (const idx in state.questions) {
         const question = state.questions[idx];
 
-        if (question.positionInRound == action.positionInRound) {
+        if (question.questionId == action.questionId) {
           const modifiedQuestion = Object.assign({}, question, {
             answer: action.answer
           });
@@ -62,6 +63,10 @@ export function quizReducer(
         }
       }
       return Object.assign({}, state, { questions: updatedQuestions });
+    case "quiz_started":
+      console.log("Penis");
+      console.log(action);
+      return state;
     default:
       return state;
   }

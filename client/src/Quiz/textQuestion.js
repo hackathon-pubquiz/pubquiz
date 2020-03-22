@@ -27,7 +27,7 @@ function TextQuestion(props) {
       helperText="Hannes tippt gerade..."
       margin="normal"
       variant="outlined"
-      onChange={e => props.typeTextHandler(question.positionInRound, e)}
+      onChange={e => props.typeTextHandler(question.id, e)}
       value={answer}
     />
   );

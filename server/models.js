@@ -70,8 +70,7 @@ QuestionSubmission.init(
     answer: Sequelize.STRING
   },
   {
-    sequelize,
-    modelName: "questionSubmission"
+    sequelize
   }
 );
 

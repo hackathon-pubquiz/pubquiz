@@ -40,10 +40,11 @@ function Quiz(props) {
     dispatch(setActiveQuestion(step));
   };
 
-  const typeText = (positionInRound, e) => {
+  const typeText = (questionId, e) => {
     const answerText = e.target.value;
-    dispatch(updateAnswer(positionInRound, answerText));
-    socket.emit("write_answer", { answerText });
+    const groupId = 1;
+    dispatch(updateAnswer(groupId, questionId, answerText));
+    socket.emit("write_answer", { groupId, questionId, answerText });
   };
   const handleTip = () => {
     window.open("https://www.sandbox.paypal.com/us/signin", "Paypal");

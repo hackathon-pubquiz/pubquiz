@@ -9,8 +9,7 @@ import PlayArrow from "@material-ui/icons/PlayArrow";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-const styles = theme => ({
-});
+const styles = theme => ({});
 
 class AudioQuestion extends Component {
   constructor(props) {
@@ -30,7 +29,6 @@ class AudioQuestion extends Component {
 
   render() {
     const { question } = this.props;
-    console.log(question)
     const { volume, volumeOn, playing, progress } = this.state;
 
     const changeVol = (event, vol) => {
@@ -54,8 +52,7 @@ class AudioQuestion extends Component {
 
     const updateProgess = () => {
       if (this.player) {
-        const newProgress =
-          (100 / this.state.secondsToPlay) * this.player.getCurrentTime();
+        const newProgress = (100 / this.state.secondsToPlay) * this.player.getCurrentTime();
         this.setState({ progress: newProgress });
 
         if (newProgress >= 100) {
@@ -92,7 +89,7 @@ class AudioQuestion extends Component {
             </IconButton>
           </Grid>
           <Grid item xs={2}>
-            <Slider value={volume} onChange={changeVol} aria-labelledby="continuous-slider" color="secondary"/>
+            <Slider value={volume} onChange={changeVol} aria-labelledby="continuous-slider" color="secondary" />
           </Grid>
         </Grid>
       </div>

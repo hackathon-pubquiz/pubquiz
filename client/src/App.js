@@ -265,11 +265,12 @@ function ThemeWrapper() {
 }
 
 function ReduxWrapper() {
-  const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+  let socketIoMiddleware = createSocketIoMiddleware(socket, "/socket.io/");
+  const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, socketIoMiddleware)));
   sessionService.initSessionService(store);
-
-  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
-
+  store.subscribe(() => {
+    console.log("new client state", store.getState());
+  });
   return (
     <Provider store={store}>
       <ThemeWrapper></ThemeWrapper>
