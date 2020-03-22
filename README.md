@@ -5,6 +5,8 @@ and allows pub owners to keep the connection to their regulars and even generate
 
 This project was started as part of the [WirVsVirus-Hackathon](https://wirvsvirushackathon.org/).
 
+You can get an impression on how the app looks like [in our mock up](https://projects.invisionapp.com/boards/8X3YZTXKBV5/).
+
 # Developing
 
 ## Prerequisites
