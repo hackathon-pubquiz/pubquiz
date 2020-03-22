@@ -10,7 +10,6 @@ class AnswerHandler {
     // data.questionId
     // data.answerText
 
-    console.log("Incomming answer:" + JSON.stringify(data));
     const [submission, created] = await QuestionSubmission.findOrCreate({
       where: { groupId: data.groupId, questionId: data.questionId },
       defaults: {

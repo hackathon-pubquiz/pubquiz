@@ -3,16 +3,12 @@ import TextField from "@material-ui/core/TextField";
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
-const answerSelector = currentQuestion =>
-  createSelector(
-    state => state.quiz.questions,
-    questions => questions.filter(question => question.positionInRound === currentQuestion.positionInRound)[0].answer
-  );
+// const answerSelector = currentQuestion => createSelector(state => state.quiz.answers[currentQuestion.id]);
 
 function AnswerTextField(props) {
   const { question } = props;
 
-  const answer = useSelector(answerSelector(question));
+  const answer = useSelector(state => state.quiz.answers[question.id]);
 
   return (
     <TextField
@@ -22,7 +18,7 @@ function AnswerTextField(props) {
       margin="normal"
       variant="outlined"
       onChange={e => props.typeTextHandler(question.id, e)}
-      value={answer}
+      value={answer && answer.text}
     />
   );
 }
