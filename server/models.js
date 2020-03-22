@@ -77,6 +77,7 @@ QuestionSubmission.init(
 QuestionSubmission.belongsTo(Question);
 QuestionSubmission.belongsTo(Group);
 
+Quiz.hasMany(Question);
 Question.belongsTo(Quiz);
 Quiz.belongsTo(Pub);
 
@@ -117,6 +118,48 @@ function seedDatabase() {
         groupId: 1
       });
     });
+
+    Quiz.create(
+      {
+        date: new Date(),
+        state: "future",
+        questions: [
+          {
+            type: "normaloderso?",
+            round: 1,
+            positionInround: 1,
+            question: "Muss das so?",
+            correctAnswer: "Ja",
+            pubId: 1
+          },
+          {
+            type: "normaloderso?",
+            round: 1,
+            positionInround: 2,
+            question: "Könnt ihr noch?",
+            correctAnswer: "Ja",
+            pubId: 1
+          },
+          {
+            type: "normaloderso?",
+            round: 2,
+            positionInround: 1,
+            question: "Habt ihr genug getrunken?",
+            correctAnswer: "Ja",
+            pubId: 1
+          },
+          {
+            type: "normaloderso?",
+            round: 3,
+            positionInround: 1,
+            question: "Würdet ihr an einem virtuellen Pubquiz teilnehmen?",
+            correctAnswer: "Ja",
+            pubId: 1
+          }
+        ]
+      },
+      { include: [Question, Pub] }
+    );
   });
 }
 
