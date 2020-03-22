@@ -66,8 +66,8 @@ const HostQuiz = props => {
   };
 
   const startRound = () => {
-    console.log("Rundenzeit abgelaufen", quiz.id, round);
-    socket.emit("round_finished", quiz.id, round);
+    console.log("Runde gestartet", quiz.id, round);
+    socket.emit("round_started", quiz.id, round);
   };
 
   const timesUp = () => {
@@ -94,34 +94,40 @@ const HostQuiz = props => {
       </div>
     );
   } else if (round <= lastRound) {
-    return <HostQuizRound round={round} roundTime={5} finishRound={finishRound} timesUp={timesUp} />;
+    return (
+      <HostQuizRound round={round} roundTime={5} finishRound={finishRound} timesUp={timesUp} startRound={startRound} />
+    );
   } else {
     return <div>Fertig: Ergebnisse</div>;
   }
 };
 
 const HostQuizRound = props => {
-  const { round, roundTime, finishRound, timesUp } = props;
+  const { round, roundTime, finishRound, timesUp, startRound } = props;
   const [counter, setCounter] = useState(roundTime);
+  const [roundStarted, setRoundStarted] = useState(false);
 
   useEffect(() => {
-    setCounter(roundTime);
-  }, [round]);
-
-  useEffect(() => {
-    if (counter > 0) {
-      setTimeout(() => setCounter(counter - 1), 1000);
-    } else {
-      timesUp();
+    if (roundStarted) {
+      if (counter > 0) {
+        setTimeout(() => setCounter(counter - 1), 1000);
+      } else {
+        timesUp();
+      }
     }
-  }, [counter]);
+  }, [counter, roundStarted]);
+
+  const startTimer = () => {
+    setRoundStarted(true);
+    setCounter(roundTime);
+  };
 
   if (counter == 0) {
     return (
       <div>
         <Typography variant="h4">Runde {round}: Antworten der Teams</Typography>
         <Button variant="contained" color="primary" onClick={finishRound}>
-          Runde abschließen
+          Bewertung abschließen
         </Button>
       </div>
     );
@@ -130,6 +136,9 @@ const HostQuizRound = props => {
       <div>
         <Typography variant="h4">Runde {round}</Typography>
         <div>Zeit übrig: {counter}</div>
+        <Button variant="contained" color="primary" onClick={startTimer} disabled={roundStarted}>
+          Runde starten
+        </Button>
       </div>
     );
   }
