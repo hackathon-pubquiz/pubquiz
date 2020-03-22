@@ -38,7 +38,6 @@ class AudioQuestion extends Component {
 
   render() {
     const { question, classes } = this.props;
-    console.log(question);
     const { volume, volumeOn, playing, progress } = this.state;
 
     const changeVol = (event, vol) => {

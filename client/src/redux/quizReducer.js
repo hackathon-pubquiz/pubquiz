@@ -27,23 +27,7 @@ export function updateAnswerInStore(groupId, questionId, answer) {
 export function quizReducer(
   state = {
     quizId: 0,
-    questions: [
-      { id: 1, question: "Wer ist das?", type: "text", questionExternalLink: "", answer: "" },
-      {
-        id: 2,
-        question: "Wie heißt der Song?",
-        type: "song",
-        questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM",
-        answer: ""
-      },
-      {
-        id: 3,
-        question: "Was ist das?",
-        type: "picture",
-        questionExternalLink: "http://thecatapi.com/api/images/get?format=src&type=jpg&size=med",
-        answer: ""
-      }
-    ],
+    questions: [],
     activeQuestion: 0
   },
   action
@@ -69,10 +53,7 @@ export function quizReducer(
       }
       return Object.assign({}, state, { questions: updatedQuestions });
     case "quiz_started":
-      console.log("Penis");
-      console.log(action);
       const questions = action.data.questions.slice();
-      console.log(questions);
 
       return Object.assign({}, state, {
         quizId: action.data.id,
