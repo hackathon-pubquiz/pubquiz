@@ -4,5 +4,5 @@ import { quizReducer } from "./quizReducer";
 
 export default combineReducers({
   session: sessionReducer,
-  quiz: quizReducer
+  quiz: quizReducer,
 });

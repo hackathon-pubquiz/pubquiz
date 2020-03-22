@@ -2,7 +2,7 @@ import { withStyles, TextField, Button, Grid, Switch, FormGroup, FormControlLabe
 import React, { useState } from "react";
 import Header from "./Header";
 import { useDispatch } from "react-redux";
-import { requestGroupCreation } from "../redux/createGroup";
+import { requestGroupCreation } from "../redux/groupApi";
 import { useParams } from "react-router-dom";
 
 const styles = theme => ({
