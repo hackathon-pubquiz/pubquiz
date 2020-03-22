@@ -107,6 +107,15 @@ const HostQuizRound = props => {
   const [counter, setCounter] = useState(roundTime);
   const [roundStarted, setRoundStarted] = useState(false);
 
+  const resetState = () => {
+    setCounter(roundTime);
+    setRoundStarted(false);
+  };
+
+  useEffect(() => {
+    resetState();
+  }, [round]);
+
   useEffect(() => {
     if (roundStarted) {
       if (counter > 0) {
@@ -120,6 +129,7 @@ const HostQuizRound = props => {
   const startTimer = () => {
     setRoundStarted(true);
     setCounter(roundTime);
+    startRound();
   };
 
   if (counter == 0) {

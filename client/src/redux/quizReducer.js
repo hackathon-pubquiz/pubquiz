@@ -28,14 +28,19 @@ export function quizReducer(
   state = {
     quizId: 0,
     questions: [
-      { id: 0, positionInRound: 1, question: "Was ist das?", type: "text", questionExternalLink: "", answer: "" },
-      { id: 1, positionInRound: 2, question: "Wo ist das?", type: "text", questionExternalLink: "", answer: "" },
-      { id: 2, positionInRound: 3, question: "Wer ist das?", type: "text", questionExternalLink: "", answer: "" },
+      { id: 1, question: "Wer ist das?", type: "text", questionExternalLink: "", answer: "" },
       {
-        positionInRound: 4,
+        id: 2,
         question: "Wie heißt der Song?",
         type: "song",
         questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM",
+        answer: ""
+      },
+      {
+        id: 3,
+        question: "Was ist das?",
+        type: "picture",
+        questionExternalLink: "http://thecatapi.com/api/images/get?format=src&type=jpg&size=med",
         answer: ""
       }
     ],

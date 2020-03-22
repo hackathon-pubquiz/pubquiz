@@ -125,7 +125,7 @@ function seedDatabase() {
         state: "future",
         questions: [
           {
-            type: "normaloderso?",
+            type: "text",
             round: 1,
             positionInround: 1,
             question: "Muss das so?",
@@ -133,7 +133,7 @@ function seedDatabase() {
             pubId: 1
           },
           {
-            type: "normaloderso?",
+            type: "text",
             round: 1,
             positionInround: 2,
             question: "Könnt ihr noch?",
@@ -141,7 +141,7 @@ function seedDatabase() {
             pubId: 1
           },
           {
-            type: "normaloderso?",
+            type: "text",
             round: 2,
             positionInround: 1,
             question: "Habt ihr genug getrunken?",
@@ -149,10 +149,26 @@ function seedDatabase() {
             pubId: 1
           },
           {
-            type: "normaloderso?",
+            type: "text",
             round: 3,
             positionInround: 1,
             question: "Würdet ihr an einem virtuellen Pubquiz teilnehmen?",
+            correctAnswer: "Ja",
+            pubId: 1
+          },
+          {
+            type: "song",
+            round: 4,
+            positionInround: 1,
+            questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM",
+            correctAnswer: "Ja",
+            pubId: 1
+          },
+          {
+            type: "picture",
+            round: 4,
+            positionInround: 2,
+            questionExternalLink: "http://thecatapi.com/api/images/get?format=src&type=jpg&size=med",
             correctAnswer: "Ja",
             pubId: 1
           }
