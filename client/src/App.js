@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {BrowserRouter as Router, Link as RouterLink, Route, Switch} from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Link as RouterLink, Route, Switch } from "react-router-dom";
 import io from "socket.io-client";
 import clsx from "clsx";
 
@@ -8,8 +8,8 @@ import Groups from "./Groups";
 import Persons from "./Persons";
 import QuizMaster from "./pages/QuizMaster";
 import Player from "./Player";
-import {darkTheme} from "./Themes";
-import {AppBar, MuiThemeProvider, Tab, Tabs, withStyles} from "@material-ui/core";
+import { darkTheme } from "./Themes";
+import { AppBar, MuiThemeProvider, Tab, Tabs, withStyles } from "@material-ui/core";
 import RegisterUserScreen from "./components/RegisterUserScreen";
 import RegisterTeamScreen from "./components/RegisterTeamScreen";
 import CheerBackdrop from "./components/CheerBackdrop";
@@ -17,8 +17,16 @@ import Quiz from "./Quiz/quiz";
 import HostQuizzes from "./components/HostQuizzes";
 import HostQuiz from "./components/HostQuiz";
 
-import {connect, useDispatch} from "react-redux";
-import {requestLoginUser, requestLogoutUser} from "./redux/sessions";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/rootReducer.js";
+import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { sessionService } from "redux-react-session";
+import createSocketIoMiddleware from "redux-socket.io";
+
+import { connect, useDispatch } from "react-redux";
+import { requestLoginUser, requestLogoutUser } from "./redux/sessions";
 import Pubs from "./Pubs";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Button from "@material-ui/core/Button";
@@ -199,7 +207,10 @@ class App extends React.Component {
           <ChatWrapper socket={socket} open={open} />
         </Drawer>
         <main
-          className={clsx(classes.content, { [classes.contentDrawerOpen]: open, [classes.contentDrawerClosed]: !open })}
+          className={clsx(classes.content, {
+            [classes.contentDrawerOpen]: open,
+            [classes.contentDrawerClosed]: !open
+          })}
         >
           <Switch>
             <Route path="/login">
@@ -255,4 +266,17 @@ function ThemeWrapper() {
   );
 }
 
-export default ThemeWrapper;
+function ReduxWrapper() {
+  const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+  sessionService.initSessionService(store);
+
+  let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
+
+  return (
+    <Provider store={store}>
+      <ThemeWrapper></ThemeWrapper>
+    </Provider>
+  );
+}
+
+export default ReduxWrapper;

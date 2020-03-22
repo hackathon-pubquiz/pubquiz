@@ -7,6 +7,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import TextQuestion from "./textQuestion";
 import { setActiveQuestion } from "../redux/quizReducer";
 import SwipeableViews from "react-swipeable-views";
+import { updateAnswer } from "../redux/quizReducer";
 
 function Quiz(props) {
   const activeStep = useSelector(state => state.quiz.activeQuestion);
@@ -28,8 +29,9 @@ function Quiz(props) {
     dispatch(setActiveQuestion(step));
   };
 
-  const typeText = e => {
+  const typeText = (positionInRound, e) => {
     const answerText = e.target.value;
+    dispatch(updateAnswer(positionInRound, answerText));
     socket.emit("write_answer", { answerText });
   };
 

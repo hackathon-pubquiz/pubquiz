@@ -4,6 +4,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { withStyles } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
 
 const styles = theme => ({
   questionWrapper: {
@@ -11,8 +13,16 @@ const styles = theme => ({
   }
 });
 
+const answerSelector = currentQuestion =>
+  createSelector(
+    state => state.quiz.questions,
+    questions => questions.filter(question => question.positionInRound == currentQuestion.positionInRound)[0].answer
+  );
+
 function TextQuestion(props) {
   const { question, classes } = props;
+
+  const answer = useSelector(answerSelector(question));
 
   return (
     <Paper className={classes.questionWrapper}>
@@ -24,7 +34,8 @@ function TextQuestion(props) {
         helperText="Hannes tippt gerade..."
         margin="normal"
         variant="outlined"
-        onChange={props.typeTextHandler}
+        onChange={e => props.typeTextHandler(question.positionInRound, e)}
+        value={answer}
       />
     </Paper>
   );

@@ -126,6 +126,7 @@ module.exports = {
   Group,
   Quiz,
   Question,
+  QuestionSubmission,
   Person,
   Session
 };

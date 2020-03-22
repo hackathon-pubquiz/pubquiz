@@ -14,6 +14,7 @@ class WebsocketHandler {
       socket.on("send_message", data => this.chatHandler.onIncomingChat(socket, data));
       socket.on("send_cheer", data => this.chatHandler.onIncomingCheer(socket));
       socket.on("write_answer", data => this.answerHandler.onUpdate(socket, data));
+      socket.on("update", data => console.log(data));
       socket.on("disconnect", () => {
         // ...
       });
