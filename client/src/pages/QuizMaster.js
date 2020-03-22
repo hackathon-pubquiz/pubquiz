@@ -323,10 +323,7 @@ class QuizMaster extends React.Component {
       <form action="/" method="POST" noValidate autoComplete="off" onSubmit={this.onSubmit} className={classes.main}>
         <Grid container direction="column" className={classes.mainGrid} wrap="nowrap">
           <Grid item>
-            <Header compact nomargin pubName={pubName} />
-          </Grid>
-          <Grid item>
-            <Paper variant="outlined" square>
+            <Header compact noMargin pubName={pubName}>
               <Grid container justify="space-between" alignItems="center" wrap="nowrap" className={classes.dateWrapper}>
                 <Grid item>
                   <DateTimePicker ampm={false} disablePast label={t('quizStart')} value={this.state.startDateTime} onChange={this.onDateChange} />
@@ -335,7 +332,7 @@ class QuizMaster extends React.Component {
                   <Button type="submit" variant="contained">{t('save')}</Button>
                 </Grid>
               </Grid>
-            </Paper>
+            </Header>
           </Grid>
           <Grid item className={classes.roundWrapper}>
             {

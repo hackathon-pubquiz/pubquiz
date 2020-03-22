@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, Grid } from "@material-ui/core";
+import {withStyles, Grid, Paper} from "@material-ui/core";
 import pubquizBackground from "../img/pubquiz_background.png";
 import { ReactComponent as BeerIcon } from "../img/bier.svg";
 
@@ -103,20 +103,32 @@ const stylesCompact = theme => ({
 
 
 const HeaderCompact = withStyles(stylesCompact)(props => {
-  const { classes, pubName, nomargin } = props;
+  const { classes, pubName, noMargin, children } = props;
 
-  const headerClasses = `${classes.header} ${nomargin ? 'no-margin' : ''}`;
+  const headerClasses = `${classes.header} ${noMargin ? 'no-margin' : ''}`;
+
+  let Headline = (<></>);
+  if (children) {
+    Headline = (
+      <Paper variant="outlined" square>
+        {children}
+      </Paper>
+    )
+  }
 
   return (
-    <Grid container component="header" className={headerClasses} alignItems="center" wrap="nowrap">
-      <Grid item>
-        <BeerIcon className={classes.beerIcon} />
+    <>
+      <Grid container component="header" className={headerClasses} alignItems="center" wrap="nowrap">
+        <Grid item>
+          <BeerIcon className={classes.beerIcon} />
+        </Grid>
+        <Grid item>
+          <h1 className={classes.headline}>Pub Quiz</h1>
+          <h3>{pubName}</h3>
+        </Grid>
       </Grid>
-      <Grid item>
-        <h1 className={classes.headline}>Pub Quiz</h1>
-        <h3>{pubName}</h3>
-      </Grid>
-    </Grid>
+      {Headline}
+    </>
   );
 });
 
