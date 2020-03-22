@@ -50,9 +50,8 @@ function Quiz(props) {
           <Paper className={classes.questionWrapper}>
           <Typography variant="h2">Frage #{question.positionInRound}</Typography>
           <Box fontSize="h5.fontSize">{question.question}</Box>
-              {question.type === "text" ? 
-                <TextQuestion question={question}></TextQuestion> : 
-                <AudioQuestion question={question}></AudioQuestion>}
+          {question.type === "song" ? <AudioQuestion question={question}></AudioQuestion>: ''}
+          <TextQuestion question={question}></TextQuestion> 
           </Paper>
         ))}          
       </SwipeableViews>
