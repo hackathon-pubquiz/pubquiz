@@ -68,7 +68,8 @@ Question.init(
 class QuestionSubmission extends Model {}
 QuestionSubmission.init(
   {
-    answer: Sequelize.STRING
+    answer: Sequelize.STRING,
+    points: Sequelize.INTEGER
   },
   {
     sequelize
@@ -138,11 +139,13 @@ function seedDatabase() {
             QuestionSubmissions: [
               {
                 answer: "Erste Antwort",
-                groupId: 1
+                groupId: 1,
+                points: 1
               },
               {
                 answer: "Andere Antwort",
-                groupId: 2
+                groupId: 2,
+                points: 1
               }
             ]
           },
@@ -156,11 +159,13 @@ function seedDatabase() {
             QuestionSubmissions: [
               {
                 answer: "Dritte",
-                groupId: 1
+                groupId: 1,
+                points: 1
               },
               {
                 answer: "Vierte",
-                groupId: 2
+                groupId: 2,
+                points: 1
               }
             ]
           },
