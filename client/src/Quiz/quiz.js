@@ -8,6 +8,7 @@ import TextQuestion from "./textQuestion";
 import { setActiveQuestion } from "../redux/quizReducer";
 import SwipeableViews from "react-swipeable-views";
 
+
 function Quiz() {
   const activeStep = useSelector(state => state.quiz.activeQuestion);
   const totalNumberOfSteps = useSelector(state => state.quiz.questions.length);
@@ -26,6 +27,10 @@ function Quiz() {
   const handleStepChange = step => {
     dispatch(setActiveQuestion(step));
   };
+
+  const handleTip = () => {
+    window.open("https://www.sandbox.paypal.com/us/signin", "Paypal");
+  }
 
   return (
     <React.Fragment>
@@ -51,8 +56,14 @@ function Quiz() {
           </Button>
         }
       />
+      <Button 
+        variant="contained" onClick={handleTip}>
+          Trinkgeld
+        </Button>
     </React.Fragment>
   );
 }
+
+
 
 export default Quiz;
