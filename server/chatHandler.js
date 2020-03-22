@@ -5,17 +5,17 @@ class ChatHandler {
   }
 
   onIncomingChat = (ownSocket, data) => {
-    // data.channel
+    // data.room
     // data.nickname
     // data.message
 
     console.log('Incomming chat:' + JSON.stringify(data));
 
-    this.websocketHandler.sendMessage({socket: ownSocket, room: null, eventName: 'rec_message', data});
+    this.websocketHandler.sendMessage({socket: ownSocket, room: data.room, eventName: 'rec_message', data});
   };
 
   onIncomingCheer = (ownSocket, data) => {
-    this.websocketHandler.sendMessage({socket: ownSocket, room: null, eventName: 'rec_cheer'});
+    this.websocketHandler.sendMessage({socket: ownSocket, room: data.room, eventName: 'rec_cheer'});
     // self send the cheer ;)
     this.websocketHandler.sendMessage({socket: ownSocket, room: ownSocket.id, eventName: 'rec_cheer'});
   };

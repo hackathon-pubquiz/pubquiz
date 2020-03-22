@@ -14,6 +14,7 @@ const Groups = () => {
   const { t } = useTranslation();
 
   const userId = useSelector(state => state.session.user.id);
+  const socketId = useSelector(state => state.socket.socketId);
 
   useEffect(() => {
     fetch("/api/groups/" + pubId)
@@ -32,7 +33,7 @@ const Groups = () => {
 
   const groupItems = groups.map(group => {
     const joinButton = group.public ? (
-      <Fab color="primary" onClick={() => joinGroup(group.id, userId)}>
+      <Fab color="primary" onClick={() => joinGroup(group.id, userId, socketId)}>
         <AddIcon/>
       </Fab>
     ) : null;

@@ -44,6 +44,7 @@ import AudioCall from "./audioCall/AudioCall";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
+import {setSocketId} from "./redux/socketReducer";
 
 const socket = io({
   autoConnect: false
@@ -131,6 +132,10 @@ const styles = theme => ({
 
 class App extends React.Component {
   componentDidMount() {
+    socket.on('connect', () => {
+      this.props.setSocketId(socket.id);
+    });
+
     socket.open();
   }
 
@@ -279,7 +284,7 @@ const mapStateToProps = ({ session }) => {
   };
 };
 
-const mapDispatchToProps = { requestLogoutUser: requestLogoutUser() };
+const mapDispatchToProps = { requestLogoutUser: requestLogoutUser(), setSocketId };
 
 const AppContainer = withTranslation()(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App)));
 

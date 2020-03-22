@@ -28,13 +28,14 @@ export function createGroup(pubId, groupName, public_) {
   }).then(response => response.json());
 }
 
-export function joinGroup(groupId, userId) {
+export function joinGroup(groupId, userId, socketId) {
   const requestOptions = {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
-      groupId: groupId,
-      userId: userId
+      groupId,
+      userId,
+      socketId
     })
   };
 
