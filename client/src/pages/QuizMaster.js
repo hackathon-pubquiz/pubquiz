@@ -10,6 +10,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import {DateTimePicker} from "@material-ui/pickers";
 import moment from "moment";
 import Header from "../components/Header";
+import { withTranslation } from 'react-i18next';
 
 
 const questionStyles = theme => ({
@@ -308,7 +309,7 @@ class QuizMaster extends React.Component {
   };
 
   render() {
-    const {classes} = this.props;
+    const {classes, t} = this.props;
     const {questions, successMessage, inputState} = this.state;
 
     const numRounds = this.state.rounds.length;
@@ -325,10 +326,10 @@ class QuizMaster extends React.Component {
           <Header compact />
           <Grid item container justify="space-between" alignItems="center" wrap="nowrap" className={classes.dateWrapper}>
             <Grid item>
-              <DateTimePicker ampm={false} disablePast label="Quizbeginn" value={this.state.startDateTime} onChange={this.onDateChange} />
+              <DateTimePicker ampm={false} disablePast label={t('quizStart')} value={this.state.startDateTime} onChange={this.onDateChange} />
             </Grid>
             <Grid item>
-              <Button type="submit" variant="contained">Speichern</Button>
+              <Button type="submit" variant="contained">{t('save')}</Button>
             </Grid>
           </Grid>
           <Grid item className={classes.roundWrapper}>
@@ -350,21 +351,21 @@ class QuizMaster extends React.Component {
               activeStep={activeRound}
               nextButton={
                 <Button size="small" onClick={() => this.setState({activeRound: activeRound + 1})} disabled={!canGoRight}>
-                  Vor
+                  {t('next')}
                   <KeyboardArrowRight />
                 </Button>
               }
               backButton={
                 <Button size="small" onClick={() => this.setState({activeRound: activeRound - 1})} disabled={!canGoLeft}>
                   <KeyboardArrowLeft />
-                  Zurück
+                  {t('previous')}
                 </Button>
               }
             />
           </Grid>
           <Grid item>
             <Button variant="contained" fullWidth color="primary" onClick={this.roundAddHandler}>
-              Runde hinzufügen
+            {t('addRound')}
             </Button>
           </Grid>
         </Grid>
@@ -470,4 +471,4 @@ function getStateValue(stateValues, id) {
   }
 }
 
-export default withStyles(quizMasterStyles)(withRouter(QuizMaster));
+export default withTranslation()(withStyles(quizMasterStyles)(withRouter(QuizMaster)));

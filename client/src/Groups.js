@@ -52,14 +52,14 @@ const Groups = () => {
     ) : null;
     return (
       <Box display="flex" justifyContent="space-between" alignItems="center" key={group.id} m={2}>
-        <Typography variant="h5">Team: "{group.name}"</Typography>
+        <Typography variant="h5">{t('team', {name: group.name})}</Typography>
         {joinButton}
       </Box>
     );
   });
 
-  if (error) return <div>Error: {error.message}</div>;
-  else if (!isLoaded) return <div>Loading...</div>;
+  if (error) return <div>{t("error",{message: error.message})}</div>;
+  else if (!isLoaded) return <div>{t("loading")}</div>;
   else
     return (
       <Typography>

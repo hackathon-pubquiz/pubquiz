@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withTranslation } from 'react-i18next';
 
 class Pubs extends Component {
   constructor(props) {
@@ -25,12 +26,13 @@ class Pubs extends Component {
 
   render() {
     const { error, isLoaded, pubs } = this.state;
+    const { t } = this.props;
     const pubItems = pubs.map(pub => <div key={pub.id}>{pub.name}</div>);
 
-    if (error) return <div>Error: {error.message}</div>;
-    else if (!isLoaded) return <div>Loading...</div>;
-    else return <div>Pubs:{pubItems}</div>;
+    if (error) return <div>{t("error",{message: error.message})}</div>;
+    else if (!isLoaded) return <div>{t("loading")}</div>;
+    else return <div>{t("pubs", {pubs: pubItems})}</div>;
   }
 }
 
-export default Pubs;
+export default withTranslation()(Pubs);
