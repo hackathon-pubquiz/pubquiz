@@ -9,10 +9,10 @@ export function setActiveQuestion(index) {
 export function quizReducer(
   state = {
     questions: [
-      { positionInRound: 1, question: "Was ist das?", type: "text", questionExternalLink: "" },
-      { positionInRound: 2, question: "Wo ist das?", type: "text", questionExternalLink: "" },
-      { positionInRound: 3, question: "Wer ist das?", type: "text", questionExternalLink: "" },
-      { positionInRound: 4, question: "Wie heißt der Song?", type: "song", questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM" }
+      { positionInRound: 1, question: "Wo ist das?", type: "text", questionExternalLink: "" },
+      { positionInRound: 2, question: "Wer ist das?", type: "text", questionExternalLink: "" },
+      { positionInRound: 3, question: "Wie heißt der Song?", type: "song", questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM" },
+      { positionInRound: 4, question: "Was ist das?", type: "picture", questionExternalLink: "http://thecatapi.com/api/images/get?format=src&type=jpg&size=med" }
     ],
     activeQuestion: 0
   },

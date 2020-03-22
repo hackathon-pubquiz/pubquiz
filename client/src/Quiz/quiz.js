@@ -4,18 +4,28 @@ import MobileStepper from "@material-ui/core/MobileStepper";
 import Button from "@material-ui/core/Button";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import TextQuestion from "./textQuestion";
+import AnswerTextField from "./answerTextField";
 import AudioQuestion from "./audioQuestion";
+import PictureQuestion from "./pictureQuestion";
 import { setActiveQuestion } from "../redux/quizReducer";
 import SwipeableViews from "react-swipeable-views";
-import { Paper } from "@material-ui/core";
+import { Paper, Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { withStyles } from "@material-ui/core";
 
 const styles = theme => ({
   questionWrapper: {
-    textAlign: "center"
+    textAlign: "center",
+    height: "100%"
+  },
+  grid: {
+    height: "100%"
+  },
+  gridItemExternalLink: {
+    height: "400px",
+    display: "flex",
+    justifyContent: "center"
   }
 });
 
@@ -48,10 +58,21 @@ function Quiz(props) {
       <SwipeableViews axis="x" index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
         {questions.map(question => (
           <Paper className={classes.questionWrapper}>
-          <Typography variant="h2">Frage #{question.positionInRound}</Typography>
-          <Box fontSize="h5.fontSize">{question.question}</Box>
-          {question.type === "song" ? <AudioQuestion question={question}></AudioQuestion>: ''}
-          <TextQuestion question={question}></TextQuestion> 
+            <Grid className={classes.grid} container direction="column">
+              <Grid item>
+                <Typography variant="h2">Frage #{question.positionInRound}</Typography>
+              </Grid>
+              <Grid item>
+                <Box fontSize="h5.fontSize">{question.question}</Box>
+              </Grid>
+              <Grid item className={classes.gridItemExternalLink}>
+                {question.type === "song" ? <AudioQuestion question={question}></AudioQuestion>: ''}
+                {question.type === "picture" ? <PictureQuestion question={question}></PictureQuestion>: ''}
+              </Grid>
+              <Grid item>
+                <AnswerTextField question={question}></AnswerTextField> 
+              </Grid>
+            </Grid>
           </Paper>
         ))}          
       </SwipeableViews>

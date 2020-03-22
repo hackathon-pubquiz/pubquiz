@@ -10,6 +10,14 @@ import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 const styles = theme => ({
+  player_root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
+  },
+  player_grid: {
+    display: "flex"
+  }
 });
 
 class AudioQuestion extends Component {
@@ -29,7 +37,7 @@ class AudioQuestion extends Component {
   };
 
   render() {
-    const { question } = this.props;
+    const { question, classes } = this.props;
     console.log(question)
     const { volume, volumeOn, playing, progress } = this.state;
 
@@ -68,7 +76,7 @@ class AudioQuestion extends Component {
     };
 
     return (
-      <div className="player_root">
+      <div className={classes.player_root}>
         <ReactPlayer
           ref={this.ref}
           url={question.questionExternalLink}
@@ -76,7 +84,7 @@ class AudioQuestion extends Component {
           height="0px"
           volume={getVolume()}
         />
-        <Grid container justify="center" alignItems="center">
+        <Grid container className={classes.player_grid} justify="center" alignItems="center">
           <Grid item xs={1}>
             <IconButton aria-label="delete" onClick={startPlaying} disabled={playing}>
               <PlayArrow />

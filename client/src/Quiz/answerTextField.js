@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 
-function TextQuestion() {
+function AnswerTextField() {
   return (
       <TextField
         label="Anwort"
@@ -13,4 +13,4 @@ function TextQuestion() {
   );
 }
 
-export default TextQuestion;
+export default AnswerTextField;
