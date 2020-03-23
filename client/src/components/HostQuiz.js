@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Button, List, ListItem, Box, TextField } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import QuizResult from "./QuizResult";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const HostQuiz = props => {
   const { socket } = props;
@@ -92,6 +93,11 @@ const HostQuiz = props => {
           Quiz {quiz.date}({lastRound} Runden)
         </Typography>
         {questionItems}
+        <CopyToClipboard text="http://localhost:3000/login/1">
+          <Button variant="contained" color="primary">
+          Einladungslink in Zwischenablage kopieren!
+          </Button>
+        </CopyToClipboard>
         <Button variant="contained" color="primary" onClick={startQuiz}>
           Start!
         </Button>

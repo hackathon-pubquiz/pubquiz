@@ -18,6 +18,7 @@
     "moment": "^2.24.0",
     "react": "^16.13.1",
     "react-collapsible": "^2.7.0",
+    "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-i18next": "^11.3.4",
     "react-player": "^1.15.2",
