@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {List, ListItem, Typography, withStyles, Grid} from "@material-ui/core";
+import { withTranslation } from 'react-i18next';
 
 
 const pointStyles = theme => ({
@@ -39,23 +40,26 @@ const pointStyles = theme => ({
     marginBottom: "-.3em",
     marginTop: "-.3em",
   },
+  label: {
+    fontSize: "80%",
+    fontWeight: "bold",
+  },
 });
 
-const Points = withStyles(pointStyles)(props => {
-  const { classes, star, points } = props;
+const Points = withTranslation()(withStyles(pointStyles)(props => {
+  const { classes, star, points, t } = props;
 
-  // TODO: i18n
   return (
     <div className={`${classes.container} ${star ? classes.star : ''}`}>
       <div className={classes.number}>
         {points}
       </div>
       <div className={classes.label}>
-        Punkte
+        {t('points')}
       </div>
     </div>
   );
-});
+}));
 
 
 const podiumStyles = theme => ({
@@ -76,8 +80,17 @@ const podiumStyles = theme => ({
       height: "4em",
     },
   },
-  name: {
+  names: {
     textAlign: "center",
+    "& > *": {
+      lineHeight: "1.1em",
+    },
+    "& > :not(:last-child)": {
+      marginBottom: "0.5em",
+    },
+    "& > :last-child": {
+      marginBottom: "0.2em",
+    },
   },
   place: {
     textAlign: "center",
@@ -99,7 +112,7 @@ const podiumStyles = theme => ({
 const Podium = withStyles(podiumStyles)(props => {
   const { results, classes } = props;
 
-  const PodiumPart = ({ points, name, place }) => {
+  const PodiumPart = ({ points, names, place }) => {
     return (
       <Grid container item direction="column" wrap="nowrap" alignItems="center" justify="flex-end">
         <Grid item>
@@ -109,10 +122,12 @@ const Podium = withStyles(podiumStyles)(props => {
             : ''
           }
         </Grid>
-        <Grid item className={classes.name}>
-          <Typography variant="h6">
-            {name}
-          </Typography>
+        <Grid item className={classes.names}>
+          {names.map((name, idx) =>
+            <Typography key={idx} variant="h6">
+              {name}
+            </Typography>
+          )}
         </Grid>
         <Grid item className={classes.place}>
           <div>
@@ -123,38 +138,66 @@ const Podium = withStyles(podiumStyles)(props => {
     );
   };
 
-  let lastPlace = 0;
-  console.log(results);
-  let top3 = results.slice(0, 3);
-  while (top3.length < 3) {
-    top3.push(null);
+  let top3 = results.filter(res => (res.place <= 3));
+  let groupsByPlace = {1: [], 2: [], 3:[]};
+  for (let groupRes of top3) {
+    groupsByPlace[groupRes.place].push(groupRes);
   }
-  console.log(top3);
-  const podiumParts = top3.map(result => {
-    console.log(result);
-    let props = {name: "", points: null, place: ++lastPlace};
-    if (result) {
-      const { total_points, place, groupId } = result;
-      props = {name: `Gruppe ${groupId}`, points: total_points , place}; // TODO: get real group names
-      lastPlace = result.place;
+  for (let place in groupsByPlace) {
+    if (!groupsByPlace[place].length) {
+      groupsByPlace[place].push({name: "", points: null, place: top3.length + 1});
     }
-    console.log(props);
-    return (<PodiumPart {...props} />);
-  });
+  }
 
   return (
     <Grid container wrap="nowrap" className={classes.main}>
-      {podiumParts}
+      <PodiumPart names={groupsByPlace[2].map(g => g.name)} place={2} points={groupsByPlace[2][0].points} />
+      <PodiumPart names={groupsByPlace[1].map(g => g.name)} place={1} points={groupsByPlace[1][0].points} />
+      <PodiumPart names={groupsByPlace[3].map(g => g.name)} place={3} points={groupsByPlace[3][0].points} />
     </Grid>
   );
 });
 
 
-const QuizResult = props => {
-  const { quizId } = props;
+const InlineResult = props => {
+  const { name, points, place } = props;
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  return (
+    <Grid container alignItems="center" wrap="nowrap" spacing={2}>
+      <Grid item>
+        <Typography variant="h6" display="inline">
+          {place}.
+        </Typography>
+      </Grid>
+      <Grid item xs>
+        <Typography variant="h6" display="inline">
+          {name}
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Points points={points}/>
+      </Grid>
+    </Grid>
+  );
+};
+
+
+const resultStyles = theme => ({
+  main: {
+    maxWidth: "400px",
+    margin: "auto",
+  },
+});
+
+
+const QuizResult = withStyles(resultStyles)(props => {
+  const { quizId, classes } = props;
+
+  const [namesLoaded, setNamesLoaded] = useState(false);
+  const [pointsLoaded, setPointsLoaded] = useState(false);
   const [pointsPerGroup, setPoints] = useState([]);
+  const [processedResults, setProcessedResults] = useState(null);
+  const [groupNames, setGroupNames] = useState({});
   const [error, setError] = useState(null);
 
   const preprocessResults = (results, inplace) => {
@@ -166,33 +209,54 @@ const QuizResult = props => {
     let lastPlace = 0;
 
     for (let idx in results) {
-      const res = results[idx];
+      const res = inplace ? results[idx] : {...results[idx]};
       if (lastScore == null || lastScore > res.total_points) {
         lastScore = res.total_points;
         lastPlace++;
       }
-      if (!inplace) {
-        results[idx] = {place: lastPlace, ...res};
-      } else {
-        res.place = lastPlace;
-      }
+      res.place = lastPlace;
+      res.points = res.total_points;
+      delete res.total_points;
+      res.name = groupNames[res.groupId];
     }
 
     return results;
   };
 
   useEffect(() => {
+    if (!(namesLoaded && pointsLoaded)) return;
+    setProcessedResults(preprocessResults(pointsPerGroup));
+  }, [namesLoaded, pointsLoaded]);
+
+  useEffect(() => {
+    setProcessedResults(null);
+    setNamesLoaded(false);
+    setPointsLoaded(false);
     fetch(`/api/quiz/${quizId}/points`)
       .then(res => res.json())
       .then(
         result => {
-          preprocessResults(result);
-          console.log(result);
+          console.log('api points res', result);
           setPoints(result);
-          setIsLoaded(true);
+          setPointsLoaded(true);
         },
         error => {
-          setIsLoaded(true);
+          setPointsLoaded(true);
+          setError(error);
+        }
+      );
+    fetch(`/api/groups/`)
+      .then(res => res.json())
+      .then(
+        result => {
+          let groupNames_ = {};
+          for (let group of result) groupNames_[group.id] = group.name;
+          setGroupNames(groupNames_);
+          console.log('api groups res', result);
+          setNamesLoaded(true);
+        },
+        error => {
+          setNamesLoaded(true);
           setError(error);
         }
       );
@@ -200,31 +264,32 @@ const QuizResult = props => {
     //   {groupId: 1, total_points: 10},
     //   {groupId: 3, total_points:  5},
     //   {groupId: 2, total_points: 15},
+    //   {groupId: 4, total_points: 15},
     //   {groupId: 9, total_points: 25},
     // ]));
-    // setIsLoaded(true);
+    // setNamesLoaded(true);
+    // setPointsLoaded(true);
   }, [quizId]);
 
-  if (!isLoaded) return <Typography>Laden...</Typography>;
-  else if (error) return <Typography color="error">Error: {error}</Typography>;
+  if (error) return <Typography color="error">Error: {error}</Typography>;
+  else if (processedResults == null) return <Typography>Laden...</Typography>;
   else {
-    // TODO: make list view nice: expand vertically, auto overflow, style items
-    const resultPerGroup = pointsPerGroup.slice(3).map(ppg => (
-      <ListItem key={ppg.groupId}>
-        <Typography>
-          GroupId: {ppg.groupId},Punkte: {ppg.total_points}
-        </Typography>
-        <Points points={ppg.total_points} />
-      </ListItem>
-    ));
     return (
       <>
         <Typography variant="h4">Ergebnisse</Typography>
-        <Podium results={pointsPerGroup} />
-        <List>{resultPerGroup}</List>
+        <div className={classes.main}>
+          <Podium results={processedResults} />
+          <List>
+            {processedResults.filter(result => (result.place > 3)).map(result =>
+              <ListItem disableGutters>
+                <InlineResult name={result.name} points={result.points} place={result.place} />
+              </ListItem>
+            )}
+          </List>
+        </div>
       </>
     );
   }
-};
+});
 
 export default QuizResult;

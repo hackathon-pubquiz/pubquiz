@@ -40,7 +40,8 @@ i18n
           startTeam: "start team!",
           areYouAlone: "Are you alone? Join an other team!",
           makeTeamPublic: "open for other players",
-          prost: "Prost!"
+          prost: "Prost!",
+          points: "Points",
         }
       },
       de: {
@@ -76,7 +77,8 @@ i18n
           startTeam: "Team starten",
           areYouAlone: "Alleine hier? Schließe dich einem anderen Team an!",
           makeTeamPublic: "Team für andere öffnen",
-          prost: "Prost!"
+          prost: "Prost!",
+          points: "Punkte",
         }
       }
     },
