@@ -191,7 +191,7 @@ class App extends React.Component {
             [classes.appBarShift]: open
           })}
         >
-          <Tabs component="nav" value={false}>
+          <Tabs component="nav" value={false} variant="scrollable">
             {this.props.loggedInUser.id ? (
               <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerOpen} edge="start">
                 <ChatIcon />
