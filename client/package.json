@@ -16,6 +16,7 @@
     "i18next": "^19.3.3",
     "i18next-browser-languagedetector": "^4.0.2",
     "moment": "^2.24.0",
+    "peerjs": "^1.2.0",
     "react": "^16.13.1",
     "react-collapsible": "^2.7.0",
     "react-copy-to-clipboard": "^5.0.2",
