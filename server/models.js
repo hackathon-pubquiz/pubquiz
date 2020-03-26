@@ -49,11 +49,23 @@ Quiz.init(
   }
 );
 
+class Round extends Model {}
+Round.init(
+  {
+    numberInQuiz: Sequelize.INTEGER,
+    startTime: Sequelize.DATE,
+    endTime: Sequelize.DATE
+  },
+  {
+    sequelize,
+    modelName: "round"
+  }
+);
+
 class Question extends Model {}
 Question.init(
   {
     type: Sequelize.STRING,
-    round: Sequelize.INTEGER,
     positionInround: Sequelize.INTEGER,
     question: Sequelize.STRING,
     questionExternalLink: Sequelize.STRING,
@@ -64,6 +76,9 @@ Question.init(
     modelName: "question"
   }
 );
+
+Question.belongsTo(Round);
+Round.hasMany(Question);
 
 class QuestionSubmission extends Model {}
 QuestionSubmission.init(
@@ -81,16 +96,34 @@ QuestionSubmission.belongsTo(Group);
 QuestionSubmission.belongsTo(Person);
 Question.hasMany(QuestionSubmission);
 
-Quiz.hasMany(Question);
-Question.belongsTo(Quiz);
+Quiz.hasMany(Round);
 Quiz.belongsTo(Pub);
+
+// const SumPointsOfQuizPerGroup = id =>
+//   QuestionSubmission.findAll({
+//     include: [
+//       {
+//         model: Question,
+//         where: { quizId: id },
+//         attributes: []
+//       }
+//     ],
+//     attributes: ["groupId", [sequelize.fn("SUM", sequelize.col("points")), "total_points"]],
+//     group: ["groupId"]
+//   });
 
 const SumPointsOfQuizPerGroup = id =>
   QuestionSubmission.findAll({
     include: [
       {
         model: Question,
-        where: { quizId: id },
+        include: [
+          {
+            model: Group,
+            where: { quizId: id },
+            attributes: []
+          }
+        ],
         attributes: []
       }
     ],
@@ -141,82 +174,90 @@ function seedDatabase() {
       {
         date: new Date(),
         state: "future",
-        questions: [
+        rounds: [
           {
-            type: "text",
-            round: 1,
-            positionInround: 1,
-            question: "Muss das so?",
-            correctAnswer: "Ja",
-            pubId: 1,
-            QuestionSubmissions: [
+            numberInQuiz: 1,
+            questions: [
               {
-                answer: "Erste Antwort",
-                groupId: 1,
-                points: 1
+                type: "text",
+                positionInround: 1,
+                question: "Muss das so?",
+                correctAnswer: "Ja",
+                QuestionSubmissions: [
+                  {
+                    answer: "Erste Antwort",
+                    groupId: 1,
+                    points: 1
+                  },
+                  {
+                    answer: "Andere Antwort",
+                    groupId: 2,
+                    points: 1
+                  }
+                ]
               },
               {
-                answer: "Andere Antwort",
-                groupId: 2,
-                points: 1
+                type: "text",
+                positionInround: 2,
+                question: "Könnt ihr noch?",
+                correctAnswer: "Ja",
+                QuestionSubmissions: [
+                  {
+                    answer: "Dritte",
+                    groupId: 1,
+                    points: 1
+                  },
+                  {
+                    answer: "Vierte",
+                    groupId: 2,
+                    points: 2
+                  }
+                ]
               }
             ]
           },
           {
-            type: "text",
-            round: 1,
-            positionInround: 2,
-            question: "Könnt ihr noch?",
-            correctAnswer: "Ja",
-            pubId: 1,
-            QuestionSubmissions: [
+            numberInQuiz: 2,
+            questions: [
               {
-                answer: "Dritte",
-                groupId: 1,
-                points: 1
-              },
-              {
-                answer: "Vierte",
-                groupId: 2,
-                points: 2
+                type: "text",
+                positionInround: 1,
+                question: "Habt ihr genug getrunken?",
+                correctAnswer: "Ja"
               }
             ]
           },
           {
-            type: "text",
-            round: 2,
-            positionInround: 1,
-            question: "Habt ihr genug getrunken?",
-            correctAnswer: "Ja",
-            pubId: 1
+            numberInQuiz: 3,
+            questions: [
+              {
+                type: "text",
+                positionInround: 1,
+                question: "Würdet ihr an einem virtuellen Pubquiz teilnehmen?",
+                correctAnswer: "Ja"
+              }
+            ]
           },
           {
-            type: "text",
-            round: 3,
-            positionInround: 1,
-            question: "Würdet ihr an einem virtuellen Pubquiz teilnehmen?",
-            correctAnswer: "Ja",
-            pubId: 1
-          },
-          {
-            type: "song",
-            round: 4,
-            positionInround: 1,
-            questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM",
-            correctAnswer: "Ja",
-            pubId: 1
-          },
-          {
-            type: "picture",
-            round: 4,
-            positionInround: 2,
-            questionExternalLink: "http://thecatapi.com/api/images/get?format=src&type=jpg&size=med",
-            correctAnswer: "Ja",
-            pubId: 1
+            numberInQuiz: 4,
+            questions: [
+              {
+                type: "song",
+                positionInround: 1,
+                questionExternalLink: "https://www.youtube.com/watch?v=z9Uz1icjwrM",
+                correctAnswer: "Ja"
+              },
+              {
+                type: "picture",
+                positionInround: 2,
+                questionExternalLink: "http://thecatapi.com/api/images/get?format=src&type=jpg&size=med",
+                correctAnswer: "Ja"
+              }
+            ]
           }
         ]
       },
-      { include: [{ model: Question, include: [QuestionSubmission] }, Pub] }
+      { include: [{ model: Round, include: [{ model: Question, include: [QuestionSubmission] }] }, Pub] }
     );
   });
 }
@@ -225,6 +266,7 @@ module.exports = {
   Pub,
   Group,
   Quiz,
+  Round,
   Question,
   QuestionSubmission,
   Person,
