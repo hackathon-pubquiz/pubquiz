@@ -36,3 +36,7 @@ We are very proud of how far we have come during that hackathon. But we also don
 - polish the rough edges
 - deploying the pubquiz to a server for everybody to test playing
 - find a pub owner who wants to host a quiz. If you are one, please reach out to us, either here on github or on [twitter](https://twitter.com/contradictioned)
+
+# License
+
+This project is licensed under the [MIT license](/license.md).
